@@ -5,6 +5,6 @@ build:
 	echo "build"
 
 tests:
-	echo "test" #ruby test_mjai_to_mjx.rb && test_mjx_to_mjai.rb
+	echo "tests"
 
 .PHONY: clear build tests
