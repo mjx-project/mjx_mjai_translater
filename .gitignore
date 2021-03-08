@@ -13,3 +13,7 @@
 .DS_store
 
 Gemfile.lock
+
+# generated proto files
+lib/mjxproto/mjx_pb.rb
+lib/mjxproto/mjx_services_pb.rb
