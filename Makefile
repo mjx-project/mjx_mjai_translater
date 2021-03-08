@@ -4,7 +4,7 @@ clear:
 build:
 	echo "build"
 
-tests: 
+tests:
 	echo "tests"
 
 protos:

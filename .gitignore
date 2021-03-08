@@ -1,4 +1,5 @@
 #idea
 .idea
+venv
+.DS_Store
 mjx_mjai_translater/lib/*.rb
-
