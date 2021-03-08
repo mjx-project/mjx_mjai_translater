@@ -32,7 +32,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mjx_mjai_translater.
+Bug reports and pull requests are welcome on GitHub at https://github.com/mjx-project/mjx_mjai_translater.
 
 ## License
 
