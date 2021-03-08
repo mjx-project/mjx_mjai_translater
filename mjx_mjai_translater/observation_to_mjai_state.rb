@@ -1,2 +1,3 @@
-def observation_to_mjai_states
+def observation_to_mjai_state
   return 0
+end
