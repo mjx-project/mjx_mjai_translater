@@ -1,5 +1,5 @@
 clear:
-	echo "clear"
+	rm -rf mjx_mjai_translater/lib/*
 
 build:
 	echo "build"
@@ -7,4 +7,7 @@ build:
 tests: 
 	echo "tests"
 
-.PHONY: clear build tests
+protos:
+	grpc_tools_ruby_protoc -I mjx --ruby_out=mjx_mjai_translater/lib --grpc_out=mjx_mjai_translater/lib mjx/mjx.proto
+
+.PHONY: clear build tests protos
