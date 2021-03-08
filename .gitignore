@@ -13,5 +13,5 @@
 Gemfile.lock
 
 # generated proto files
-lib/mjx_pb.rb
-lib/mjx_services_pb.rb
+lib/mjxproto/mjx_pb.rb
+lib/mjxproto/mjx_services_pb.rb
