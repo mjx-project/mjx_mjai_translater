@@ -1,5 +1,5 @@
 require "test/unit"
-require "./mjai_aciton_to_mjx_action"
+require "./observation_to_mjai_states"
 
 class TestTranslator < Test::Unit::TestCase
   def test_mjai_to_mjx
