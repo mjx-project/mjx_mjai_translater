@@ -1,0 +1,3 @@
+[submodule "mjx"]
+	path = mjx
+	url = git@github.com:mjx-project/mjx.git
