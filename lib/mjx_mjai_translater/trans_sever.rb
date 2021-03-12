@@ -4,16 +4,24 @@ lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require 'grpc'
 require 'mjx_services_pb'
+require "socket"
+require "thread"
 #変換サーバの本体
 
 class TransServer << Mjxproto::Agent::Service
     
     def initialize()
-        self.players = []
-        self._mjx_event_history = []
-        self.new_mjai_acitons = []
-        self.next_mjx_actions = []
+        @players = []
+        @_mjx_event_history = []
+        @new_mjai_acitons = []
+        @next_mjx_actions = []
     end
+
+
+    def initialize_players(host, port)#serverを立てて、playerをコマンドの数に応じて立てる
+        @mutex = Mutex.new()
+        @server = TCPServer.open(host, port)
+                
 
 
     def do_action(action)
@@ -37,6 +45,7 @@ class TransServer << Mjxproto::Agent::Service
     
     def observe(observation)
     end
+
 
     def take_action(observation, _unused_call)
         obserbve(observation)
