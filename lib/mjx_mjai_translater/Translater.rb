@@ -20,7 +20,7 @@ class TransServer << Mjxproto::Agent::Service
         #mjaiと同じ実装
     end
 
-
+        
     def step(new_event):
         # do_actionの呼ばれ方がActiveGame内で11パターンあったので、それらを模倣する
     end
