@@ -1,7 +1,7 @@
 require "random_agent"
 #変換サーバの本体
 
-class TransServer << RandomAgent
+class TransServer << Mjxproto::Agent::Service
     
     def initialize()
         self.players = []
