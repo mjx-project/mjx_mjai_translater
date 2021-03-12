@@ -33,7 +33,7 @@ class TransServer << Mjxproto::Agent::Service
     def observe(observation)
     end
 
-    def take_action(obser_vation)
+    def take_action(observation, _unused_call)
         obserbve(observation)
         curr_player = get_curr_player(observation)
         response = none
