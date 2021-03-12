@@ -18,14 +18,29 @@ class TransServer << Mjxproto::Agent::Service
     end
 
 
-    def initialize_players(host, port)#serverを立てて、playerをコマンドの数に応じて立てる
-        @mutex = Mutex.new()
-        @server = TCPServer.open(host, port)
+    def initialize_players(host, port)
+        #- Serverを立てる
+        #- Clientと最初の通信をする。(クライアントの数がわかっていればいらないかも)
+        #- TCPPlayerをクライアントの数の分立てる
                 
-
-
+        
     def do_action(action)
         #mjaiと同じ実装
+        if action.is_a?(Hash)
+            action = Action.new(action)
+          end
+          
+          #update_state(action)これはmjxがやる
+          #@on_action.call(action) if @on_action
+          responses = (0...4).map() do |i|
+            @players[i].respond_to_action(action_in_view(action, i, true))  # aciton_in_view()実装する必要あり
+          end
+          #action_with_logs = action.merge({:logs => responses.map(){ |r| r && r.log }})
+          responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
+          #@on_responses.call(action_with_logs, responses) if @on_responses
+          #@previous_action = action
+          #validate_responses(responses, action)
+          return responses
     end
 
         
