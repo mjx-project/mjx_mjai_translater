@@ -71,7 +71,4 @@ class TransServer << Mjxproto::Agent::Service
         self.next_mjx_actions = update_next_actions(response)
         return self.next_mjx_actions[curr_player]
     end
-
-
-
 end
