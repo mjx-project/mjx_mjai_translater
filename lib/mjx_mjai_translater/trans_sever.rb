@@ -4,8 +4,6 @@ lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require 'grpc'
 require 'mjx_services_pb'
-require "socket"
-require "thread"
 #変換サーバの本体
 
 class TransServer << Mjxproto::Agent::Service
@@ -23,7 +21,7 @@ class TransServer << Mjxproto::Agent::Service
         #- Clientと最初の通信をする。(クライアントの数がわかっていればいらないかも)
         #- TCPPlayerをクライアントの数の分立てる
                 
-        
+
     def do_action(action)
         #mjaiと同じ実装
         if action.is_a?(Hash)
@@ -55,10 +53,12 @@ class TransServer << Mjxproto::Agent::Service
 
 
     def get_curr_player(observation)
+        #  行動したプレイヤーをobservationから出力する。
     end
 
     
     def observe(observation)
+        # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等）
     end
 
 
