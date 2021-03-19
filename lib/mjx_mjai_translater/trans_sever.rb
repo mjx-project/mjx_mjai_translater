@@ -9,15 +9,36 @@ require 'mjx_services_pb'
 class TransServer << Mjxproto::Agent::Service
     
     def initialize()
-        self.players = []
-        self._mjx_event_history = []
-        self.new_mjai_acitons = []
-        self.next_mjx_actions = []
+        @players = []
+        @_mjx_event_history = []
+        @new_mjai_acitons = []
+        @next_mjx_actions = []
     end
 
 
+    def initialize_players(host, port)
+        #- Serverを立てる
+        #- Clientと最初の通信をする。(クライアントの数がわかっていればいらないかも)
+        #- TCPPlayerをクライアントの数の分立てる
+                
+
     def do_action(action)
         #mjaiと同じ実装
+        if action.is_a?(Hash)
+            action = Action.new(action)
+          end
+          
+          #update_state(action)これはmjxがやる
+          #@on_action.call(action) if @on_action
+          responses = (0...4).map() do |i|
+            @players[i].respond_to_action(action_in_view(action, i, true))  # aciton_in_view()実装する必要あり
+          end
+          #action_with_logs = action.merge({:logs => responses.map(){ |r| r && r.log }})
+          responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
+          #@on_responses.call(action_with_logs, responses) if @on_responses
+          #@previous_action = action
+          #validate_responses(responses, action)
+          return responses
     end
 
         
@@ -32,11 +53,14 @@ class TransServer << Mjxproto::Agent::Service
 
 
     def get_curr_player(observation)
+        #  行動したプレイヤーをobservationから出力する。
     end
 
     
     def observe(observation)
+        # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等）
     end
+
 
     def take_action(observation, _unused_call)
         obserbve(observation)
@@ -47,7 +71,4 @@ class TransServer << Mjxproto::Agent::Service
         self.next_mjx_actions = update_next_actions(response)
         return self.next_mjx_actions[curr_player]
     end
-
-
-
 end
