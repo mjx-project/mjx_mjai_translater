@@ -56,8 +56,14 @@ class TransServer << Mjxproto::Agent::Service
         #  行動したプレイヤーをobservationから出力する。
     end
 
+
+    def extract_difference(_mjx_event_history, observation)
+    end
+
     
     def observe(observation)
+        difference = extract_difference(@_mjx_event_history, observation)
+        # mjx_actions = differnce_to_mjai_actions(difference)
         # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等）
     end
 
