@@ -18,8 +18,8 @@ RSpec.describe  TransServer do
             json = JSON.load(line)
             json_string = Google::Protobuf.encode_json(json)
             proto_observation = Google::Protobuf.decode_json(Mjxproto::Observation, json_string)  # protobuf に変換
-            difference_extracted = TransServer.new().extract_difference(preserved_event_history, proto_observation)
-            expect(difference_extracted).to eq proto_observation.event_history.events[preserved_event_history.events.length .. -1]
+            difference_extracted = TransServer.new().extract_difference(preserved_event_history, proto_observation)  # 差分を取得する関数を動かす
+            expect(difference_extracted).to eq proto_observation.event_history.events[preserved_event_history.events.length .. -1]  # 差分が適切に取り出せているか 懸念点としてはチェックの仕方が差分を取り出す関数と同じロジックになってしまう可能性があること。
             preserved_event_history = proto_observation.event_history
     }
     end
