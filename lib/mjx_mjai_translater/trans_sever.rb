@@ -1,4 +1,4 @@
-require "random_agent"
+require '/Users/nishimorihajimeichirou/mjai-mjx-translater/lib/mjx_mjai_translater/random_agent.rb'
 this_dir = __dir__
 lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
@@ -6,7 +6,7 @@ require 'grpc'
 require 'mjx_services_pb'
 #変換サーバの本体
 
-class TransServer << Mjxproto::Agent::Service
+class TransServer < Mjxproto::Agent::Service
     
     def initialize()
         @players = []
@@ -20,7 +20,7 @@ class TransServer << Mjxproto::Agent::Service
         #- Serverを立てる
         #- Clientと最初の通信をする。(クライアントの数がわかっていればいらないかも)
         #- TCPPlayerをクライアントの数の分立てる
-                
+    end          
 
     def do_action(action)
         #mjaiと同じ実装
@@ -42,7 +42,7 @@ class TransServer << Mjxproto::Agent::Service
     end
 
         
-    def step(new_event):
+    def step(new_event)
         # do_actionの呼ばれ方がActiveGame内で11パターンあったので、それらを模倣する
     end
     
@@ -72,8 +72,9 @@ class TransServer << Mjxproto::Agent::Service
         obserbve(observation)
         curr_player = get_curr_player(observation)
         response = none
-        for mjai_action in self.mjai_new_actinos:
+        for mjai_action in self.mjai_new_actinos
             response = self.do_action(mjai_action)
+        end
         self.next_mjx_actions = update_next_actions(response)
         return self.next_mjx_actions[curr_player]
     end
