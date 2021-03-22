@@ -2,10 +2,11 @@
 
 require 'json'
 require 'grpc'
-require '/Users/nishimorihajimeichirou/mjai-mjx-translater/lib/mjxproto/mjx_services_pb.rb'
+require_relative '../lib/mjxproto/mjx_services_pb.rb'
 require 'google/protobuf'
-require '/Users/nishimorihajimeichirou/mjai-mjx-translater/lib/mjxproto/mjx_pb.rb'
-require '/Users/nishimorihajimeichirou/mjai-mjx-translater/lib/mjx_mjai_translater/trans_sever.rb'
+require_relative '../lib/mjxproto/mjx_pb.rb'
+require_relative '../lib//mjx_mjai_translater/trans_sever.rb'
+
 
 
 file = File.open("./resources/observations-000.json", "r")
@@ -24,3 +25,4 @@ RSpec.describe  TransServer do
     }
     end
 end
+

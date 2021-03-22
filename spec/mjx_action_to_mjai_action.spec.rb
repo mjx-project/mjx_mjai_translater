@@ -1,4 +1,4 @@
-require "./lib/mjx_mjai_translater/mjx_action_to_mjai_action"
+require_relative "../lib/mjx_mjai_translater/mjx_action_to_mjai_action"
 
 
 RSpec.describe  MjxActToMjaiAct do
