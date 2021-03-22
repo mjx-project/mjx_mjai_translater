@@ -40,11 +40,8 @@ jobs:
     - name: Install grpc
       run: sudo gem install grpc && sudo gem install grpc-tools
 
-    - name: Check mjx.proto existence
-      run: cat mjx/mjx.proto
-
     - name: make protos
-      run: make protos
+      run: make protos && ls lib/mjxproto
 
     - name: Run tests
       run: bundle exec rake
