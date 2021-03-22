@@ -23,6 +23,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_MJX }}
+        submodules: true
+
     - name: Set up Ruby
     # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
     # change this to (see https://github.com/ruby/setup-ruby#versioning):
@@ -31,9 +36,6 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-        fetch-depth: 0
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_MJX }}
-        submodules: true
 
     - name: Install grpc
       run: sudo gem install grpc && sudo gem install grpc-tools
