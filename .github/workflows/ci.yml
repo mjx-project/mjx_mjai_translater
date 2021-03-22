@@ -23,7 +23,7 @@ jobs:
 
     steps:
     - name: install
-      run: gem install grpc && gem install grpc-tools
+      run: sudo gem install grpc && gem install grpc-tools
     - name: make protos
       run: grpc_tools_ruby_protoc -I mjx --ruby_out=lib/mjxproto --grpc_out=lib/mjxproto mjx/mjx.proto
     - uses: actions/checkout@v2
