@@ -19,15 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['2.6', '2.7', '3.0']
+        ruby-version: ['3.0']  # ['2.6', '2.7', '3.0']
 
     steps:
-    - name: install
-      run: sudo gem install grpc && sudo gem install grpc-tools
-    - name: init submodule
-      run: git submodule init && git submodule update —init
-    - name: make protos
-      run: grpc_tools_ruby_protoc -I mjx --ruby_out=lib/mjxproto --grpc_out=lib/mjxproto mjx/mjx.proto
     - uses: actions/checkout@v2
     - name: Set up Ruby
     # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
@@ -37,5 +31,18 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+        fetch-depth: 0
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_MJX }}
+        submodules: true
+
+    - name: Install grpc
+      run: sudo gem install grpc && sudo gem install grpc-tools
+
+    - name: Init submodule
+      run: git submodule update --init
+
+    - name: make protos
+      run: make protos
+
     - name: Run tests
       run: bundle exec rake
