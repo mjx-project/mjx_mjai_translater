@@ -8,7 +8,6 @@ require './lib/mjxproto/mjx_pb.rb'
 require './lib/mjx_mjai_translater/trans_sever.rb'
 
 
-
 file = File.open("spec/resources/observations-000.json", "r")
 
 
