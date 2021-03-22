@@ -2,10 +2,10 @@
 
 require 'json'
 require 'grpc'
-require_relative '../lib/mjxproto/mjx_services_pb.rb'
+require './lib/mjxproto/mjx_services_pb.rb'
 require 'google/protobuf'
-require_relative '../lib/mjxproto/mjx_pb.rb'
-require_relative '../lib//mjx_mjai_translater/trans_sever.rb'
+require './lib/mjxproto/mjx_pb.rb'
+require './lib//mjx_mjai_translater/trans_sever.rb'
 
 
 
