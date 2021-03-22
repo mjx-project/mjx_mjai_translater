@@ -41,7 +41,7 @@ jobs:
       run: sudo gem install grpc && sudo gem install grpc-tools
 
     - name: Init submodule
-      run: git submodule update --init && cat mjx.proto
+      run: git submodule update --init && cat mjx/mjx.proto
 
     - name: make protos
       run: make protos
