@@ -22,6 +22,8 @@ jobs:
         ruby-version: ['2.6', '2.7', '3.0']
 
     steps:
+    - name: make protos
+      run: grpc_tools_ruby_protoc -I mjx --ruby_out=lib/mjxproto --grpc_out=lib/mjxproto mjx/mjx.proto
     - uses: actions/checkout@v2
     - name: Set up Ruby
     # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
