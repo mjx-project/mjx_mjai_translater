@@ -40,8 +40,8 @@ jobs:
     - name: Install grpc
       run: sudo gem install grpc && sudo gem install grpc-tools
 
-    - name: Init submodule
-      run: git submodule update --init && cat mjx/mjx.proto
+    - name: Check mjx.proto existence
+      run: cat mjx/mjx.proto
 
     - name: make protos
       run: make protos
