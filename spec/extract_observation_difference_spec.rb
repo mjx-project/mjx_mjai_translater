@@ -5,7 +5,7 @@ require 'grpc'
 require './lib/mjxproto/mjx_services_pb.rb'
 require 'google/protobuf'
 require './lib/mjxproto/mjx_pb.rb'
-require './lib//mjx_mjai_translater/trans_sever.rb'
+require './lib/mjx_mjai_translater/trans_sever.rb'
 
 
 
