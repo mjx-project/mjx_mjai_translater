@@ -25,7 +25,7 @@ jobs:
     - name: install
       run: sudo gem install grpc && sudo gem install grpc-tools
     - name: init submodule
-      run: git submodule update —init
+      run: git submodule init && git submodule update —init
     - name: make protos
       run: grpc_tools_ruby_protoc -I mjx --ruby_out=lib/mjxproto --grpc_out=lib/mjxproto mjx/mjx.proto
     - uses: actions/checkout@v2
