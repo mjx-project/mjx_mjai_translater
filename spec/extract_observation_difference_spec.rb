@@ -9,7 +9,7 @@ require_relative '../lib//mjx_mjai_translater/trans_sever.rb'
 
 
 
-file = File.open("./resources/observations-000.json", "r")
+file = File.open("spec/resources/observations-000.json", "r")
 
 
 RSpec.describe  TransServer do
@@ -25,4 +25,5 @@ RSpec.describe  TransServer do
     }
     end
 end
+file.close()
 
