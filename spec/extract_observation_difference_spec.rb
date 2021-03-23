@@ -2,10 +2,10 @@
 
 require 'json'
 require 'grpc'
+require_relative '../lib/mjx_mjai_translater/trans_sever'
 require_relative '../lib/mjxproto/mjx_pb'
 require_relative '../lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
-require_relative '../lib/mjx_mjai_translater/trans_sever'
 
 
 file = File.open("spec/resources/observations-000.json", "r")
