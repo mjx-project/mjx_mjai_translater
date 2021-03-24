@@ -44,4 +44,6 @@ jobs:
       run: make protos && ls lib/mjxproto
 
     - name: Run tests
-      run: bundle exec rake
+      run: |
+        export RUBYLIB=lib/mjxproto  
+        bundle exec rake
