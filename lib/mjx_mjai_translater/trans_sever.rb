@@ -62,6 +62,7 @@ class TransServer < Mjxproto::Agent::Service
         if !previous_history
             return current_history = observation.event_history.events
         end
+
         current_history = observation.event_history.events
         difference_history = current_history[previous_history.length ..]
         @_mjx_event_history = current_history  #更新
