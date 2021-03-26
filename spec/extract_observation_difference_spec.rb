@@ -19,9 +19,9 @@ RSpec.describe  TransServer do
     it "局の最初" do
         observation = observation_from_json(0)
         difference_extracted = TransServer.new().extract_difference(None, observation)  # 差分を取得する関数を動かす                          
-        expect(difference_extracted).to eq  [{"init_hand"[43,45,93,113,49,101,80,40,70,95,19,109,4]}, {"draw":28}]
+        expect(difference_extracted).to eq  [{"init_hand":[43,45,93,113,49,101,80,40,70,95,19,109,4]}, {"draw":28}]
     end
-    it "局の途中"
+    it "局の途中" do
         observation_previous = observation_from_json(0)
         observation = observation_from_json(1)
         difference_extracted = TransServer.new().extract_difference(observation_previous, observation)

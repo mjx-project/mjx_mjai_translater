@@ -58,8 +58,7 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def extract_difference(_mjx_event_history, observation)
-        return 0
+    def extract_difference(observation_previous, observation)
     end
 
     
