@@ -59,6 +59,10 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def extract_difference(observation_previous, observation)
+        if !observation_previous
+            return [{"init_hand":observation.private_info.init_hand}, {"draw":observation.private_info.draws[0]}]
+        end
+        return 0
     end
 
     
