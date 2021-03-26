@@ -11,7 +11,7 @@ class TransServer < Mjxproto::Agent::Service
     
     def initialize()
         @players = []
-        @_mjx_event_history = []
+        @_mjx_event_history = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
     end
@@ -58,23 +58,21 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def extract_difference(observation_previous, observation)
-        if !observation_previous
-            return [{"init_hand":observation.private_info.init_hand}, {"draw":observation.private_info.draws[0]}]
+    def extract_difference(previous_history = @_mjx_event_history, observation)  # event_historyの差分を取り出す
+        if !previous_history
+            return current_history = observation.event_history.events
         end
-        previous_draws = observation_previous.private_info.draws
-        current_draws = observation.private_info.draws
-        previous_history = observation_previous.event_history.events
         current_history = observation.event_history.events
         difference_history = current_history[previous_history.length ..]
-        return [{"draw": current_draws[previous_draws.length ..][0]}, {"discard": difference_history[0].tile}]
+        @_mjx_event_history = current_history  #更新
+        return difference_history
     end
 
     
     def observe(observation)
-        difference = extract_difference(@_mjx_event_history, observation)
-        # mjx_actions = differnce_to_mjai_actions(difference)
-        # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等）
+        history_difference = extract_difference(@_mjx_event_history, observation)
+        # mjx_actions = differnce_to_mjai_actions(target_player, history_difference, observation)
+        # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
     end
 
 
