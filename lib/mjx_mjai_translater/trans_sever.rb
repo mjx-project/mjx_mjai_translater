@@ -62,7 +62,12 @@ class TransServer < Mjxproto::Agent::Service
         if !observation_previous
             return [{"init_hand":observation.private_info.init_hand}, {"draw":observation.private_info.draws[0]}]
         end
-        return 0
+        previous_draws = observation_previous.private_info.draws
+        current_draws = observation.private_info.draws
+        previous_history = observation_previous.event_history.events
+        current_history = observation.event_history.events
+        difference_history = current_history[previous_history.length ..]
+        return [{"draw": current_draws[previous_draws.length ..][0]}, {"discard": difference_history[0].tile}]
     end
 
     
