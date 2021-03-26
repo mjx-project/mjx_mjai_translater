@@ -1,7 +1,7 @@
 this_dir = __dir__
 lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
-require 'grpc'
+require "grpc"
 require 'mjx_services_pb'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require 'random_agent'
@@ -59,6 +59,7 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def extract_difference(_mjx_event_history, observation)
+        return 0
     end
 
     
