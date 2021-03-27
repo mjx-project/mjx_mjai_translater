@@ -2,7 +2,7 @@
 #require "./open_converter.rb"
 
 
-class MjxActToMjaiAct
+class MjxActToMjaiAct   # mjaiのアクションをmjxの者に変換する際に,mjxのpossible actionsとの照合をするため。
 
   def initialize(proto_possible_actions)
     @proto_acitons = proto_possible_actions

@@ -69,10 +69,20 @@ class TransServer < Mjxproto::Agent::Service
         return difference_history
     end
 
+
+    def convert_to_mjai_actions(history_difference)
+        # event_histryの差分に対して他のfileで定義されている変換関数を適用する。
+        # mjai_actions = []
+        # for i in range(len(history_difference)):
+        #    mjai_action = mjx_event_to_mjai_action(history_difference[i])
+        #    mjai_actions.append(mjai_action)
+        # return mjai_actions
+    end
+
     
     def observe(observation)
         history_difference = extract_difference(@_mjx_event_history, observation)
-        # mjx_actions = differnce_to_mjai_actions(target_player, history_difference, observation)
+        # mjx_actions = convert_to_mjai_actions(history_difference)
         # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
     end
 
