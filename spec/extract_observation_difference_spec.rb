@@ -7,11 +7,12 @@ require 'google/protobuf'
 require './lib/mjx_mjai_translater/trans_sever'
 require 'json'
 
-def observation_from_json(lines,line)
+def observation_from_json(lines,line)  # 特定の行を取得する
     json = JSON.load(lines[line])
     json_string = Google::Protobuf.encode_json(json)
     proto_observation = Google::Protobuf.decode_json(Mjxproto::Observation, json_string)
 end
+
 RSpec.describe  TransServer do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
