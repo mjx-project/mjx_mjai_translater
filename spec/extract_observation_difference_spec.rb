@@ -33,3 +33,16 @@ RSpec.describe  TransServer do
     end
 end
 
+
+RSpec.describe "observation間のdrawsの変動" do 
+    file = File.open("spec/resources/observations-000.json", "r")
+    lines = file.readlines
+    previous_draws = []
+    it "変動が1以下であること" do
+        lines.length.times do |line|
+            current_draws = observation_from_json(lines, line).private_info.draws
+            expect(current_draws.length - previous_draws.length).to be <= 1
+            previous_draws = current_draws
+        end
+    end
+end
