@@ -34,15 +34,15 @@ RSpec.describe  TransServer do
 end
 
 
-RSpec.describe "observation間のdrawsの変動" do 
+RSpec.describe "observation間のdrawsの変動" do  # ツモ牌の情報の取得がdraws[-1]で良いことを確約するためのテスト
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
     previous_draws = []
     it "変動が1以下であること" do
         lines.length.times do |line|
-            current_draws = observation_from_json(lines, line).private_info.draws
+            current_draws = observation_from_json(lines, line).private_info.draws  
             expect(current_draws.length - previous_draws.length).to be <= 1
-            previous_draws = current_draws
+            previous_draws = current_draws  # 更新
         end
     end
 end
