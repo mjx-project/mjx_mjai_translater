@@ -1,16 +1,17 @@
-require "random_agent"
 this_dir = __dir__
 lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
-require 'grpc'
+require "grpc"
 require 'mjx_services_pb'
+$LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
+require 'random_agent'
 #変換サーバの本体
 
-class TransServer << Mjxproto::Agent::Service
+class TransServer < Mjxproto::Agent::Service
     
     def initialize()
         @players = []
-        @_mjx_event_history = []
+        @_mjx_event_history = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
     end
@@ -20,7 +21,7 @@ class TransServer << Mjxproto::Agent::Service
         #- Serverを立てる
         #- Clientと最初の通信をする。(クライアントの数がわかっていればいらないかも)
         #- TCPPlayerをクライアントの数の分立てる
-                
+    end          
 
     def do_action(action)
         #mjaiと同じ実装
@@ -42,7 +43,7 @@ class TransServer << Mjxproto::Agent::Service
     end
 
         
-    def step(new_event):
+    def step(new_event)
         # do_actionの呼ばれ方がActiveGame内で11パターンあったので、それらを模倣する
     end
     
@@ -56,9 +57,23 @@ class TransServer << Mjxproto::Agent::Service
         #  行動したプレイヤーをobservationから出力する。
     end
 
+
+    def extract_difference(previous_history = @_mjx_event_history, observation)  # event_historyの差分を取り出す
+        if !previous_history
+            return current_history = observation.event_history.events
+        end
+
+        current_history = observation.event_history.events
+        difference_history = current_history[previous_history.length ..]
+        @_mjx_event_history = current_history  #更新
+        return difference_history
+    end
+
     
     def observe(observation)
-        # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等）
+        history_difference = extract_difference(@_mjx_event_history, observation)
+        # mjx_actions = differnce_to_mjai_actions(target_player, history_difference, observation)
+        # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
     end
 
 
@@ -66,8 +81,9 @@ class TransServer << Mjxproto::Agent::Service
         obserbve(observation)
         curr_player = get_curr_player(observation)
         response = none
-        for mjai_action in self.mjai_new_actinos:
+        for mjai_action in self.mjai_new_actinos
             response = self.do_action(mjai_action)
+        end
         self.next_mjx_actions = update_next_actions(response)
         return self.next_mjx_actions[curr_player]
     end

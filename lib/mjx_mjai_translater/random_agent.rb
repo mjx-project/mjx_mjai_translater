@@ -20,4 +20,4 @@ def main
   s.run_till_terminated_or_interrupted([1, 'int', 'SIGQUIT'])
 end
 
-main
+#main
