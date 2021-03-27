@@ -7,11 +7,12 @@ require 'google/protobuf'
 require './lib/mjx_mjai_translater/trans_sever'
 require 'json'
 
-def observation_from_json(lines,line)
+def observation_from_json(lines,line)  # 特定の行を取得する
     json = JSON.load(lines[line])
     json_string = Google::Protobuf.encode_json(json)
     proto_observation = Google::Protobuf.decode_json(Mjxproto::Observation, json_string)
 end
+
 RSpec.describe  TransServer do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
@@ -32,3 +33,16 @@ RSpec.describe  TransServer do
     end
 end
 
+
+RSpec.describe "observation間のdrawsの変動" do  # ツモ牌の情報の取得がdraws[-1]で良いことを確約するためのテスト
+    file = File.open("spec/resources/observations-000.json", "r")
+    lines = file.readlines
+    previous_draws = []
+    it "変動が1以下であること" do
+        lines.length.times do |line|
+            current_draws = observation_from_json(lines, line).private_info.draws  
+            expect(current_draws.length - previous_draws.length).to be <= 1
+            previous_draws = current_draws  # 更新
+        end
+    end
+end
