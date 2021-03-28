@@ -1,10 +1,17 @@
 # possibleactionsをmjaiのactionのフォーマットに変換する
 #require "./open_converter.rb"
+this_dir = __dir__
+lib_dir = File.join(this_dir, '../mjxproto')
+$LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
+require 'mjx_pb'
+require 'mjx_services_pb'
+require 'google/protobuf'
 
 
 class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラスじゃなくても良いかも
 
-  def initialize()
+  def initialize(absolutepos_id)
+    @absolutepos_id_hash = absolutepos_id
   end
 
 
@@ -23,7 +30,15 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_event_to_mjai_actiom(event)
-    #ここにmjxのeventからmjaiのactionへの変換を実装
+  def mjx_event_to_mjai_action(event)
+    if event.type == :EVENT_TYPE_DRAW
+      return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # 全て？で統一
+    end
+    if event.type == :EVENT_TYPE_DISCARD_FROM_HAND
+      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>false}
+    end
+    if event.type == :EVENT_TYPE_DISCARD_DRAWN_TILE
+      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>true}
+    end 
   end
 end

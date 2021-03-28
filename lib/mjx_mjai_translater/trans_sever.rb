@@ -12,6 +12,8 @@ class TransServer < Mjxproto::Agent::Service
     
     def initialize()
         @players = []
+        @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
+        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応
         @_mjx_event_history = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
@@ -73,8 +75,8 @@ class TransServer < Mjxproto::Agent::Service
     def convert_to_mjai_actions(history_difference)
         # event_histryの差分に対して他のfileで定義されている変換関数を適用する。
         mjai_actions = []
-        history_difference.length.time |i|
-           mjai_action = MjxToMjai.mjx_event_to_mjai_action(history_difference[i])
+        history_difference.length.times do |i|
+           mjai_action = MjxToMjai.new(@absolutepos_id_hash).mjx_event_to_mjai_action(history_difference[i])  # mjxのeventをmjai actioinに変換
            mjai_actions.push(mjai_action)
         end
         return mjai_actions

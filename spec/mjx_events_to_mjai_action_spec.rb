@@ -20,10 +20,11 @@ RSpec.describe TransServer do
         previous_history = observation_from_json(lines, 0).event_history.events
         observation = observation_from_json(lines, 1)
         history_difference = trans_server.extract_difference(previous_history, observation)
-        expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"`E", "tumogiri"=>false}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>1,"pai"=>"`S", "tumogiri"=>false}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>2,"pai"=>"`1s", "tumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>3,"pai"=>"`E", "tumogiri"=>false}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"}]  # 牌の対応はmjconvertの関数を参考にしている。
+        puts history_difference
+        expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"E", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},
+                                                                                {"type"=>"dahai","actor"=>1,"pai"=>"S", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
+                                                                                {"type"=>"dahai","actor"=>2,"pai"=>"1s", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
+                                                                                {"type"=>"dahai","actor"=>3,"pai"=>"E", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # mjaiのwikiを参考に作成
     end
     it "リーチ" do
         #38, 39
