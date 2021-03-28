@@ -1,7 +1,7 @@
 require "./lib/mjx_mjai_translater/mjx_to_mjai"
 
 
-RSpec.describe  MjxToMjai do
+RSpec.describe  MjxToMjai do  # tile変換のテスト
   it "protoの赤tileがmjaiのtileに変換できること" do
     expect(MjxToMjai.new().proto_tile_to_mjai_tile(16)).to eq "5mr"
   end
