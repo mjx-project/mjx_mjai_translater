@@ -2,7 +2,7 @@
 #require "./open_converter.rb"
 
 
-class MjxToMjai   # mjaiのアクションをmjxの者に変換する際に,mjxのpossible actionsとの照合をするため。
+class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラスじゃなくても良いかも
 
   def initialize()
   end

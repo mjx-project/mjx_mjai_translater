@@ -5,6 +5,7 @@ require "grpc"
 require 'mjx_services_pb'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require 'random_agent'
+require 'mjx_to_mjai'
 #変換サーバの本体
 
 class TransServer < Mjxproto::Agent::Service
@@ -62,7 +63,6 @@ class TransServer < Mjxproto::Agent::Service
         if !previous_history
             return current_history = observation.event_history.events
         end
-
         current_history = observation.event_history.events
         difference_history = current_history[previous_history.length ..]
         @_mjx_event_history = current_history  #更新
@@ -72,11 +72,12 @@ class TransServer < Mjxproto::Agent::Service
 
     def convert_to_mjai_actions(history_difference)
         # event_histryの差分に対して他のfileで定義されている変換関数を適用する。
-        # mjai_actions = []
-        # for i in range(len(history_difference)):
-        #    mjai_action = mjx_event_to_mjai_action(history_difference[i])
-        #    mjai_actions.append(mjai_action)
-        # return mjai_actions
+        mjai_actions = []
+        history_difference.length.time |i|
+           mjai_action = MjxToMjai.mjx_event_to_mjai_action(history_difference[i])
+           mjai_actions.push(mjai_action)
+        end
+        return mjai_actions
     end
 
     
