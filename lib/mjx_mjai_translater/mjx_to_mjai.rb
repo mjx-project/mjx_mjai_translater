@@ -21,4 +21,9 @@ class MjxToMjai   # mjaiのアクションをmjxの者に変換する際に,mjx�
     end
     return num_zihai_dict[(proto_tile % 36).div(4)]  #字牌
   end
+
+
+  def mjx_event_to_mjai_actiom(event)
+    #ここにmjxのeventからmjaiのactionへの変換を実装
+  end
 end
