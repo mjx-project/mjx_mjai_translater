@@ -21,7 +21,7 @@ class OpenConverter
   end
 
 
-  def stolen_tile(open)
+  def open_stolen_tile(open)
   end
   
   
