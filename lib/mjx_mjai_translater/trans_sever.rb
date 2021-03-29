@@ -5,12 +5,15 @@ require "grpc"
 require 'mjx_services_pb'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require 'random_agent'
+require 'mjx_to_mjai'
 #変換サーバの本体
 
 class TransServer < Mjxproto::Agent::Service
     
     def initialize()
         @players = []
+        @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
+        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応
         @_mjx_event_history = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
@@ -62,17 +65,27 @@ class TransServer < Mjxproto::Agent::Service
         if !previous_history
             return current_history = observation.event_history.events
         end
-
         current_history = observation.event_history.events
         difference_history = current_history[previous_history.length ..]
         @_mjx_event_history = current_history  #更新
         return difference_history
     end
 
+
+    def convert_to_mjai_actions(history_difference)
+        # event_histryの差分に対して他のfileで定義されている変換関数を適用する。
+        mjai_actions = []
+        history_difference.length.times do |i|
+           mjai_action = MjxToMjai.new(@absolutepos_id_hash).mjx_event_to_mjai_action(history_difference[i])  # mjxのeventをmjai actioinに変換
+           mjai_actions.push(mjai_action)
+        end
+        return mjai_actions
+    end
+
     
     def observe(observation)
         history_difference = extract_difference(@_mjx_event_history, observation)
-        # mjx_actions = differnce_to_mjai_actions(target_player, history_difference, observation)
+        # mjx_actions = convert_to_mjai_actions(history_difference)
         # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
     end
 

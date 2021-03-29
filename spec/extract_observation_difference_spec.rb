@@ -5,7 +5,6 @@ require './lib/mjxproto/mjx_pb'
 require './lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/trans_sever'
-require 'json'
 
 def observation_from_json(lines,line)  # 特定の行を取得する
     json = JSON.load(lines[line])
