@@ -3,6 +3,8 @@ class OpenConverter
     @open = open
   end
 #必要な情報
-# -晒した牌の情報 
+# 誰から鳴いたか
+# 何を鳴いたか
+# 晒した牌 
 
 end
