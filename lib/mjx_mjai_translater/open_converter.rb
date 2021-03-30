@@ -1,6 +1,6 @@
 class OpenConverter
   def initialize(open)
-    @open = open
+    @bits = open
   end
 #必要な情報
 # ポン,チー,ダイミンカン 
@@ -13,7 +13,21 @@ class OpenConverter
 # アンカン
 # consumed: 晒した牌
 
-  def open_event_type(open)
+
+  def open_event_type()  # rubyでは0はfalseを意味しない
+    if (1 << 2 & @bits) != 0
+      return "chi"
+    elsif 1 << 3 & @bits != 0
+      return "pon"
+    elsif 1 << 4 & @bits != 0
+      return "kakan"
+    else
+      if Mjxproto::RelativePos::RELATIVE_POS_SELF == @bits & 3
+          return "ankan"
+      else
+          return "daiminkan"
+      end
+    end
   end
 
 
@@ -26,6 +40,6 @@ class OpenConverter
   
   
   def open_tiles(open)
-  def
+  end
 
 end
