@@ -29,3 +29,22 @@ RSpec.describe "open_from" do   # 誰から鳴いたのか必要なのはpon chi
         expect(open_converter.open_from()).to eq Mjxproto::RelativePos::RELATIVE_POS_LEFT
     end
 end
+
+
+RSpec.describe "open_stolen_tile_type" do
+    it "1s" do
+        open_converter = OpenConverter.new(28722)
+        expect(open_converter.open_from()).to eq 18
+    it "3s" do
+        open_converter = OpenConverter.new(49495)
+        expect(open_converter.open_from()).to eq 20
+    end
+    it "C" do
+        open_converter = OpenConverter.new(51306)
+        expect(open_converter.open_from()).to eq 33
+    end
+    it "P" do
+        open_converter = OpenConverter.new(31744)
+        expect(open_converter.open_from()).to eq 31
+    end
+end

@@ -14,8 +14,8 @@ class OpenConverter
 # consumed: 晒した牌
 
 
-  def open_event_type()  # rubyでは0はfalseを意味しない
-    if (1 << 2 & @bits) != 0
+  def open_event_type()
+    if (1 << 2 & @bits) != 0  # rubyでは0はfalseを意味しない
       return "chi"
     elsif 1 << 3 & @bits != 0
       return "pon"
@@ -31,7 +31,7 @@ class OpenConverter
   end
 
 
-  def open_from()
+  def open_from()  # 誰から鳴いたか
     p Mjxproto::RelativePos::RELATIVE_POS_LEFT
     event_type = open_event_type()
     if event_type == "chi"
