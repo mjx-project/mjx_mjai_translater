@@ -31,7 +31,16 @@ class OpenConverter
   end
 
 
-  def open_from(open)
+  def open_from()
+    p Mjxproto::RelativePos::RELATIVE_POS_LEFT
+    event_type = open_event_type()
+    if event_type == "chi"
+        return Mjxproto::RelativePos::RELATIVE_POS_LEFT
+    elsif event_type == "pon" or event_type == "daiminkan"  or event_type == "kakan"
+        return @bits & 3 # ポンチーダイミンカンの場合はrelativeposは3通り
+    else
+        return Mjxproto::RelativePos::RELATIVE_POS_SELF
+    end
   end
 
 
