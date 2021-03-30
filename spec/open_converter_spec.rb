@@ -17,3 +17,15 @@ RSpec.describe "event_type" do
         expect(open_converter.open_event_type()).to eq "kakan" 
     end
 end
+
+
+RSpec.describe "open_from" do   # 誰から鳴いたのか必要なのはpon chi daiminkanのみ
+    it "対面" do
+        open_converter = OpenConverter.new(51306)
+        expect(open_converter.open_from()).to eq Mjxproto::RelativePos::RELATIVE_POS_MID
+    end
+    it "上家" do
+        open_converter = OpenConverter.new(49495)
+        expect(open_converter.open_from()).to eq Mjxproto::RelativePos::RELATIVE_POS_LEFT
+    end
+end
