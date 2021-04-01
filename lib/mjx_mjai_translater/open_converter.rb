@@ -206,7 +206,7 @@ end
   end
 
 
-  def open_to_maji_tile(open)
+  def open_to_mjai_tile(open)
     open_red_mjai_tile_dict = {51=>"5mr", 52=>"5sr", 53=>"5pr"}
     mod9_kind_dict = {0 => "m", 1 => "s", 2 => "p"}
     num_zihai_dict = {0 => "E", 1 => "S", 2 => "W", 3 => "N", 4 => "P", 5 => "F", 6 => "C"}
@@ -214,12 +214,9 @@ end
         return open_red_mjai_tile_dict[open]
     end
     if open.div(9) <= 2
-        ((open % 9) + 1).to_i.to_s + mod9_kind_dict[open.div(9)]
+        return ((open % 9) + 1).to_i.to_s + mod9_kind_dict[open.div(9)]
     end
-    num_zihai_dict[open % 9]
-
-  end
-    
-    
+    return num_zihai_dict[open % 9]
+  end 
 end
 
