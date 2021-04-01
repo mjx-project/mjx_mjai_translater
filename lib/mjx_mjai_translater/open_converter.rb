@@ -217,6 +217,8 @@ end
         ((open % 9) + 1).to_i.to_s + mod9_kind_dict[open.div(9)]
     end
     num_zihai_dict[open % 9]
+
+  end
     
     
 end
