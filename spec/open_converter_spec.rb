@@ -64,7 +64,7 @@ end
 
 
 
-RSpec.describe "open_tile_type" do
+RSpec.describe "open_tile_types" do
     it "pon C" do
         open_converter = OpenConverter.new(51306)
         expect(open_converter.open_tile_types()).to eq [33, 33, 33]
