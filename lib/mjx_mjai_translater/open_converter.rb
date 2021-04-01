@@ -162,6 +162,7 @@ end
           return open
       end
   end
+  
 
 
   def open_stolen_tile_type()
