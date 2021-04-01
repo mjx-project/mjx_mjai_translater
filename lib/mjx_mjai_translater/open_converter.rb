@@ -77,10 +77,10 @@ class OpenConverter
   end
 
 
-  def has_red_chi(bits: int)  # TODO テストgit
+  def has_red_chi()  # TODO テストgit
       min_starts_include5_mod9 = [2, 3, 4]
       min_tile = _min_tile_chi()
-      if min_starts_include5_mod9.include?(min_tile % 9)
+      if !min_starts_include5_mod9.include?(min_tile % 9)
           false
       else
           start_from3 = min_tile % 9 == 2  # min_tile で場合分け
@@ -117,8 +117,20 @@ class OpenConverter
   end
 
 
+  def has_red()
+    event_type = open_event_type()
+    if event_type == "chi"
+        return has_red_chi()
+    elsif event_type == "pon" or event_type == "kakan"
+        return has_red_pon_kan_added()
+    else
+        return has_red_kan_closed_kan_opend()  # ダイミンカンとアンカンは必ず赤を含む
+    end
+end
+
+
   def transform_red_stolen(stolen_tile) 
-      red_dict = {4=> 51, 13=> 52, 22=> 53} # openの5:mjscoreの赤５
+      red_dict = { 4=> 51, 13=> 52, 22=> 53 } # openの5:mjscoreの赤５
       if is_stolen_red(stolen_tile)
           return red_dict[stolen_tile]
       else
@@ -127,14 +139,24 @@ class OpenConverter
   end
 
 
+  def replace_array_by_hash(array_, hash_)
+    hash_.keys.each do |key|
+        if array_.include?(key)
+            array_[array_.find_index(key)] = hash_[key]
+        end
+    end
+    return array_
+  end
+
+
   def transform_red_open(open, event_type)
-      red_dict = {4=> 51, 13=> 52, 22=> 53}
+      red_dict = { 4=>51, 13=>52, 22=>53 }
       fives = [4, 13, 22]
       if !has_red()
           return open
       end
       if event_type == "chi"
-          return []  #[red_dict[i] if i in fives else i for i in open]
+          return replace_array_by_hash(open, red_dict)
       else
           open[-1] = red_dict[open[-1]]
           return open
@@ -156,6 +178,30 @@ class OpenConverter
           return transform_red_stolen(stolen_tile_kind)
       end
   end
-  
+
+
+  def open_tile_types() 
+    reds = [51, 52, 53]
+    red_five_dict = { 51=>4, 52=>13, 53=>22 }
+    event_type = open_event_type()
+    if event_type == "chi"
+        min_tile = _min_tile_chi()
+        open = [min_tile, min_tile + 1, min_tile + 2]
+        return transform_red_open(open, event_type)
+    end
+    stolen_tile_kind = open_stolen_tile_type()
+    if reds.include?(stolen_tile_kind)  # 赤だった場合はopenのformatに置換しないと、複数の同じ赤を持ったopenが生成される。
+        stolen_tile_kind = red_five_dict[stolen_tile_kind]
+    else
+        nil
+    end
+    if event_type == "pon"
+        open = [stolen_tile_kind] * 3
+        return transform_red_open(open, event_type)
+    else
+        open = [stolen_tile_kind] * 4
+        return transform_red_open(open, event_type)
+    end
+  end
 end
 
