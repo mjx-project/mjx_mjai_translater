@@ -63,6 +63,7 @@ RSpec.describe "open_stolen_tile_type" do
 end
 
 
+
 RSpec.describe "open_tile_type" do
     it "pon C" do
         open_converter = OpenConverter.new(51306)
