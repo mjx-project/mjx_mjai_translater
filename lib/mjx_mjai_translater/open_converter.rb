@@ -130,7 +130,7 @@ end
 
 
   def transform_red_stolen(stolen_tile) 
-      red_dict = { 4=> 51, 13=> 52, 22=> 53 } # openの5:mjscoreの赤５
+      red_dict = { 4=> "5mr", 13=> "5sr", 22=> "5pr" } # openの5:mjscoreの赤５
       if is_stolen_red(stolen_tile)
           return red_dict[stolen_tile]
       else
@@ -150,7 +150,7 @@ end
 
 
   def transform_red_open(open, event_type)
-      red_dict = { 4=>51, 13=>52, 22=>53 }
+      red_dict = { 4=>"5mr", 13=>"5sr", 22=>"5pr" }
       fives = [4, 13, 22]
       if !has_red()
           return open
@@ -182,8 +182,8 @@ end
 
 
   def open_tile_types() 
-    reds = [51, 52, 53]
-    red_five_dict = { 51=>4, 52=>13, 53=>22 }
+    reds = ["5mr", "5sr", "5pr"]
+    red_five_dict = { "5mr"=>4, "5sr"=>13, "5pr"=>22 }
     event_type = open_event_type()
     if event_type == "chi"
         min_tile = _min_tile_chi()
