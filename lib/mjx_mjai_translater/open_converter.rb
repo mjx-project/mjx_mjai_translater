@@ -32,7 +32,6 @@ class OpenConverter
 
 
   def open_from()  # 誰から鳴いたか
-    p Mjxproto::RelativePos::RELATIVE_POS_LEFT
     event_type = open_event_type()
     if event_type == "chi"
         return Mjxproto::RelativePos::RELATIVE_POS_LEFT
@@ -44,11 +43,132 @@ class OpenConverter
   end
 
 
-  def open_stolen_tile(open)
-  end
-  
-  
-  def open_tiles(open)
+  def _min_tile_chi()
+    x = (@bits >> 10).div(3)  # 0~21
+    min_tile = (x.div(7)) * 9 + x % 7  # 0~33 base 9
+    return min_tile
   end
 
+
+  def is_stolen_red(stolen_tile_kind)  # TODO: test  さらに小さい関数を作るか否か考えるべし
+      fives = [4, 13, 22]
+      reds = [14, 52, 88]
+      event_type = open_event_type()
+      if !fives.include?(stolen_tile_kind)
+          return false
+      end
+      if event_type == "chi"
+          stolen_tile_mod3 = (@bits >> 10) % 3  # 鳴いた牌のindex
+          stolen_tile_id_mod4 = (@bits >> (3 + 2 * stolen_tile_mod3)) % 4  # 鳴いた牌のi
+          return stolen_tile_id_mod4 == 0  # 鳴いた牌のid mod 4=0→赤
+      elsif event_type == "pon" || event_type == "kakan"
+          unused_id_mod4 = (@bits >> 5) % 4  # 未使用牌のid mod 4
+          stolen_tile_mod3 = (@bits >> 9) % 3  # 鳴いた牌のindex
+          return unused_id_mod4 != 0 && stolen_tile_mod3 == 0  # 未使用牌が赤でなく、鳴いた牌のインデックスが0の時→赤
+      else
+          return reds.include?((@bits >> 8))
+      end
+    end
+
+
+  def is_unused_red()
+      unused_id_mod4 = (@bits >> 5) % 4
+      return unused_id_mod4 == 0
+  end
+
+
+  def has_red_chi(bits: int)  # TODO テストgit
+      min_starts_include5_mod9 = [2, 3, 4]
+      min_tile = _min_tile_chi()
+      if min_starts_include5_mod9.include?(min_tile % 9)
+          false
+      else
+          start_from3 = min_tile % 9 == 2  # min_tile で場合分け
+          start_from4 = min_tile % 9 == 3
+          start_from5 = min_tile % 9 == 4
+          if start_from3  # 3から始まる→3番目の牌のid mod 4 =0 →赤
+              return (@bits >> 7) % 4 == 0
+          elsif start_from4
+              return (@bits >> 5) % 4 == 0
+          elsif start_from5
+              return (@bits >> 3) % 4 == 0
+          else
+              assert false
+          end
+      end
+  end
+
+  def has_red_pon_kan_added()  # TODO テスト ポンとカカンは未使用牌が赤かどうかで鳴牌に赤があるか判断
+      fives = [4, 13, 22, 51, 52, 53]
+      stolen_tile_kind = open_stolen_tile_type()
+      if fives.include?(stolen_tile_kind)
+          unused_id_mod4 = (@bits >> 5) % 4
+          return unused_id_mod4 != 0
+      else
+          return false
+      end
+  end
+
+
+  def has_red_kan_closed_kan_opend()
+      fives = [4, 13, 22, 51, 52, 53]
+      stolen_tile_kind = open_stolen_tile_type()
+      return fives.include?(stolen_tile_kind)
+  end
+
+
+  def has_red()
+      event_type = open_event_type()
+      if event_type == "chi"
+          return has_red_chi()
+      elsif event_type == "pon" || event_type == "kakan"
+          return has_red_pon_kan_added()
+      else
+          return has_red_kan_closed_kan_opend()  # ダイミンカンとアンカンは必ず赤を含む
+      end
+  end
+
+
+  def transform_red_stolen(stolen_tile) 
+      red_dict = {4=> 51, 13=> 52, 22=> 53} # openの5:mjscoreの赤５
+      if is_stolen_red(stolen_tile)
+          return red_dict[stolen_tile]
+      else
+          return stolen_tile
+      end
+  end
+
+
+  def transform_red_open(open, event_type)
+      red_dict = {4=> 51, 13=> 52, 22=> 53}
+      fives = [4, 13, 22]
+      if !has_red()
+          return open
+      end
+      if event_type == "chi"
+          return []  #[red_dict[i] if i in fives else i for i in open]
+      else
+          open[-1] = red_dict[open[-1]]
+          return open
+      end
+  end
+
+
+  def open_stolen_tile_type()
+      event_type = open_event_type()
+      if event_type == "chi"
+          min_tile = _min_tile_chi()
+          p min_tile
+          stolen_tile_kind = min_tile + (@bits >> 10) % 3
+          return transform_red_stolen(stolen_tile_kind)
+      elsif event_type == "pon" or event_type == "kakan"
+          stolen_tile_kind = (@bits >> 9).div(3)
+          return transform_red_stolen(stolen_tile_kind)
+      else
+          stolen_tile_kind = (@bits >> 8).div(4)
+          return transform_red_stolen(stolen_tile_kind)
+      end
+  end
+  
 end
+

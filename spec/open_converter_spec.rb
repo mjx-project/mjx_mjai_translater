@@ -34,17 +34,18 @@ end
 RSpec.describe "open_stolen_tile_type" do
     it "1s" do
         open_converter = OpenConverter.new(28722)
-        expect(open_converter.open_from()).to eq 18
+        expect(open_converter.open_stolen_tile_type()).to eq 18
+    end
     it "3s" do
         open_converter = OpenConverter.new(49495)
-        expect(open_converter.open_from()).to eq 20
+        expect(open_converter.open_stolen_tile_type()).to eq 20
     end
     it "C" do
         open_converter = OpenConverter.new(51306)
-        expect(open_converter.open_from()).to eq 33
+        expect(open_converter.open_stolen_tile_type()).to eq 33
     end
     it "P" do
         open_converter = OpenConverter.new(31744)
-        expect(open_converter.open_from()).to eq 31
+        expect(open_converter.open_stolen_tile_type()).to eq 31
     end
 end
