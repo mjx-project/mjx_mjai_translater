@@ -82,4 +82,3 @@ RSpec.describe "open_tile_types" do
         expect(open_converter.open_tile_types()).to eq [31, 31, 31, 31]
     end
 end
-
