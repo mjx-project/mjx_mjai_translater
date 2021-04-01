@@ -86,9 +86,15 @@ end
 
 RSpec.describe "open_to_mjai_tile" do
     it "1s" do
+        open_converter = OpenConverter.new(31744)
+        expect(open_converter.open_to_maji_tile(9)).to eq "1s"
     end
     it "P" do
+        open_converter = OpenConverter.new(31744)
+        expect(open_converter.open_to_maji_tile(31)).to eq "P"
     end
     it "red" do
+        open_converter = OpenConverter.new(31744)
+        expect(open_converter.open_to_mjai_tile()).to eq "5mr"
     end
 end
