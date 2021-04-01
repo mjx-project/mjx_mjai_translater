@@ -101,4 +101,15 @@ RSpec.describe "open_to_mjai_tile" do
         open_converter = OpenConverter.new(31744)
         expect(open_converter.open_to_mjai_tile(51)).to eq "5mr"
     end
+
+    Spec.describe "mjai_consumed" do
+        it "pon C" do
+            open_converter = OpenConverter.new(51306)
+            expect(open_converter.open_tile_types()).to eq [33, 33, 33]
+        end
+        it "chi 3s4s5s" do
+            open_converter = OpenConverter.new(49495)
+            expect(open_converter.open_tile_types()).to eq [20, 21, 22]
+        end
+    end
 end

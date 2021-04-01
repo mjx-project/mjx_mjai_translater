@@ -165,7 +165,7 @@ end
   
 
 
-  def open_stolen_tile_type()
+  def open_stolen_tile_type()  # 鳴いた牌
       event_type = open_event_type()
       if event_type == "chi"
           min_tile = _min_tile_chi()
@@ -181,7 +181,7 @@ end
   end
 
 
-  def open_tile_types() 
+  def open_tile_types() # 鳴いた牌全ての情報
     reds = [51, 52, 53]
     red_five_dict = { 51=>4, 52=>13, 53=>22 }
     event_type = open_event_type()
@@ -206,7 +206,7 @@ end
   end
 
 
-  def open_to_mjai_tile(open)
+  def open_to_mjai_tile(open)  # openをmjai_tileに変換する。
     open_red_mjai_tile_dict = {51=>"5mr", 52=>"5sr", 53=>"5pr"}
     mod9_kind_dict = {0 => "m", 1 => "s", 2 => "p"}
     num_zihai_dict = {0 => "E", 1 => "S", 2 => "W", 3 => "N", 4 => "P", 5 => "F", 6 => "C"}
