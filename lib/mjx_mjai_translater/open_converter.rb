@@ -117,18 +117,6 @@ class OpenConverter
   end
 
 
-  def has_red()
-      event_type = open_event_type()
-      if event_type == "chi"
-          return has_red_chi()
-      elsif event_type == "pon" || event_type == "kakan"
-          return has_red_pon_kan_added()
-      else
-          return has_red_kan_closed_kan_opend()  # ダイミンカンとアンカンは必ず赤を含む
-      end
-  end
-
-
   def transform_red_stolen(stolen_tile) 
       red_dict = {4=> 51, 13=> 52, 22=> 53} # openの5:mjscoreの赤５
       if is_stolen_red(stolen_tile)
@@ -158,7 +146,6 @@ class OpenConverter
       event_type = open_event_type()
       if event_type == "chi"
           min_tile = _min_tile_chi()
-          p min_tile
           stolen_tile_kind = min_tile + (@bits >> 10) % 3
           return transform_red_stolen(stolen_tile_kind)
       elsif event_type == "pon" or event_type == "kakan"

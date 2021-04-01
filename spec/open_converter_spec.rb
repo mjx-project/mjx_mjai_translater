@@ -31,6 +31,18 @@ RSpec.describe "open_from" do   # 誰から鳴いたのか必要なのはpon chi
 end
 
 
+RSpec.describe "red" do
+    it "has red" do
+        open_converter = OpenConverter.new(52503)
+        expect(open_converter.has_red()).to eq true
+    end
+    it "transform_red" do
+        open_converter = OpenConverter.new(52503)
+        expect(open_converter.transform_red_open([21, 22, 23], "chi")).to eq true
+    end
+end
+
+
 RSpec.describe "open_stolen_tile_type" do
     it "1s" do
         open_converter = OpenConverter.new(28722)
@@ -49,3 +61,24 @@ RSpec.describe "open_stolen_tile_type" do
         expect(open_converter.open_stolen_tile_type()).to eq 31
     end
 end
+
+
+RSpec.describe "open_tile_type" do
+    it "pon C" do
+        open_converter = OpenConverter.new(51306)
+        expect(open_converter.open_tile_type()).to eq [33, 33, 33]
+    end
+    it "chi 3s4s5s" do
+        open_converter = OpenConverter.new(49495)
+        expect(open_converter.open_tile_type()).to eq 20 [20, 21, 22]
+    end
+    it "kakan 1s" do
+        open_converter = OpenConverter.new(28722)
+        expect(open_converter.open_stolen_type()).to eq [18, 18, 18, 18]
+    end
+    it "ankan P" do
+        open_converter = OpenConverter.new(31744)
+        expect(open_converter.open_stolen_type()).to eq [31, 31, 31, 31]
+    end
+end
+
