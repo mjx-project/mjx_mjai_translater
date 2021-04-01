@@ -13,7 +13,7 @@ class TransServer < Mjxproto::Agent::Service
     def initialize()
         @players = []
         @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
-        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応
+        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因
         @_mjx_event_history = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []

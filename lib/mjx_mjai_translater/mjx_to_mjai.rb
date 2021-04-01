@@ -1,5 +1,6 @@
 # possibleactionsをmjaiのactionのフォーマットに変換する
-#require "./open_converter.rb"
+$LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
+require "open_converter.rb"
 this_dir = __dir__
 lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
@@ -40,5 +41,24 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if event.type == :EVENT_TYPE_DISCARD_DRAWN_TILE
       return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>true}
     end 
+    if event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_KAN_OPEND
+      open_converter = OpenConverter.new(event.open)
+      type = open_converter.event_type()
+      target = open_converter.open_from() # absolute_posを表すsymbol object
+      stolen_tile = open_converter.stolen_tile()
+      consumed_tile = open_converter.consumed_tile()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "target"=>@absolutepos_id_hash[target], "pai"=>stolen_tile, "consumed_tile"=>consumed_tile}
+    end
+    if event.type = :EVENT_TYPE_KAN_ADDED
+      type = open_converter.event_type()
+      stolen_tile = open_converter.stolen_tile()
+      consumed_tile = open_converter.consumed_tile()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "pai"=>stolen_tile, "consumed_tile"=>consumed_tile}
+    end
+    if event.type = :EVENT_TYPE_KAN_CLOSED
+      type = open_converter.event_type()
+      consumed_tile = open_converter.consumed_tile()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who],"consumed_tile"=>consumed_tile}
+    end
   end
 end
