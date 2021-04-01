@@ -14,7 +14,7 @@ class OpenConverter
 # consumed: 晒した牌
 
 
-  def open_event_type()
+  def open_event_type()  # eventのtype
     if (1 << 2 & @bits) != 0  # rubyでは0はfalseを意味しない
       return "chi"
     elsif 1 << 3 & @bits != 0
@@ -50,7 +50,7 @@ class OpenConverter
   end
 
 
-  def is_stolen_red(stolen_tile_kind)  # TODO: test  さらに小さい関数を作るか否か考えるべし
+  def is_stolen_red(stolen_tile_kind)
       fives = [4, 13, 22]
       reds = [14, 52, 88]
       event_type = open_event_type()
@@ -77,7 +77,7 @@ class OpenConverter
   end
 
 
-  def has_red_chi()  # TODO テストgit
+  def has_red_chi()  # chiが赤を持っているか
       min_starts_include5_mod9 = [2, 3, 4]
       min_tile = _min_tile_chi()
       if !min_starts_include5_mod9.include?(min_tile % 9)
@@ -98,7 +98,8 @@ class OpenConverter
       end
   end
 
-  def has_red_pon_kan_added()  # TODO テスト ポンとカカンは未使用牌が赤かどうかで鳴牌に赤があるか判断
+
+  def has_red_pon_kan_added()  # ponが赤を持っているか
       fives = [4, 13, 22, 51, 52, 53]
       stolen_tile_kind = open_stolen_tile_type()
       if fives.include?(stolen_tile_kind)
@@ -117,7 +118,7 @@ class OpenConverter
   end
 
 
-  def has_red()
+  def has_red()  # 赤を持っているか
     event_type = open_event_type()
     if event_type == "chi"
         return has_red_chi()
@@ -208,7 +209,7 @@ end
 
   def open_to_mjai_tile(open)  # openをmjai_tileに変換する。
     open_red_mjai_tile_dict = {51=>"5mr", 52=>"5sr", 53=>"5pr"}
-    mod9_kind_dict = {0 => "m", 1 => "s", 2 => "p"}
+    mod9_kind_dict = {0 => "m", 1 => "p", 2 => "s"}
     num_zihai_dict = {0 => "E", 1 => "S", 2 => "W", 3 => "N", 4 => "P", 5 => "F", 6 => "C"}
     if open_red_mjai_tile_dict.include?(open)
         return open_red_mjai_tile_dict[open]
@@ -218,5 +219,28 @@ end
     end
     return num_zihai_dict[open % 9]
   end 
+
+
+  def mjai_stolen()  # 鳴いたはいをmjaiのformatで返すtrans_serverへのinterface
+    open_stolen_tile = open_stolen_tile_type()
+    mjai_tile = open_to_mjai_tile(open_stolen_tile)
+    return mjai_tile
+  end
+
+
+  def mjai_consumed()  # 晒した牌
+    open_stolen_tile = open_stolen_tile_type()
+    open_tiles = open_tile_types()
+    event_type = open_event_type()
+    if has_red || event_type == "chi"
+        open_tiles.delete(open_stolen_tile)  # 鳴いたはいを削除する。
+        consumed_tiles = open_tiles.map {|x| open_to_mjai_tile(x)}
+        return consumed_tiles
+    else
+        open_tiles.delete_at 0
+        consumed_tiles = open_tiles.map {|x| open_to_mjai_tile(x)}
+        return consumed_tiles
+    end
+  end
 end
 

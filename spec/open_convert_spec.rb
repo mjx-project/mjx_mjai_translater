@@ -84,14 +84,14 @@ RSpec.describe "open_tile_types" do
 end
 
 
-RSpec.describe "open_to_mjai_tile" do
+RSpec.describe "open_to_mjai_tile" do  # openからmjaiのtileへの変換のテスト
     it "1s" do
         open_converter = OpenConverter.new(31744)
-        expect(open_converter.open_to_mjai_tile(9)).to eq "1s"
+        expect(open_converter.open_to_mjai_tile(9)).to eq "1p"
     end
-    it "5p" do
+    it "5s" do
         open_converter = OpenConverter.new(31744)
-        expect(open_converter.open_to_mjai_tile(22)).to eq "5p"
+        expect(open_converter.open_to_mjai_tile(22)).to eq "5s"
     end
     it "P" do
         open_converter = OpenConverter.new(31744)
@@ -101,15 +101,28 @@ RSpec.describe "open_to_mjai_tile" do
         open_converter = OpenConverter.new(31744)
         expect(open_converter.open_to_mjai_tile(51)).to eq "5mr"
     end
+end
 
-    Spec.describe "mjai_consumed" do
-        it "pon C" do
-            open_converter = OpenConverter.new(51306)
-            expect(open_converter.open_tile_types()).to eq [33, 33, 33]
-        end
-        it "chi 3s4s5s" do
-            open_converter = OpenConverter.new(49495)
-            expect(open_converter.open_tile_types()).to eq [20, 21, 22]
-        end
+
+RSpec.describe "mjai_stolen" do  # 鳴いた牌のmjaiのformatへの変換
+    it "pon C" do
+        open_converter = OpenConverter.new(51306)
+        expect(open_converter.mjai_stolen()).to eq  "C"
+    end
+    it "chi 3s4s5s" do
+        open_converter = OpenConverter.new(49495)
+        expect(open_converter.mjai_stolen()).to eq  "3s"
+   end
+end
+
+
+RSpec.describe "mjai_consumed" do # 晒した牌のmjaiのformatへの変換
+     it "pon C" do
+         open_converter = OpenConverter.new(51306)
+         expect(open_converter.mjai_consumed()).to eq  ["C", "C"]
+     end
+     it "chi 3s4s5s" do
+         open_converter = OpenConverter.new(49495)
+         expect(open_converter.mjai_consumed()).to eq  ["4s", "5s"]
     end
 end
