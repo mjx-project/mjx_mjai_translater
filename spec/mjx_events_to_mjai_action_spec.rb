@@ -30,7 +30,11 @@ RSpec.describe TransServer do
         previous_history = observation_from_json(lines, 38).event_history.events
         observation = observation_from_json(lines, 39)
         history_difference = trans_server.extract_difference(previous_history, observation)
-        expect(trans_server.convert_to_mjai_actions(history_difference)).to eq []
+        p history_difference
+        expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"2p", "tsumogiri"=>false}, {"type"=>"pon","actor"=>2,"target"=>0,"pai"=>"2p","consumed"=>["2p","2p"]},
+        {"type"=>"dahai","actor"=>2,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"tsumo", "actor"=>3,"pai"=>"?"},{"type"=>"reach","actor"=>3}, 
+        {"type"=>"dahai", "actor"=>3,"pai"=>"3p", "tsumogiri"=>false}, {"type"=>"reach_accepted","actor"=>3},
+        {"type"=>"tsumo", "actor"=>0, "pai"=>"?"}]
         #38, 39
     end
     it "チー" do
@@ -38,21 +42,19 @@ RSpec.describe TransServer do
         observation = observation_from_json(lines, 85)
         history_difference = trans_server.extract_difference(previous_history, observation)
         expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"chi","actor"=>1,"target"=>0,"pai"=>"1p", "consumed"=>["2p","3p"]},
-                                                                                {"type"=>"dahai","actor"=>1,"pai"=>"6s", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>2,"pai"=>"1s", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>3,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # history_differenceを目視で確認し、mjconvertにかけてmjaiのformatと照合した。
+        {"type"=>"dahai","actor"=>1,"pai"=>"6s", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
+        {"type"=>"dahai","actor"=>2,"pai"=>"1s", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
+        {"type"=>"dahai","actor"=>3,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]
         #84, 85
     end
     it "アンカン" do
         previous_history = observation_from_json(lines, 153).event_history.events
         observation = observation_from_json(lines, 154)
         history_difference = trans_server.extract_difference(previous_history, observation)
-        #p history_difference
-        #p trans_server.convert_to_mjai_actions(history_difference)
         expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"1s", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},
-        {"type"=>"dahai","actor"=>1,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},{"type"=>"ankan","actor"=>2,"consumed":["1p","1p","1p","1p"]},
-        {"type":"dora","dora_marker":"N"}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},{"type"=>"dahai","actor"=>2,"pai"=>"9m", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
-        {"type"=>"dahai","actor"=>3,"pai"=>"P", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # history_differenceを目視で確認し、mjconvertにかけてmjaiのformatと照合した。
+        {"type"=>"dahai","actor"=>1,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},{"type"=>"ankan","actor"=>2,"consumed"=>["1p","1p","1p","1p"]},
+        {"type"=>"dora","dora_marker"=>"W"}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},{"type"=>"dahai","actor"=>2,"pai"=>"9m", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
+        {"type"=>"dahai","actor"=>3,"pai"=>"N", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # history_differenceを目視で確認し、mjconvertにかけてmjaiのformatと照合した。
         # 153 154  
     end                                                        
 
