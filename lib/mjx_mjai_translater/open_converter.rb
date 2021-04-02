@@ -1,3 +1,10 @@
+this_dir = __dir__
+lib_dir = File.join(this_dir, '../mjxproto')
+$LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
+require 'mjx_pb'
+require 'mjx_services_pb'
+require 'google/protobuf'
+
 class OpenConverter
   def initialize(open)
     @bits = open
@@ -22,7 +29,7 @@ class OpenConverter
     elsif 1 << 4 & @bits != 0
       return "kakan"
     else
-      if Mjxproto::RelativePos::RELATIVE_POS_SELF == @bits & 3
+      if (Mjxproto::RelativePos::RELATIVE_POS_LEFT == @bits & 3) != 0
           return "ankan"
       else
           return "daiminkan"
@@ -243,4 +250,9 @@ end
     end
   end
 end
+
+open_converter = OpenConverter.new(9216)
+type = open_converter.open_event_type()
+p open_converter.mjai_stolen()
+
 

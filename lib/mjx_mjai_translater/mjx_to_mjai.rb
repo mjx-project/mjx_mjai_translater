@@ -59,12 +59,12 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       open_converter = OpenConverter.new(event.open)
       type = open_converter.open_event_type()
       stolen_tile = open_converter.mjai_stolen()
-      consumed_tile = open_converter.mjai_consumed()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "pai"=>stolen_tile, "consumed"=>consumed_tile}
     end
     if event.type = :EVENT_TYPE_KAN_CLOSED  # ankan
       open_converter = OpenConverter.new(event.open)
-      type = open_converter.event_type()
+      type = open_converter.open_event_type()
+      p open_converter.mjai_stolen()
       consumed_tile = open_converter.mjai_consumed()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who],"consumed"=>consumed_tile}
     end
