@@ -239,7 +239,9 @@ end
     open_stolen_tile = open_stolen_tile_type()
     open_tiles = open_tile_types()
     event_type = open_event_type()
-    if has_red || event_type == "chi"
+    if event_type == "ankan"
+        return open_tiles.map {|x| open_to_mjai_tile(x)}
+    elsif has_red || event_type == "chi"
         open_tiles.delete(open_stolen_tile)  # 鳴いたはいを削除する。
         consumed_tiles = open_tiles.map {|x| open_to_mjai_tile(x)}
         return consumed_tiles
@@ -252,7 +254,7 @@ end
 end
 
 open_converter = OpenConverter.new(9216)
-type = open_converter.open_event_type()
-p open_converter.mjai_stolen()
+type = open_converter.open_to_mjai_tile(117)
+p type
 
 

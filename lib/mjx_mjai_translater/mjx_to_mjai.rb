@@ -55,18 +55,23 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       consumed_tile = open_converter.mjai_consumed()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "target"=>@absolutepos_id_hash[target], "pai"=>stolen_tile, "consumed"=>consumed_tile}
     end
-    if event.type = :EVENT_TYPE_KAN_ADDED  # kakan
+    if event.type == :EVENT_TYPE_KAN_ADDED  # kakan
       open_converter = OpenConverter.new(event.open)
       type = open_converter.open_event_type()
       stolen_tile = open_converter.mjai_stolen()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "pai"=>stolen_tile, "consumed"=>consumed_tile}
     end
-    if event.type = :EVENT_TYPE_KAN_CLOSED  # ankan
+    if event.type == :EVENT_TYPE_KAN_CLOSED  # ankan
       open_converter = OpenConverter.new(event.open)
       type = open_converter.open_event_type()
-      p open_converter.mjai_stolen()
       consumed_tile = open_converter.mjai_consumed()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who],"consumed"=>consumed_tile}
     end
+    if event.type == :EVENT_TYPE_NEW_DORA
+      return{"type"=>"dora", "dora_marker"=>proto_tile_to_mjai_tile(event.tile)}
+    end
   end
 end
+
+a = MjxToMjai.new({})
+p a.proto_tile_to_mjai_tile(121)
