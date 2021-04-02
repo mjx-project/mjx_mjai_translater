@@ -253,8 +253,4 @@ end
   end
 end
 
-open_converter = OpenConverter.new(9216)
-type = open_converter.open_to_mjai_tile(117)
-p type
-
 
