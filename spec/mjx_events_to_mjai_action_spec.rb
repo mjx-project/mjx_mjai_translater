@@ -26,6 +26,7 @@ RSpec.describe TransServer do
                                                                                 {"type"=>"dahai","actor"=>3,"pai"=>"E", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # mjaiのwikiを参考に作成
     end
     it "リーチ" do
+        
         #38, 39
     end
     it "ポン" do
