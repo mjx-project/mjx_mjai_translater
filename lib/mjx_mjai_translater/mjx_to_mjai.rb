@@ -53,19 +53,20 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       target = @absolute_pos[target_index] # absolute_posを表すsymbol object
       stolen_tile = open_converter.mjai_stolen()
       consumed_tile = open_converter.mjai_consumed()
-      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "target"=>@absolutepos_id_hash[target], "pai"=>stolen_tile, "consumed_tile"=>consumed_tile}
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "target"=>@absolutepos_id_hash[target], "pai"=>stolen_tile, "consumed"=>consumed_tile}
     end
     if event.type = :EVENT_TYPE_KAN_ADDED  # kakan
-      type = open_converter.event_type()
-      
-      stolen_tile = open_converter.stolen_tile()
-      consumed_tile = open_converter.consumed_tile()
-      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "pai"=>stolen_tile, "consumed_tile"=>consumed_tile}
+      open_converter = OpenConverter.new(event.open)
+      type = open_converter.open_event_type()
+      stolen_tile = open_converter.mjai_stolen()
+      consumed_tile = open_converter.mjai_consumed()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "pai"=>stolen_tile, "consumed"=>consumed_tile}
     end
     if event.type = :EVENT_TYPE_KAN_CLOSED  # ankan
+      open_converter = OpenConverter.new(event.open)
       type = open_converter.event_type()
-      consumed_tile = open_converter.consumed_tile()
-      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who],"consumed_tile"=>consumed_tile}
+      consumed_tile = open_converter.mjai_consumed()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who],"consumed"=>consumed_tile}
     end
   end
 end
