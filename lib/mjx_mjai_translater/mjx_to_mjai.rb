@@ -33,7 +33,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
 
   def mjx_event_to_mjai_action(event)
     if event.type == :EVENT_TYPE_DRAW
-      return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # 全て？で統一
+      return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # ツモ牌 全て？で統一
     end
     if event.type == :EVENT_TYPE_DISCARD_FROM_HAND
       return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>false}
@@ -41,7 +41,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if event.type == :EVENT_TYPE_DISCARD_DRAWN_TILE
       return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>true}
     end 
-    if event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_KAN_OPEND
+    if event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_KAN_OPEND  # pon, chi, daiminkan
       open_converter = OpenConverter.new(event.open)
       type = open_converter.event_type()
       target = open_converter.open_from() # absolute_posを表すsymbol object
@@ -49,13 +49,13 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       consumed_tile = open_converter.consumed_tile()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "target"=>@absolutepos_id_hash[target], "pai"=>stolen_tile, "consumed_tile"=>consumed_tile}
     end
-    if event.type = :EVENT_TYPE_KAN_ADDED
+    if event.type = :EVENT_TYPE_KAN_ADDED  # kakan
       type = open_converter.event_type()
       stolen_tile = open_converter.stolen_tile()
       consumed_tile = open_converter.consumed_tile()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "pai"=>stolen_tile, "consumed_tile"=>consumed_tile}
     end
-    if event.type = :EVENT_TYPE_KAN_CLOSED
+    if event.type = :EVENT_TYPE_KAN_CLOSED  # ankan
       type = open_converter.event_type()
       consumed_tile = open_converter.consumed_tile()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who],"consumed_tile"=>consumed_tile}
