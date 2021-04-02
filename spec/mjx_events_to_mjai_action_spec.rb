@@ -22,14 +22,16 @@ RSpec.describe TransServer do
         history_difference = trans_server.extract_difference(previous_history, observation)
         expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"E", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},
                                                                                 {"type"=>"dahai","actor"=>1,"pai"=>"S", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>2,"pai"=>"1s", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
+                                                                                {"type"=>"dahai","actor"=>2,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
                                                                                 {"type"=>"dahai","actor"=>3,"pai"=>"E", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # mjaiのwikiを参考に作成
     end
-    it "リーチ" do
-        
+    it "リーチ, ポン" do
+        previous_history = observation_from_json(lines, 38).event_history.events
+        observation = observation_from_json(lines, 39)
+        history_difference = trans_server.extract_difference(previous_history, observation)
+        p history_difference
+        expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"E", "tsumogiri"=>false}]
         #38, 39
-    end
-    it "ポン" do
     end
     it "チー" do
         #84, 85
