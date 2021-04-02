@@ -18,7 +18,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
 
   def proto_tile_to_mjai_tile(proto_tile)  # 他のクラスに
     reds_in_proto = [16, 52, 88]
-    reds_dict = {16 => "5mr", 52 => "5sr", 88 => "5pr"}
+    reds_dict = {16 => "5mr", 52 => "5pr", 88 => "5sr"}
     mod36_kind_dict = {0 => "m", 1 => "p", 2 => "s"}
     num_zihai_dict = {0 => "E", 1 => "S", 2 => "W", 3 => "N", 4 => "P", 5 => "F", 6 => "C"}
     if reds_in_proto.include?(proto_tile)  # 赤
