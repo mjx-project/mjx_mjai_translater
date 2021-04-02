@@ -16,7 +16,7 @@ RSpec.describe TransServer do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
     trans_server = TransServer.new()
-    it "ツモ、捨て牌" do  # actorとabsolute_posは=ではないので内部で変換している。
+    it "ツモ、捨て牌" do  # actor(id)とabsolute_posは=ではないので内部で変換している。
         previous_history = observation_from_json(lines, 0).event_history.events
         observation = observation_from_json(lines, 1)
         history_difference = trans_server.extract_difference(previous_history, observation)
@@ -37,10 +37,10 @@ RSpec.describe TransServer do
         observation = observation_from_json(lines, 85)
         history_difference = trans_server.extract_difference(previous_history, observation)
         p history_difference
-        expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"9m", "tsumogiri"=>false}, {"type"=>"chi","actor"=>1,"target"=>0,"pai"=>"1p", "consumed"=>["2p","3p"]},
+        expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"chi","actor"=>1,"target"=>0,"pai"=>"1p", "consumed_tile"=>["2p","3p"]},
                                                                                 {"type"=>"dahai","actor"=>1,"pai"=>"6s", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
                                                                                 {"type"=>"dahai","actor"=>2,"pai"=>"1s", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>3,"pai"=>"9p", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]
+                                                                                {"type"=>"dahai","actor"=>3,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]
         #84, 85
     end
 end

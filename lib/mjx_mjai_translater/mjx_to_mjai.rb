@@ -13,6 +13,8 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
 
   def initialize(absolutepos_id)
     @absolutepos_id_hash = absolutepos_id
+    @absolute_pos = [:ABSOLUTE_POS_INIT_EAST,:ABSOLUTE_POS_INIT_SOUTH,
+    :ABSOLUTE_POS_INIT_WEST, :ABSOLUTE_POS_INIT_NORTH]
   end
 
 
@@ -41,16 +43,21 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if event.type == :EVENT_TYPE_DISCARD_DRAWN_TILE
       return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>true}
     end 
-    if event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_KAN_OPEND  # pon, chi, daiminkan
+    if event.type == :EVENT_TYPE_CHI || event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_KAN_OPEND  # pon, chi, daiminkan
       open_converter = OpenConverter.new(event.open)
-      type = open_converter.event_type()
-      target = open_converter.open_from() # absolute_posを表すsymbol object
-      stolen_tile = open_converter.stolen_tile()
-      consumed_tile = open_converter.consumed_tile()
+      type = open_converter.open_event_type()
+      current_pos = event.who
+      pos_index = @absolute_pos.find_index(current_pos)
+      relative_pos = open_converter.open_from()
+      target_index = (pos_index + relative_pos) % 4
+      target = @absolute_pos[target_index] # absolute_posを表すsymbol object
+      stolen_tile = open_converter.mjai_stolen()
+      consumed_tile = open_converter.mjai_consumed()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "target"=>@absolutepos_id_hash[target], "pai"=>stolen_tile, "consumed_tile"=>consumed_tile}
     end
     if event.type = :EVENT_TYPE_KAN_ADDED  # kakan
       type = open_converter.event_type()
+      
       stolen_tile = open_converter.stolen_tile()
       consumed_tile = open_converter.consumed_tile()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[event.who], "pai"=>stolen_tile, "consumed_tile"=>consumed_tile}
