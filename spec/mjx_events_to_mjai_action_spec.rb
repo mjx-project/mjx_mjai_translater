@@ -40,7 +40,7 @@ RSpec.describe TransServer do
         expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"chi","actor"=>1,"target"=>0,"pai"=>"1p", "consumed_tile"=>["2p","3p"]},
                                                                                 {"type"=>"dahai","actor"=>1,"pai"=>"6s", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
                                                                                 {"type"=>"dahai","actor"=>2,"pai"=>"1s", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>3,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]
+                                                                                {"type"=>"dahai","actor"=>3,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # history_differenceを目視で確認し、mjconvertにかけてmjaiのformatと照合した。
         #84, 85
     end
 end
