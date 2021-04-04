@@ -13,7 +13,7 @@ class TransServer < Mjxproto::Agent::Service
     def initialize()
         @players = []
         @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
-        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因
+        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_event_history = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
@@ -72,11 +72,11 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def convert_to_mjai_actions(history_difference)
+    def convert_to_mjai_actions(history_difference, scores)  # scoresはriichi_acceptedを送る場合などに使う
         # event_histryの差分に対して他のfileで定義されている変換関数を適用する。
         mjai_actions = []
         history_difference.length.times do |i|
-           mjai_action = MjxToMjai.new(@absolutepos_id_hash).mjx_event_to_mjai_action(history_difference[i])  # mjxのeventをmjai actioinに変換
+           mjai_action = MjxToMjai.new(@absolutepos_id_hash).mjx_event_to_mjai_action(history_difference[i], scores)  # mjxのeventをmjai actioinに変換
            mjai_actions.push(mjai_action)
         end
         return mjai_actions
@@ -85,7 +85,8 @@ class TransServer < Mjxproto::Agent::Service
     
     def observe(observation)
         history_difference = extract_difference(@_mjx_event_history, observation)
-        # mjx_actions = convert_to_mjai_actions(history_difference)
+        @scores = observation.state.init_score.ten  # scoreを更新 mjaiのactionに変換する際に使用
+        # mjx_actions = convert_to_mjai_actions(history_difference,scores)
         # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
     end
 
