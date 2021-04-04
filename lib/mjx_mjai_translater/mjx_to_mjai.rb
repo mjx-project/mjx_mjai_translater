@@ -77,6 +77,9 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         ten_change = [0,0,0,0]
         pos_index = @absolute_pos.find_index(event.who)
         ten_change[pos_index] = -1000
+        scores = observation.state.init_score.ten
+        scores += ten_change
+        return  {"type"=>"reach_accepted","actor"=>@absolutepos_id_hash[event.who], "deltas"=>ten_change, "scoers"=>scores}
     end
   end
 end

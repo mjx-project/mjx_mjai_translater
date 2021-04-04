@@ -33,7 +33,7 @@ RSpec.describe TransServer do
         p history_difference
         expect(trans_server.convert_to_mjai_actions(history_difference)).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"2p", "tsumogiri"=>false}, {"type"=>"pon","actor"=>2,"target"=>0,"pai"=>"2p","consumed"=>["2p","2p"]},
         {"type"=>"dahai","actor"=>2,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"tsumo", "actor"=>3,"pai"=>"?"},{"type"=>"reach","actor"=>3}, 
-        {"type"=>"dahai", "actor"=>3,"pai"=>"3p", "tsumogiri"=>false}, {"type"=>"reach_accepted","actor"=>3},
+        {"type"=>"dahai", "actor"=>3,"pai"=>"3p", "tsumogiri"=>false}, {"type"=>"reach_accepted","actor"=>3, "deltas"=>[0,0,0,-1000], "scoers"=>[26000,26000,26000,21000]},
         {"type"=>"tsumo", "actor"=>0, "pai"=>"?"}]
         #38, 39
     end
