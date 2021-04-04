@@ -33,7 +33,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_event_to_mjai_action(event)
+  def mjx_event_to_mjai_action(event, observation)  # observationはreach_accepted, ron tsumoの時しか使わない。
     if event.type == :EVENT_TYPE_DRAW
       return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # ツモ牌 全て？で統一
     end
@@ -69,6 +69,14 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
     if event.type == :EVENT_TYPE_NEW_DORA
       return{"type"=>"dora", "dora_marker"=>proto_tile_to_mjai_tile(event.tile)}
+    end
+    if event.type == :EVENT_TYPE_RIICHI
+      return {"type"=>"reach", "actor"=>@absolutepos_id_hash[event.who]}
+    end
+    if event.type == :EVENT_TYPE_RIICHI_SCORE_CHANGE
+        ten_change = [0,0,0,0]
+        pos_index = @absolute_pos.find_index(event.who)
+        ten_change[pos_index] = -1000
     end
   end
 end
