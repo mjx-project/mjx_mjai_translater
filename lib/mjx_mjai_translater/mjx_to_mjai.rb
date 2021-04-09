@@ -18,7 +18,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def proto_tile_to_mjai_tile(proto_tile)  # 他のクラスに
+  def proto_tile_to_mjai_tile(proto_tile)
     reds_in_proto = [16, 52, 88]
     reds_dict = {16 => "5mr", 52 => "5pr", 88 => "5sr"}
     mod36_kind_dict = {0 => "m", 1 => "p", 2 => "s"}
@@ -81,7 +81,30 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         return  {"type"=>"reach_accepted","actor"=>@absolutepos_id_hash[event.who], "deltas"=>ten_change, "scoers"=>scores}
     end
   end
-end
 
-a = MjxToMjai.new({})
-p a.proto_tile_to_mjai_tile(121)
+  def mjx_action_to_mjai_action(mjx_action)  # mjai actionとの照合用　
+    action_type = mjx_action.type
+    who = mjx_action.who
+    if action_type == :ACTION_TYPE_DISCARD
+    end
+    if action_type == :ACTION_TYPE_CHI
+    end
+    if action_type == :ACTION_TYPE_PON
+    end
+    if action_type == :ACTION_TYPE_KAN_OPENED
+    end
+    if action_type == :ACTION_TYPE_KAN_CLOSED 
+    end
+    if action_type == :ACTION_TYPE_RIICHI
+    end
+    if action_type == :ACTION_TYPE_TSUMO
+    end
+    if action_type == :ACTION_TYPE_NO 
+    end
+    if action_type == :ACTION_TYPE_RON
+    end
+    
+    
+
+  end
+end

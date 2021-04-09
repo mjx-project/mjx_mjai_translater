@@ -16,28 +16,31 @@ end
 RSpec.describe "mjai_action_to_mjx_action" do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
+    absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
+    :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3}
     it "discard" do
         observation = observation_from_json(lines,1)
         possible_actions = observation.possible_actions
         mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"8m", "tsumoigri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
-        #expect(mjai_act_to_mjx_act(mjai_action, proto_possible_actions)).to eq possible_actions[0]
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "chi" do
         observation = observation_from_json(lines,7)
         possible_actions = observation.possible_actions
         mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>"3p", "consumed"=>["4p", "5p"]}
-        #expect(mjai_act_to_mjx_act(mjai_action, proto_possible_actions)).to eq possible_actions[0]
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "pon" do
         observation = observation_from_json(lines,9)
         possible_actions = observation.possible_actions
         mjai_action = {"type"=>"pon", "actor"=>0, "target"=>2, "pai"=>"2p", "consumed"=>["2p", "2p"]}
-        #expect(mjai_act_to_mjx_act(mjai_action, proto_possible_actions)).to eq possible_actions[0]
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "daiminkan" do
         observation = observation_from_json(lines,173)
         possible_actions = observation.possible_actions
+        p possible_actions[1].type
         mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"3p", "consumed"=>["3p", "3p", "3p"]}
-        #expect(mjai_act_to_mjx_act(mjai_action, proto_possible_actions)).to eq possible_actions[0]
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
     end
 end
