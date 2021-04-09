@@ -10,7 +10,7 @@ class MjaiToMjx
 
   def find_proper_action_idx(mjai_action, possible_actions)
     mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
-    if mjai_action["type"] == "dahai"
+    if mjai_action["type"] == "dahai"  # TODO ツモぎりもpossible actionsに加わる予定。 
       possible_actions.length.times do |i|
         action_type = possible_actions[i].type
         discard_in_mjai = mjx_to_mjai.proto_tile_to_mjai_tile(possible_actions[i].discard)
@@ -59,6 +59,17 @@ class MjaiToMjx
       end
     end
     if mjai_action["type"] == "daiminkan"
+      possible_actions.length.times do |i|
+        action_type = possible_actions[i].type
+        if action_type == :ACTION_TYPE_KAN_OPENED  # 牌の種類が同じかどうか
+            open_converter = OpenConverter.new(possible_actions[i].open)
+            stolen_tile_in_mjai = open_converter.mjai_stolen()
+            consumed_tile_in_mjai = open_converter.mjai_consumed()
+            if mjai_action["pai"] == stolen_tile_in_mjai && mjai_action["consumed"] == consumed_tile_in_mjai
+              return i
+            end
+        end
+      end
     end
     if mjai_action["type"] == "ankan"
     end
@@ -68,7 +79,6 @@ class MjaiToMjx
     end
     if mjai_action["type"] == "ryukyoku"
     end
-    return  0
   end
 
   def mjai_act_to_mjx_act(mjai_action, proto_possible_actions)  # mjxのpossible actionsをmjaiのactionに変換して照合するという方法を取る。なぜならmjxの方がactionの情報量が多い。

@@ -39,7 +39,6 @@ RSpec.describe "mjai_action_to_mjx_action" do
     it "daiminkan" do
         observation = observation_from_json(lines,173)
         possible_actions = observation.possible_actions
-        p possible_actions[1].type
         mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"3p", "consumed"=>["3p", "3p", "3p"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
     end
