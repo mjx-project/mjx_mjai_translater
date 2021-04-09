@@ -1,4 +1,4 @@
-require "mjx_action_to_mjai_action"
+require "mjx_to_mjai"
 
 def find_proper_action_idx(mjai_action, mjai_possible_actions)
   return  0
