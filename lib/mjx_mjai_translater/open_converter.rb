@@ -1,3 +1,10 @@
+this_dir = __dir__
+lib_dir = File.join(this_dir, '../mjxproto')
+$LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
+require 'mjx_pb'
+require 'mjx_services_pb'
+require 'google/protobuf'
+
 class OpenConverter
   def initialize(open)
     @bits = open
@@ -22,7 +29,7 @@ class OpenConverter
     elsif 1 << 4 & @bits != 0
       return "kakan"
     else
-      if Mjxproto::RelativePos::RELATIVE_POS_SELF == @bits & 3
+      if (Mjxproto::RelativePos::RELATIVE_POS_LEFT == @bits & 3) != 0
           return "ankan"
       else
           return "daiminkan"
@@ -232,7 +239,9 @@ end
     open_stolen_tile = open_stolen_tile_type()
     open_tiles = open_tile_types()
     event_type = open_event_type()
-    if has_red || event_type == "chi"
+    if event_type == "ankan"
+        return open_tiles.map {|x| open_to_mjai_tile(x)}
+    elsif has_red || event_type == "chi"
         open_tiles.delete(open_stolen_tile)  # 鳴いたはいを削除する。
         consumed_tiles = open_tiles.map {|x| open_to_mjai_tile(x)}
         return consumed_tiles
@@ -243,4 +252,5 @@ end
     end
   end
 end
+
 
