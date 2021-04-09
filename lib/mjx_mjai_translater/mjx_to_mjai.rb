@@ -103,8 +103,5 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
     if action_type == :ACTION_TYPE_RON
     end
-    
-    
-
   end
 end

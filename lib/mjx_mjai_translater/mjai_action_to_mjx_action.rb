@@ -85,6 +85,14 @@ class MjaiToMjx
     end
     if mjai_action["type"] == "ryukyoku"
     end
+    if mjai_action["type"] == "none"
+      possible_actions.length.times do |i|
+        action_type = possible_actions[i].type
+        if action_type == :ACTION_TYPE_NO # mjaiはツモとロンを区別しない　同時に発生することはないので0K　
+          return i
+        end
+      end
+    end
   end
 
   def mjai_act_to_mjx_act(mjai_action, proto_possible_actions)  # mjxのpossible actionsをmjaiのactionに変換して照合するという方法を取る。なぜならmjxの方がactionの情報量が多い。
