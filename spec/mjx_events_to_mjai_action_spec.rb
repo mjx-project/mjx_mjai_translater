@@ -30,7 +30,6 @@ RSpec.describe TransServer do
         previous_history = observation_from_json(lines, 38).event_history.events
         observation = observation_from_json(lines, 39)
         history_difference = trans_server.extract_difference(previous_history, observation)
-        p history_difference
         expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,22000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"2p", "tsumogiri"=>false}, {"type"=>"pon","actor"=>2,"target"=>0,"pai"=>"2p","consumed"=>["2p","2p"]},
         {"type"=>"dahai","actor"=>2,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"tsumo", "actor"=>3,"pai"=>"?"},{"type"=>"reach","actor"=>3}, 
         {"type"=>"dahai", "actor"=>3,"pai"=>"3p", "tsumogiri"=>false}, {"type"=>"reach_accepted","actor"=>3, "deltas"=>[0,0,0,-1000], "scoers"=>[26000,26000,26000,21000]},

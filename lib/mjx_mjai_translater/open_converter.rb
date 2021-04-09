@@ -29,7 +29,7 @@ class OpenConverter
     elsif 1 << 4 & @bits != 0
       return "kakan"
     else
-      if (Mjxproto::RelativePos::RELATIVE_POS_LEFT == @bits & 3) != 0
+      if Mjxproto::RelativePos::RELATIVE_POS_SELF == @bits & 3
           return "ankan"
       else
           return "daiminkan"
@@ -240,6 +240,7 @@ end
     open_tiles = open_tile_types()
     event_type = open_event_type()
     if event_type == "ankan"
+        p open_tiles
         return open_tiles.map {|x| open_to_mjai_tile(x)}
     elsif has_red || event_type == "chi"
         open_tiles.delete(open_stolen_tile)  # 鳴いたはいを削除する。
