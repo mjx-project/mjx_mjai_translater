@@ -45,13 +45,13 @@ RSpec.describe "mjai_action_to_mjx_action" do
     it "tsumo" do
         observation = observation_from_json(lines,96)
         possible_actions = observation.possible_actions
-        mjai_action = {"type":"hora","actor"=>0,"target"=>2,"pai"=>"2m","uradora_markers"=>["8p"],"hora_tehais"=>["1m","3m","5m","6m","7m","1p","2p","3p","4p","5pr","6p","W","W","2m"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1]],"fu":30,"fan":3,"hora_points"=>4000,"deltas"=>[-2100,-1100,6300,-1100],"scores"=>[25900,21900,29300,22900]}
+        mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"2m","uradora_markers"=>["8p"],"hora_tehais"=>["1m","3m","5m","6m","7m","1p","2p","3p","4p","5pr","6p","W","W","2m"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1]],"fu":30,"fan":3,"hora_points"=>4000,"deltas"=>[-2100,-1100,6300,-1100],"scores"=>[25900,21900,29300,22900]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "ron" do
         observation = observation_from_json(lines,156)
         possible_actions = observation.possible_actions
-        mjai_action = {"type":"hora","actor"=>0,"target"=>2,"pai"=>"2m","uradora_markers"=>["8p"],"hora_tehais"=>["1m","3m","5m","6m","7m","1p","2p","3p","4p","5pr","6p","W","W","2m"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1]],"fu":30,"fan":3,"hora_points"=>4000,"deltas"=>[-2100,-1100,6300,-1100],"scores"=>[25900,21900,29300,22900]}
+        mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"2m","uradora_markers"=>["8p"],"hora_tehais"=>["1m","3m","5m","6m","7m","1p","2p","3p","4p","5pr","6p","W","W","2m"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1]],"fu":30,"fan":3,"hora_points"=>4000,"deltas"=>[-2100,-1100,6300,-1100],"scores"=>[25900,21900,29300,22900]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
 end

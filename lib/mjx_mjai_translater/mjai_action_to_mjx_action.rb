@@ -76,6 +76,12 @@ class MjaiToMjx
     if mjai_action["type"] == "reach"
     end
     if mjai_action["type"] == "hora"
+      possible_actions.length.times do |i|
+        action_type = possible_actions[i].type
+        if action_type == :ACTION_TYPE_RON or action_type == :ACTION_TYPE_TSUMO  # mjaiはツモとロンを区別しない　同時に発生することはないので0K　
+          return i
+        end
+      end
     end
     if mjai_action["type"] == "ryukyoku"
     end
