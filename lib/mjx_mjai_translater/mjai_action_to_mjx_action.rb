@@ -1,5 +1,6 @@
 require "mjx_to_mjai"
 require "open_converter"
+require 'mjai-manue'
 
 class MjaiToMjx
   def initialize(absolutepos_id)

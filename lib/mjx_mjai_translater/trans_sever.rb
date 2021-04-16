@@ -32,7 +32,6 @@ class TransServer < Mjxproto::Agent::Service
         if action.is_a?(Hash)
             action = Action.new(action)
           end
-          
           #update_state(action)これはmjxがやる
           #@on_action.call(action) if @on_action
           responses = (0...4).map() do |i|
