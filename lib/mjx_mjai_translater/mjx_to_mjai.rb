@@ -8,7 +8,6 @@ require 'mjx_pb'
 require 'mjx_services_pb'
 require 'google/protobuf'
 
-
 class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラスじゃなくても良いかも
 
   def initialize(absolutepos_id)
