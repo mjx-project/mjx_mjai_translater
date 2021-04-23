@@ -1,7 +1,5 @@
 require "mjx_to_mjai"
 require "open_converter"
-require 'bundler/setup'
-require 'mjai'
 
 class MjaiToMjx
   def initialize(absolutepos_id)
