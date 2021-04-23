@@ -5,6 +5,7 @@ require 'mjx_pb'
 require 'mjx_services_pb'
 require 'google/protobuf'
 
+
 class OpenConverter
   def initialize(open)
     @bits = open
