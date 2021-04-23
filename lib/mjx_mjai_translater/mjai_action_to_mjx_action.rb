@@ -1,6 +1,7 @@
 require "mjx_to_mjai"
 require "open_converter"
 
+
 class MjaiToMjx
   def initialize(absolutepos_id)
     @absolutepos_id_hash = absolutepos_id
