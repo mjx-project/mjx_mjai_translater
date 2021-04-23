@@ -82,26 +82,4 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def mjx_action_to_mjai_action(mjx_action)  # mjai actionとの照合用　
-    action_type = mjx_action.type
-    who = mjx_action.who
-    if action_type == :ACTION_TYPE_DISCARD
-    end
-    if action_type == :ACTION_TYPE_CHI
-    end
-    if action_type == :ACTION_TYPE_PON
-    end
-    if action_type == :ACTION_TYPE_KAN_OPENED
-    end
-    if action_type == :ACTION_TYPE_KAN_CLOSED 
-    end
-    if action_type == :ACTION_TYPE_RIICHI
-    end
-    if action_type == :ACTION_TYPE_TSUMO
-    end
-    if action_type == :ACTION_TYPE_NO 
-    end
-    if action_type == :ACTION_TYPE_RON
-    end
-  end
 end

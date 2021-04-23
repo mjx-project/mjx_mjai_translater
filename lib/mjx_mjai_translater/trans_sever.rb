@@ -6,6 +6,7 @@ require 'mjx_services_pb'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require 'random_agent'
 require 'mjx_to_mjai'
+require 'mjai_action_to_mjx_action'
 #変換サーバの本体
 
 class TransServer < Mjxproto::Agent::Service
@@ -31,7 +32,6 @@ class TransServer < Mjxproto::Agent::Service
         if action.is_a?(Hash)
             action = Action.new(action)
           end
-          
           #update_state(action)これはmjxがやる
           #@on_action.call(action) if @on_action
           responses = (0...4).map() do |i|
@@ -51,8 +51,13 @@ class TransServer < Mjxproto::Agent::Service
     end
     
 
-    def update_next_actions(response)
+    def update_next_actions(responses)
         #　ユーザーのアクションに対してmjaiのアクションからmjxのアクションに変更する
+        next_mjai_actions = []
+        responses.length.times do |i|
+            next_mjai_actions.push(mjai_act_to_mjx_act(responses[i]))
+        end
+        return next_mjai_actions
     end
 
 
@@ -86,7 +91,7 @@ class TransServer < Mjxproto::Agent::Service
     def observe(observation)
         history_difference = extract_difference(@_mjx_event_history, observation)
         @scores = observation.state.init_score.ten  # scoreを更新 mjaiのactionに変換する際に使用
-        # mjx_actions = convert_to_mjai_actions(history_difference,scores)
+        mjx_actions = convert_to_mjai_actions(history_difference,@scores)
         # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
     end
 
@@ -94,11 +99,11 @@ class TransServer < Mjxproto::Agent::Service
     def take_action(observation, _unused_call)
         obserbve(observation)
         curr_player = get_curr_player(observation)
-        response = none
+        responses = none
         for mjai_action in self.mjai_new_actinos
-            response = self.do_action(mjai_action)
+            responses = self.do_action(mjai_action)
         end
-        self.next_mjx_actions = update_next_actions(response)
+        self.next_mjx_actions = update_next_actions(responses)
         return self.next_mjx_actions[curr_player]
     end
 end

@@ -39,6 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'grpc'
-  spec.add_development_dependency 'mjai'
   spec.add_development_dependency 'json'
+  spec.add_development_dependency 'nokogiri'
+  spec.add_development_dependency 'sass'
 end

@@ -1,3 +1,6 @@
 [submodule "mjx"]
 	path = mjx
 	url = https://github.com/mjx-project/mjx.git
+[submodule "mjai"]
+	path = mjai
+	url = https://github.com/nissymori/mjai
