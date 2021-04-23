@@ -1,6 +1,6 @@
 require "mjx_to_mjai"
 require "open_converter"
-
+require_relative "../../mjai/lib/mjai/tcp_active_game_server"
 
 class MjaiToMjx
   def initialize(absolutepos_id)
