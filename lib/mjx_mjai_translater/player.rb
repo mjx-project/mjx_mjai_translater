@@ -5,8 +5,10 @@
 
 
 class Player 
-    def initialize()
-        
+    def initialize(socket, id)
+        @possible_actions = []
+        @socket = socket
+        @id = id
     end
 
     def respond_to_action(action)
@@ -45,6 +47,6 @@ class Player
           
         end
         
-      end
+    end
       
 end
