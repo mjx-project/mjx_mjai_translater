@@ -11,11 +11,11 @@ require 'mjai_action_to_mjx_action'
 
 class TransServer < Mjxproto::Agent::Service
     
-    def initialize(params) # paramsはcommandからextractされる。
-        @params = params
-        @num_player_size = @params[:num_player_size]
+    def initialize() # params paramsはcommandからextractされる。
+        #@params = params
+        #@num_player_size = @params[:num_player_size]
         @players = []
-        @server = TCPServer.open(params[:host], params[:port])
+        #@server = TCPServer.open(params[:host], params[:port])
         @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
         :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_event_history = nil
@@ -26,11 +26,11 @@ class TransServer < Mjxproto::Agent::Service
     def run()
         #TCPserverにおけるrunの部分
         #- Clientと最初の通信をする。(クライアントの数がわかっていればいらないかも)
-
+    end
 
     def initialize_players(socket)
         @num_player_size.times do |i|
-             @players.push(Player.new(socket, i)) # ここの作る順番がidになる。 やっぱり,最初にidとmjxのabsolute_posを対応させる関数がいる。
+             @players.push(Player.new(socket, i)) # ここの作る順番がidになる。 TODO やっぱり,最初にidとmjxのabsolute_posを対応させる関数がいる。
         end
     end          
 
@@ -41,7 +41,7 @@ class TransServer < Mjxproto::Agent::Service
           end
           #update_state(action)これはmjxがやる
           #@on_action.call(action) if @on_action
-          responses = (0...4).map() do |i|
+          responses = (0...4).map() do |i|  # TODO ここ4固定なの気になるな
             @players[i].respond_to_action(action_in_view(action, i, true))  # aciton_in_view()実装する必要あり
           end
           #action_with_logs = action.merge({:logs => responses.map(){ |r| r && r.log }})
@@ -73,7 +73,7 @@ class TransServer < Mjxproto::Agent::Service
             if action.actor == player
               return action.merge({
                   :possible_actions =>
-                      with_response_hint ? player.possible_actions : nil,
+                      with_response_hint ? player.possible_actions() : nil,
               })
             else
               return action.merge({:pai => Pai::UNKNOWN})
@@ -82,7 +82,7 @@ class TransServer < Mjxproto::Agent::Service
             if action.actor != player
               return action.merge({
                   :possible_actions =>
-                      with_response_hint ? player.possible_actions : nil,
+                      with_response_hint ? player.possible_actions() : nil,
               })
             else
               return action
@@ -91,7 +91,7 @@ class TransServer < Mjxproto::Agent::Service
             if action.actor == player
               return action.merge({
                   :cannot_dahai =>
-                      with_response_hint ? player.kuikae_dahais : nil,
+                      with_response_hint ? player.inhibited_tiles() : nil,
               })
             else
               return action
@@ -100,7 +100,7 @@ class TransServer < Mjxproto::Agent::Service
             if action.actor == player
               return action.merge({
                   :cannot_dahai =>
-                      with_response_hint ? (player.tehais.uniq() - player.possible_dahais) : nil,
+                      with_response_hint ? player.inhibited_tiles() : nil,
               })
             else
               return action
@@ -108,6 +108,7 @@ class TransServer < Mjxproto::Agent::Service
           else
             return action
         end
+    end
 
         
     def step(new_event)

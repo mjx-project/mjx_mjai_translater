@@ -1,4 +1,4 @@
-require './lib/mjx_mjai_translater/trans_server'
+require './lib/mjx_mjai_translater/trans_sever'
 
 # action_in_view()はプレイヤーによって与える情報を調整するための関数
 

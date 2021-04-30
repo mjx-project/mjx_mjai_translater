@@ -12,10 +12,26 @@ class Player
         @id = id
     end
 
+    def possible_actions()
+        return @possible_actions
+    end
+
+    def hand()
+        return @hand
+    end
+
+    def inhibited_tiles()
+        possible_tiles = []
+        @possible_actions.length.times do |i|
+            if @possible_actions[i].type == :ACTION_TYPE_DISCARD
+                possible_tiles.push(@possible_actions[i]discard)
+            end
+        end
+        return tehai.uniq() - possible_tiles
+    end
+
     def respond_to_action(action)
-          
         begin
-          
           puts("server -> player %d\t%s" % [self.id, action.to_json()])
           @socket.puts(action.to_json())
           line = nil
