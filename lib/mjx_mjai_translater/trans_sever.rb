@@ -11,8 +11,11 @@ require 'mjai_action_to_mjx_action'
 
 class TransServer < Mjxproto::Agent::Service
     
-    def initialize()
+    def initialize(params) # paramsはcommandからextractされる。
+        @params = params
+        @num_player_size = @params[:num_player_size]
         @players = []
+        @server = TCPServer.open(params[:host], params[:port])
         @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
         :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_event_history = nil
@@ -20,11 +23,15 @@ class TransServer < Mjxproto::Agent::Service
         @next_mjx_actions = []
     end
 
-
-    def initialize_players(host, port)
-        #- Serverを立てる
+    def run()
+        #TCPserverにおけるrunの部分
         #- Clientと最初の通信をする。(クライアントの数がわかっていればいらないかも)
-        #- TCPPlayerをクライアントの数の分立てる
+
+
+    def initialize_players(socket)
+        @num_player_size.times do |i|
+             @players.push(Player.new(socket, i)) # ここの作る順番がidになる。 やっぱり,最初にidとmjxのabsolute_posを対応させる関数がいる。
+        end
     end          
 
     def do_action(action)
@@ -44,6 +51,63 @@ class TransServer < Mjxproto::Agent::Service
           #validate_responses(responses, action)
           return responses
     end
+
+    def action_in_view(action, player_id, for_response)  # action_in_viewをこちらで実装する。
+        #全体を見て必要な情報
+        #①各プレイヤーのpossible_actitons
+        #②各playerの手配
+        player = @players[player_id]
+        with_response_hint = for_response && expect_response_from?(player)
+        case action.type
+          when :start_game
+            return action.merge({:id => player_id})
+          when :start_kyoku
+            tehais_list = action.tehais.dup()
+            for i in 0...4
+              if i != player_id
+                tehais_list[i] = [Pai::UNKNOWN] * tehais_list[i].size
+              end
+            end
+            return action.merge({:tehais => tehais_list})
+          when :tsumo
+            if action.actor == player
+              return action.merge({
+                  :possible_actions =>
+                      with_response_hint ? player.possible_actions : nil,
+              })
+            else
+              return action.merge({:pai => Pai::UNKNOWN})
+            end
+          when :dahai, :kakan
+            if action.actor != player
+              return action.merge({
+                  :possible_actions =>
+                      with_response_hint ? player.possible_actions : nil,
+              })
+            else
+              return action
+            end
+          when :chi, :pon
+            if action.actor == player
+              return action.merge({
+                  :cannot_dahai =>
+                      with_response_hint ? player.kuikae_dahais : nil,
+              })
+            else
+              return action
+            end
+          when :reach
+            if action.actor == player
+              return action.merge({
+                  :cannot_dahai =>
+                      with_response_hint ? (player.tehais.uniq() - player.possible_dahais) : nil,
+              })
+            else
+              return action
+            end
+          else
+            return action
+        end
 
         
     def step(new_event)

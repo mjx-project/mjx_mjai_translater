@@ -6,7 +6,8 @@
 
 class Player 
     def initialize(socket, id)
-        @possible_actions = []
+        @possible_actions = []  # mjxとのやりとりで更新していく
+        @hand = []  # mjxとのやりとりで更新していく。
         @socket = socket
         @id = id
     end
