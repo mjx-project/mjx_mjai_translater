@@ -1,4 +1,5 @@
 require './lib/mjx_mjai_translater/trans_sever'
+require './lib/mjx_mjai_translater/trans_sever'
 
 # action_in_view()はプレイヤーによって与える情報を調整するための関数
 
@@ -17,3 +18,4 @@ RSpec.describe "action_in_view" do
     end
 end
 
+Rspec

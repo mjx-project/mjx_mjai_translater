@@ -91,7 +91,7 @@ class TransServer < Mjxproto::Agent::Service
             if action.actor == player
               return action.merge({
                   :cannot_dahai =>
-                      with_response_hint ? player.inhibited_tiles() : nil,
+                      with_response_hint ? player.forbidden_tiles() : nil,
               })
             else
               return action
@@ -100,7 +100,7 @@ class TransServer < Mjxproto::Agent::Service
             if action.actor == player
               return action.merge({
                   :cannot_dahai =>
-                      with_response_hint ? player.inhibited_tiles() : nil,
+                      with_response_hint ? player.forbidden_tiles() : nil,
               })
             else
               return action

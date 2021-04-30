@@ -20,7 +20,7 @@ class Player
         return @hand
     end
 
-    def inhibited_tiles()
+    def forbidden_tiles()
         possible_tiles = []
         @possible_actions.length.times do |i|
             if @possible_actions[i].type == :ACTION_TYPE_DISCARD
