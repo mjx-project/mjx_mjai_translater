@@ -1,10 +1,12 @@
 #player クラス
 #役割
 #- mjaiのクライアントとの交信に必要な情報の保持 -> 自分でインスタンス変数を設定
-#- mjaiのクライアントとのsocket通信 -> mjaiからのコピペ
-
+#- mjaiのクライアントとのsocket通信 -> mjaiからのコ
+$LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
+require "mjx_to_mjai"
 
 class Player 
+
     def initialize(socket, id)
         @possible_actions = []  # mjxとのやりとりで更新していく
         @hand = []  # mjxとのやりとりで更新していく。
@@ -12,23 +14,45 @@ class Player
         @id = id
     end
 
+
+    def update_possible_actoins(possible_actions)
+      @possible_actions= possible_actions
+    end
+
+
+    def update_hand(hand)
+      @hand = hand
+    end
+
+
     def possible_actions()
         return @possible_actions
     end
+
 
     def hand()
         return @hand
     end
 
-    def forbidden_tiles()
-        possible_tiles = []
-        @possible_actions.length.times do |i|
-            if @possible_actions[i].type == :ACTION_TYPE_DISCARD
-                possible_tiles.push(@possible_actions[i]discard)
-            end
+
+    def from_actions_to_discard_tiles(actions)
+      tiles = []
+      if actions.length.times do |i|
+        if actions[i].type == :ACTION_TYPE_DISCARD
+           tiles.push(actions[i].discard)
         end
-        return tehai.uniq() - possible_tiles
+      end
+      return tiles
     end
+  end
+
+
+    def forbidden_tiles_mjai()
+        possible_tiles = from_actions_to_discard_tiles(@possible_actions)
+        mjx_to_mjai = MjxToMjai.new(nil)
+        return mjx_to_mjai.proto_tiles_to_mjai_tiles(@hand).uniq() - mjx_to_mjai.proto_tiles_to_mjai_tiles(possible_tiles)  #ここではmjxのformatで処理する。
+    end
+
 
     def respond_to_action(action)
         begin
