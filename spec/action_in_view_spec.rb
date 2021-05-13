@@ -43,7 +43,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
     end
     it "riichi" do  # 聴牌にならないはいを返しているか
     end
-    it "chi" do # くい変えになる牌を返しているか
+    it "chi" do # 喰い替えになる牌を返しているか
         observation = observation_from_json(lines,208)
         hand = [73,106,75,102,2,4,91,84,99,79,105]  # 実際に渡されるhandは晒したはいは除かれている
         possible_actions = observation.possible_actions

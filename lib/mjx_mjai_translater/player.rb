@@ -1,7 +1,7 @@
 #player クラス
 #役割
 #- mjaiのクライアントとの交信に必要な情報の保持 -> 自分でインスタンス変数を設定
-#- mjaiのクライアントとのsocket通信 -> mjaiからのコ
+#- mjaiのクライアントとのsocket通信 -> mjaiからのコピぺ
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "mjx_to_mjai"
 
