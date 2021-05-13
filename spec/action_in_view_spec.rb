@@ -45,17 +45,11 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
     end
     it "chi" do # くい変えになる牌を返しているか
         observation = observation_from_json(lines,208)
-        hand = [73,106,75,102,2,103,4,91,84,92,99,79,105]  # 逆算した
+        hand = [73,106,75,102,2,4,91,84,99,79,105]  # 実際に渡されるhandは晒したはいは除かれている
         possible_actions = observation.possible_actions
-        open_converter = OpenConverter(59655) #該当のチー
         player = Player.new(nil, nil)
-        player.update_possible_actoins(possible_actions)  # possible_actionsを更新
-        player.update_hand(hand)  # handを更新
+        player.update_possible_actoins(possible_actions)  
+        player.update_hand(hand) 
         expect(player.forbidden_tiles_mjai()).to eq ["7s"] # 99は7sで
-
-        
-         
-        
-
     end
 end
