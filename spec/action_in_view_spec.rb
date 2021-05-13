@@ -4,12 +4,14 @@ $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
 
 
-RSpec.describe "action_in_view" do
+RSpec.describe "action_in_view :actor!=player" do
+    player = Player.new(nil,0) # idは0
     it "start_game" do
     end
     it "start_kyoku" do
     end
     it "tsumo" do
+        
     end
     it "dahai kakan" do
     end
