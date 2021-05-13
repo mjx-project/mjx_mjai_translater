@@ -1,14 +1,7 @@
 require './lib/mjx_mjai_translater/trans_sever'
 require './lib/mjx_mjai_translater/player'
-require './lib/mjx_mjai_translater/mjx_to_mjai'
-require './lib/mjx_mjai_translater/open_converter'
-
-# action_in_view()はプレイヤーによって与える情報を調整するための関数
-def observation_from_json(lines,line)  # コピペが多いのでこの関数用のファイルを別のPRデつくります。 
-    json = JSON.load(lines[line])
-    json_string = Google::Protobuf.encode_json(json)
-    proto_observation = Google::Protobuf.decode_json(Mjxproto::Observation, json_string)
-end
+$LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
+require "test_utils"
 
 
 RSpec.describe "action_in_view" do

@@ -47,14 +47,14 @@ class Player
   end
 
 
-    def forbidden_tiles_mjai()  # 手牌のうち,possible action に含まれていないものを返す。
+  def forbidden_tiles_mjai()  # 手牌のうち,possible action に含まれていないものを返す。
         possible_tiles = from_actions_to_discard_tiles(@possible_actions)
         mjx_to_mjai = MjxToMjai.new(nil)
         return mjx_to_mjai.proto_tiles_to_mjai_tiles(@hand).uniq() - mjx_to_mjai.proto_tiles_to_mjai_tiles(possible_tiles)  #mjaiのformatで処理する。
-    end
+  end
 
 
-    def respond_to_action(action)
+  def respond_to_action(action)
         begin
           puts("server -> player %d\t%s" % [self.id, action.to_json()])
           @socket.puts(action.to_json())

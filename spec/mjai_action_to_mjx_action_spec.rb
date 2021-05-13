@@ -4,13 +4,8 @@ require './lib/mjxproto/mjx_pb'
 require './lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/mjai_action_to_mjx_action'
-
-
-def observation_from_json(lines,line)  # 特定の行を取得する
-    json = JSON.load(lines[line])
-    json_string = Google::Protobuf.encode_json(json)
-    proto_observation = Google::Protobuf.decode_json(Mjxproto::Observation, json_string)
-end
+$LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
+require "test_utils"
 
 
 RSpec.describe "mjai_action_to_mjx_action" do
