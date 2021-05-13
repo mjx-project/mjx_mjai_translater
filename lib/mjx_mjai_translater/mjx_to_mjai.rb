@@ -31,6 +31,14 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     return num_zihai_dict[(proto_tile % 36).div(4)]  #字牌
   end
 
+  def proto_tiles_to_mjai_tiles(proto_tiles)
+    mjai_tiles = []
+    proto_tiles.length.times do |i|
+      mjai_tiles.push(proto_tile_to_mjai_tile(proto_tiles[i]))
+    end
+    return mjai_tiles
+  end
+
 
   def mjx_event_to_mjai_action(event,scores)  # observationはreach_accepted, ron tsumoの時しか使わない。
     if event.type == :EVENT_TYPE_DRAW
