@@ -1,5 +1,7 @@
 require './lib/mjx_mjai_translater/trans_sever'
 require './lib/mjx_mjai_translater/player'
+require './lib/mjx_mjai_translater/mjx_to_mjai'
+require './lib/mjx_mjai_translater/open_converter'
 
 # action_in_view()はプレイヤーによって与える情報を調整するための関数
 def observation_from_json(lines,line)  # コピペが多いのでこの関数用のファイルを別のPRデつくります。 
@@ -41,6 +43,19 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
     end
     it "riichi" do  # 聴牌にならないはいを返しているか
     end
-    it "hora" do # くい変えになる牌を返しているか
+    it "chi" do # くい変えになる牌を返しているか
+        observation = observation_from_json(lines,208)
+        hand = [73,106,75,102,2,103,4,91,84,92,99,79,105]  # 逆算した
+        possible_actions = observation.possible_actions
+        open_converter = OpenConverter(59655) #該当のチー
+        player = Player.new(nil, nil)
+        player.update_possible_actoins(possible_actions)  # possible_actionsを更新
+        player.update_hand(hand)  # handを更新
+        expect(player.forbidden_tiles_mjai()).to eq ["7s"] # 99は7sで
+
+        
+         
+        
+
     end
 end

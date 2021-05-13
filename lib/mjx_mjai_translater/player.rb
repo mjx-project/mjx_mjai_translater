@@ -35,7 +35,7 @@ class Player
     end
 
 
-    def from_actions_to_discard_tiles(actions)
+    def from_actions_to_discard_tiles(actions)  # possible actionの中からdiscardに関するものだけを取得する。
       tiles = []
       if actions.length.times do |i|
         if actions[i].type == :ACTION_TYPE_DISCARD
@@ -47,10 +47,10 @@ class Player
   end
 
 
-    def forbidden_tiles_mjai()
+    def forbidden_tiles_mjai()  # 手牌のうち,possible action に含まれていないものを返す。
         possible_tiles = from_actions_to_discard_tiles(@possible_actions)
         mjx_to_mjai = MjxToMjai.new(nil)
-        return mjx_to_mjai.proto_tiles_to_mjai_tiles(@hand).uniq() - mjx_to_mjai.proto_tiles_to_mjai_tiles(possible_tiles)  #ここではmjxのformatで処理する。
+        return mjx_to_mjai.proto_tiles_to_mjai_tiles(@hand).uniq() - mjx_to_mjai.proto_tiles_to_mjai_tiles(possible_tiles)  #mjaiのformatで処理する。
     end
 
 
