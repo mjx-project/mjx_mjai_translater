@@ -6,7 +6,7 @@ require './lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/trans_sever'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
-require "test_util"
+require "test_utils"
 
 RSpec.describe  TransServer do
     file = File.open("spec/resources/observations-000.json", "r")

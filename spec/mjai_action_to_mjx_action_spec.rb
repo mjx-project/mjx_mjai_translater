@@ -5,7 +5,7 @@ require './lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/mjai_action_to_mjx_action'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
-require "test_util"
+require "test_utils"
 
 
 RSpec.describe "mjai_action_to_mjx_action" do

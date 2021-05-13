@@ -1,7 +1,7 @@
 require './lib/mjx_mjai_translater/trans_sever'
 require './lib/mjx_mjai_translater/player'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
-require "test_util"
+require "test_utils"
 
 
 RSpec.describe "action_in_view" do
