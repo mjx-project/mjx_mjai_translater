@@ -1,4 +1,5 @@
 require './lib/mjx_mjai_translater/trans_sever'
+require './lib/mjx_mjai_translater/mjx_to_mjai'
 require './lib/mjx_mjai_translater/player'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
@@ -23,6 +24,8 @@ end
 RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
+    file_3 = File.open("spec/resources/observations-003.json", "r")
+    lines_3 = file_3.readlines
     it "normal" do
         observation = observation_from_json(lines,0)
         init_hand = observation.private_info.init_hand
@@ -35,6 +38,13 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         expect(player.forbidden_tiles_mjai()).to eq []
     end
     it "riichi" do  # 聴牌にならないはいを返しているか
+        observation = observation_from_json(lines_3,31)
+        hand = [1,101,67,5,17,13,56,11,63,124,127,102,18,125]
+        possible_actions = observation.possible_actions
+        player = Player.new(nil, nil) # playerのinstanceを作る
+        player.update_possible_actoins(possible_actions) 
+        player.update_hand(hand) 
+        expect(player.forbidden_tiles_mjai()).to eq ["8s", "8p", "2m","6p", "3m", "7p", "P"]
     end
     it "chi" do # 喰い替えになる牌を返しているか
         observation = observation_from_json(lines,208)
