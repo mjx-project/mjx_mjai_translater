@@ -216,7 +216,7 @@ end
 
 
   def open_to_mjai_tile(open)  # openをmjai_tileに変換する。
-    open_red_mjai_tile_dict = {51=>"5mr", 52=>"5sr", 53=>"5pr"}
+    open_red_mjai_tile_dict = {51=>"5mr", 52=>"5pr", 53=>"5sr"}
     mod9_kind_dict = {0 => "m", 1 => "p", 2 => "s"}
     num_zihai_dict = {0 => "E", 1 => "S", 2 => "W", 3 => "N", 4 => "P", 5 => "F", 6 => "C"}
     if open_red_mjai_tile_dict.include?(open)
@@ -241,15 +241,13 @@ end
     open_tiles = open_tile_types()
     event_type = open_event_type()
     if event_type == "ankan"
-        p open_tiles
         return open_tiles.map {|x| open_to_mjai_tile(x)}
-    elsif has_red || event_type == "chi"
+    elsif is_stolen_red(open_stolen_tile) || event_type == "chi"
         open_tiles.delete(open_stolen_tile)  # 鳴いたはいを削除する。
         consumed_tiles = open_tiles.map {|x| open_to_mjai_tile(x)}
         return consumed_tiles
     else
-        open_tiles.delete_at 0
-        consumed_tiles = open_tiles.map {|x| open_to_mjai_tile(x)}
+        consumed_tiles = open_tiles[1..-1].map {|x| open_to_mjai_tile(x)} # pon, kanは晒した牌に赤があってもopenの最初のを除けば良い:赤は最後にくる
         return consumed_tiles
     end
   end
