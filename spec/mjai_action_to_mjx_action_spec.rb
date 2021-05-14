@@ -4,6 +4,7 @@ require './lib/mjxproto/mjx_pb'
 require './lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/mjai_action_to_mjx_action'
+require './lib/mjx_mjai_translater/open_converter'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
 
@@ -11,6 +12,8 @@ require "test_utils"
 RSpec.describe "mjai_action_to_mjx_action" do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
+    file_1 = File.open("spec/resources/observations-001.json", "r")
+    lines_1 = file_1.readlines
     file_3 = File.open("spec/resources/observations-003.json", "r")
     lines_3 = file_3.readlines
     absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
@@ -33,11 +36,23 @@ RSpec.describe "mjai_action_to_mjx_action" do
         mjai_action = {"type"=>"pon", "actor"=>0, "target"=>2, "pai"=>"2p", "consumed"=>["2p", "2p"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
+    it "kakan" do
+        observation = observation_from_json(lines_1,119)
+        possible_actions = observation.possible_actions
+        mjai_action = {"type"=>"kakan","actor"=>1,"pai"=>"5s","consumed"=>["5s", "5s", "5sr"]}
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
+    end
     it "daiminkan" do
         observation = observation_from_json(lines,173)
         possible_actions = observation.possible_actions
         mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"3p", "consumed"=>["3p", "3p", "3p"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
+    end
+    it "ankan" do
+        observation = observation_from_json(lines_3,42)
+        possible_actions = observation.possible_actions
+        mjai_action = {"type"=>"ankan","actor"=>3,"consumed"=>["P", "P", "P", "P"]}
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "riichi" do
         observation = observation_from_json(lines_3,30)
