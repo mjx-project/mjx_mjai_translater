@@ -53,6 +53,6 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         player = Player.new(nil, nil)
         player.update_possible_actoins(possible_actions)  
         player.update_hand(hand) 
-        expect(player.forbidden_tiles_mjai()).to eq ["7s"] # 99は7sで
+        expect(player.forbidden_tiles_mjai()).to eq ["7s"] # 7sを鳴いて7sを持っている。
     end
 end
