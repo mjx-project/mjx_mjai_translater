@@ -90,7 +90,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def mjx_act_to_mjai_act()
+  def mjx_act_to_mjai_act(mjx_act)
   end
 
 end
