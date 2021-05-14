@@ -11,6 +11,8 @@ require "test_utils"
 RSpec.describe "mjai_action_to_mjx_action" do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
+    file_3 = File.open("spec/resources/observations-003.json", "r")
+    lines_3 = file_3.readlines
     absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
     :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3}
     it "discard" do
@@ -36,6 +38,12 @@ RSpec.describe "mjai_action_to_mjx_action" do
         possible_actions = observation.possible_actions
         mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"3p", "consumed"=>["3p", "3p", "3p"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
+    end
+    it "riichi" do
+        observation = observation_from_json(lines_3,30)
+        possible_actions = observation.possible_actions
+        mjai_action = {"type"=>"reach","actor"=>3}
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "tsumo" do
         observation = observation_from_json(lines,96)

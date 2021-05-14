@@ -75,6 +75,12 @@ class MjaiToMjx
     if mjai_action["type"] == "ankan"
     end
     if mjai_action["type"] == "reach"
+      possible_actions.length.times do |i|
+        action_type = possible_actions[i].type
+        if action_type == :ACTION_TYPE_RIICHI
+          return i
+        end
+      end
     end
     if mjai_action["type"] == "hora"
       possible_actions.length.times do |i|
