@@ -48,6 +48,12 @@ RSpec.describe "mjai_action_to_mjx_action" do
         mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"3p", "consumed"=>["3p", "3p", "3p"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
     end
+    it "ankan" do
+        observation = observation_from_json(lines_3,42)
+        possible_actions = observation.possible_actions
+        mjai_action = {"type"=>"ankan","actor"=>3,"consumed"=>["P", "P", "P", "P"]}
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
+    end
     it "riichi" do
         observation = observation_from_json(lines_3,30)
         possible_actions = observation.possible_actions

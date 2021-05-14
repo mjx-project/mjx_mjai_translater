@@ -73,6 +73,17 @@ class MjaiToMjx
       end
     end
     if mjai_action["type"] == "ankan"
+      possible_actions.length.times do |i|
+        action_type = possible_actions[i].type
+        if action_type == :ACTION_TYPE_KAN_CLOSED  # 牌の種類が同じかどうか
+            open_converter = OpenConverter.new(possible_actions[i].open)
+            stolen_tile_in_mjai = open_converter.mjai_stolen()
+            consumed_tile_in_mjai = open_converter.mjai_consumed()
+            if mjai_action["consumed"] == consumed_tile_in_mjai
+              return i
+            end
+        end
+      end
     end
     if mjai_action["type"] == "reach"
       possible_actions.length.times do |i|
