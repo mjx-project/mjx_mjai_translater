@@ -50,7 +50,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if event.type == :EVENT_TYPE_DISCARD_DRAWN_TILE
       return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>true}
     end 
-    if event.type == :EVENT_TYPE_CHI || event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_KAN_OPEND  # pon, chi, daiminkan
+    if event.type == :EVENT_TYPE_CHI || event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_KAN_OPENED  # pon, chi, daiminkan
       open_converter = OpenConverter.new(event.open)
       type = open_converter.open_event_type()
       current_pos = event.who
