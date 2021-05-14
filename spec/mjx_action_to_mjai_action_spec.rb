@@ -15,3 +15,26 @@ RSpec.describe  MjxToMjai do  # tile変換のテスト
     expect(MjxToMjai.new({}).proto_tile_to_mjai_tile(121)).to eq "N"
   end
 end
+
+RSpec.describe  MjxToMjai do
+  it "打牌" do
+  end
+  it "チー" do
+  end
+  it "ポン" do
+  end
+  it "カカン" do
+  end
+  it "ダイミンカン" do 
+  end
+  it "アンカン" do
+  end
+  it "リーチ" do
+  end
+  it "ロン" do
+  end
+  it "ツモ" do
+  end
+  it "no" do
+  end
+end
