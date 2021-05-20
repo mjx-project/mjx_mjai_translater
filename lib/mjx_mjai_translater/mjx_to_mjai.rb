@@ -91,6 +91,19 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
   def mjx_act_to_mjai_act(mjx_act)
+    action_type = mjx_act.type
+    who = mjx_act.who
+    if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
+    end
+    if action_type == :ACTION_TYPE_RIICHI
+      return {"type"=>"reach", "actor"=>@absolutepos_id_hash[who]}
+    end
+    if action_type == :ACTION_TYPE_RON
+    end
+    if action_type == :ACTION_TYPE_TSUMO
+    end
+    if action_type == :ACTION_TYPE_NO
+      return {"type"=>"none"}
+    end
   end
-
 end
