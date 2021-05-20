@@ -95,10 +95,13 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
     end
+    if action_type == :ACTION_TYPE_CHI
+      
+    end
     if action_type == :ACTION_TYPE_RIICHI
       return {"type"=>"reach", "actor"=>@absolutepos_id_hash[who]}
     end
-    if action_type == :ACTION_TYPE_RON
+    if action_type == :ACTION_TYPE_RON # trans_serverが持っている previous_event_historyの情報を使う
     end
     if action_type == :ACTION_TYPE_TSUMO
     end
