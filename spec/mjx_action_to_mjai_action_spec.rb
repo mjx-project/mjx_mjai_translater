@@ -1,5 +1,13 @@
 require "./lib/mjx_mjai_translater/mjx_to_mjai"
-
+require 'json'
+require 'grpc'
+require './lib/mjxproto/mjx_pb'
+require './lib/mjxproto/mjx_services_pb'
+require 'google/protobuf'
+require './lib/mjx_mjai_translater/mjai_action_to_mjx_action'
+require './lib/mjx_mjai_translater/open_converter'
+$LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
+require "test_utils"
 
 RSpec.describe  MjxToMjai do  # tile変換のテスト
   it "protoの赤tileがmjaiのtileに変換できること" do
@@ -23,6 +31,8 @@ RSpec.describe  MjxToMjai do
   lines_1 = file_1.readlines
   file_3 = File.open("spec/resources/observations-003.json", "r")
   lines_3 = file_3.readlines
+  mjx_to_mjai = MjxToMjai.new({:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
+  :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3})
   it "打牌" do
     observation = observation_from_json(lines,1)
     possible_actions = observation.possible_actions
@@ -64,23 +74,25 @@ RSpec.describe  MjxToMjai do
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
     expected_mjai_action = {"type"=>"reach","actor"=>3}
+    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action)).to eq expected_mjai_action
   end
   it "ツモ" do
     observation = observation_from_json(lines,96)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"2m","uradora_markers"=>["8p"],"hora_tehais"=>["1m","3m","5m","6m","7m","1p","2p","3p","4p","5pr","6p","W","W","2m"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1]],"fu":30,"fan":3,"hora_points"=>4000,"deltas"=>[-2100,-1100,6300,-1100],"scores"=>[25900,21900,29300,22900]}
+    expected_mjai_action = {"type"=>"hora","actor"=>2,"target"=>2,"pai"=>"2m"}
   end
   it "ロン" do
     observation = observation_from_json(lines,156)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"2m","uradora_markers"=>["8p"],"hora_tehais"=>["1m","3m","5m","6m","7m","1p","2p","3p","4p","5pr","6p","W","W","2m"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1]],"fu":30,"fan":3,"hora_points"=>4000,"deltas"=>[-2100,-1100,6300,-1100],"scores"=>[25900,21900,29300,22900]}
+    expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"2m"}
   end
   it "no" do
     observation = observation_from_json(lines,9)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[1]
     expected_mjai_action = {"type"=>"none"}
+    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action)).to eq expected_mjai_action
   end
 end
