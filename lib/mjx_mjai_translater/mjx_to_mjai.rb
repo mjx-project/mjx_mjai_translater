@@ -107,6 +107,19 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       consumed_tile = open_converter.mjai_consumed()
       return {"type"=>type, "actor"=>@absolutepos_id_hash[who], "target"=>@absolutepos_id_hash[target], "pai"=>stolen_tile, "consumed"=>consumed_tile}
     end
+    if action_type == :ACTION_TYPE_KAN_ADDED  # kakan
+      open_converter = OpenConverter.new(mjx_act.open)
+      type = open_converter.open_event_type()
+      stolen_tile = open_converter.mjai_stolen()
+      consumed_tile = open_converter.mjai_consumed()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[who], "pai"=>stolen_tile, "consumed"=>consumed_tile}
+    end
+    if action_type == :ACTION_TYPE_KAN_CLOSED  # ankan
+      open_converter = OpenConverter.new(mjx_act.open)
+      type = open_converter.open_event_type()
+      consumed_tile = open_converter.mjai_consumed()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[who],"consumed"=>consumed_tile}
+    end
     if action_type == :ACTION_TYPE_RIICHI
       return {"type"=>"reach", "actor"=>@absolutepos_id_hash[who]}
     end
