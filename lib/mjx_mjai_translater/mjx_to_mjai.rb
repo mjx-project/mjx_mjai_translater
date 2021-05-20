@@ -90,7 +90,9 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def mjx_act_to_mjai_act(mjx_act)
+  def mjx_act_to_mjai_act(mjx_act, mjx_event_history) 
+    # この関数はtrans_serverの内部で実行されるのでprevious_historyは問題なく手に入る 
+    #　またこの関数が実行される際には@_mjx_event_historyが最新のものに更新されているので欲しいactionが含まれていないという心配もない
     action_type = mjx_act.type
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
