@@ -95,10 +95,35 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
     end
+    if action_type == :ACTION_TYPE_CHI || action_type == :ACTION_TYPE_PON || action_type == :ACTION_TYPE_KAN_OPENED
+      open_converter = OpenConverter.new(mjx_act.open)
+      type = open_converter.open_event_type()
+      current_pos = who
+      pos_index = @absolute_pos.find_index(current_pos)
+      relative_pos = open_converter.open_from()
+      target_index = (pos_index + relative_pos) % 4
+      target = @absolute_pos[target_index] # absolute_posを表すsymbol object
+      stolen_tile = open_converter.mjai_stolen()
+      consumed_tile = open_converter.mjai_consumed()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[who], "target"=>@absolutepos_id_hash[target], "pai"=>stolen_tile, "consumed"=>consumed_tile}
+    end
+    if action_type == :ACTION_TYPE_KAN_ADDED  # kakan
+      open_converter = OpenConverter.new(mjx_act.open)
+      type = open_converter.open_event_type()
+      stolen_tile = open_converter.mjai_stolen()
+      consumed_tile = open_converter.mjai_consumed()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[who], "pai"=>stolen_tile, "consumed"=>consumed_tile}
+    end
+    if action_type == :ACTION_TYPE_KAN_CLOSED  # ankan
+      open_converter = OpenConverter.new(mjx_act.open)
+      type = open_converter.open_event_type()
+      consumed_tile = open_converter.mjai_consumed()
+      return {"type"=>type, "actor"=>@absolutepos_id_hash[who],"consumed"=>consumed_tile}
+    end
     if action_type == :ACTION_TYPE_RIICHI
       return {"type"=>"reach", "actor"=>@absolutepos_id_hash[who]}
     end
-    if action_type == :ACTION_TYPE_RON
+    if action_type == :ACTION_TYPE_RON # trans_serverが持っている previous_event_historyの情報を使う
     end
     if action_type == :ACTION_TYPE_TSUMO
     end
