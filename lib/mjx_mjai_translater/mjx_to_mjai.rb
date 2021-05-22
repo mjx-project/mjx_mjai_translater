@@ -19,7 +19,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     @absolutepos_id_hash = absolutepos_id
     @absolute_pos = [:ABSOLUTE_POS_INIT_EAST,:ABSOLUTE_POS_INIT_SOUTH,
     :ABSOLUTE_POS_INIT_WEST, :ABSOLUTE_POS_INIT_NORTH]
-    self.assertions = 0
+    self.assertions = 0　# ないとエラーになる
   end
 
 
