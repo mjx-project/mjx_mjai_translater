@@ -7,13 +7,19 @@ $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require 'mjx_pb'
 require 'mjx_services_pb'
 require 'google/protobuf'
+require "minitest"
+
+include Minitest::Assertions
+
+
 
 class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラスじゃなくても良いかも
-
+  attr_accessor :assertions
   def initialize(absolutepos_id)
     @absolutepos_id_hash = absolutepos_id
     @absolute_pos = [:ABSOLUTE_POS_INIT_EAST,:ABSOLUTE_POS_INIT_SOUTH,
     :ABSOLUTE_POS_INIT_WEST, :ABSOLUTE_POS_INIT_NORTH]
+    self.assertions = 0
   end
 
 
@@ -127,9 +133,11 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
     if action_type == :ACTION_TYPE_RON || action_type == :ACTION_TYPE_TSUMO # trans_serverが持っている previous_event_historyの情報を使う
       last_event = event_history[-1]
+      assert_types = [:EVENT_TYPE_DISCARD_DRAWN_TILE, :EVENT_TYPE_DISCARD_FROM_HAND, :EVENT_TYPE_DRAW, :EVENT_TYPE_KAN_ADDED]
+      assert_includes assert_types, last_event.type
       target = last_event.who
       hora_tile = last_event.tile
-       return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[target],"pai"=>proto_tile_to_mjai_tile(hora_tile)}
+      return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[target],"pai"=>proto_tile_to_mjai_tile(hora_tile)}
     end
     if action_type == :ACTION_TYPE_NO
       return {"type"=>"none"}

@@ -86,7 +86,7 @@ RSpec.describe  MjxToMjai do
     possible_actions = observation.possible_actions
     event_history = observation.event_history.events
     mjx_action = possible_actions[0]
-    p event_history[-1].tile
+    p event_history[-1].type
     expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>0,"pai"=>"1m"}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, event_history)).to eq expected_mjai_action
   end
