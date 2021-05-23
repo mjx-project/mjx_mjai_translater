@@ -26,6 +26,7 @@ class Player
 
 
     def possible_actions()
+      
         return @possible_actions
     end
 
