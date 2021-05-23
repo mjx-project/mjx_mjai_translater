@@ -7,13 +7,19 @@ $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require 'mjx_pb'
 require 'mjx_services_pb'
 require 'google/protobuf'
+require "minitest"
+
+include Minitest::Assertions
+
+
 
 class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラスじゃなくても良いかも
-
+  attr_accessor :assertions
   def initialize(absolutepos_id)
     @absolutepos_id_hash = absolutepos_id
     @absolute_pos = [:ABSOLUTE_POS_INIT_EAST,:ABSOLUTE_POS_INIT_SOUTH,
     :ABSOLUTE_POS_INIT_WEST, :ABSOLUTE_POS_INIT_NORTH]
+    self.assertions = 0
   end
 
 
@@ -90,7 +96,9 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def mjx_act_to_mjai_act(mjx_act)
+  def mjx_act_to_mjai_act(mjx_act, event_history) 
+    # この関数はtrans_serverの内部で実行されるのでprevious_historyは問題なく手に入る 
+    #　またこの関数が実行される際には@_mjx_event_historyが最新のものに更新されているので欲しいactionが含まれていないという心配もない
     action_type = mjx_act.type
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
@@ -123,9 +131,13 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if action_type == :ACTION_TYPE_RIICHI
       return {"type"=>"reach", "actor"=>@absolutepos_id_hash[who]}
     end
-    if action_type == :ACTION_TYPE_RON # trans_serverが持っている previous_event_historyの情報を使う
-    end
-    if action_type == :ACTION_TYPE_TSUMO
+    if action_type == :ACTION_TYPE_RON || action_type == :ACTION_TYPE_TSUMO # trans_serverが持っている previous_event_historyの情報を使う
+      last_event = event_history[-1]
+      assert_types = [:EVENT_TYPE_DISCARD_DRAWN_TILE, :EVENT_TYPE_DISCARD_FROM_HAND, :EVENT_TYPE_DRAW, :EVENT_TYPE_KAN_ADDED]
+      assert_includes assert_types, last_event.type
+      target = last_event.who
+      hora_tile = last_event.tile
+      return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[target],"pai"=>proto_tile_to_mjai_tile(hora_tile)}
     end
     if action_type == :ACTION_TYPE_NO
       return {"type"=>"none"}

@@ -42,4 +42,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'json'
   spec.add_development_dependency 'nokogiri'
   spec.add_development_dependency 'sass'
+  spec.add_development_dependency 'minitest'
 end
