@@ -12,6 +12,8 @@ class Player
         @hand = []  # mjxとのやりとりで更新していく。
         @socket = socket
         @id = id
+        @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
+        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3}
     end
 
 
@@ -26,8 +28,8 @@ class Player
 
 
     def possible_actions()
-      
-        return @possible_actions
+      mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
+      return @possible_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x) }
     end
 
 

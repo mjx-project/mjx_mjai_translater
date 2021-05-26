@@ -6,17 +6,28 @@ require "test_utils"
 
 
 RSpec.describe "action_in_view" do
+    trans_server = TransServer.new()
     it "start_game" do
     end
     it "start_kyoku" do
     end
-    it "tsumo" do
+    it "tsumo not actor" do # id がactorと一致している時
     end
-    it "dahai kakan" do
+    it "tsumo actor"　do# id がactorと一致していない時
     end
-    it "chi pon" do
+    it "dahai kakan not actor" do
     end
-    it "reach" do
+    it "dahai kakan actor" do
+    end
+    it "chi pon not actor" do
+    end
+    it "chi actor" do
+    end
+    it "chi not actor" do
+    end
+    it "reach actor" do
+    end
+    it "reach not actor" do
     end
 end
 
