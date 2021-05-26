@@ -11,9 +11,9 @@ RSpec.describe "action_in_view" do
     end
     it "start_kyoku" do
     end
-    it "tsumo not actor" do # id がactorと一致している時
+    it "tsumo not actor" do # idがactorと一致している時
     end
-    it "tsumo actor"　do# id がactorと一致していない時
+    it "tsumo actor" do # idがactorと一致していない時
     end
     it "dahai kakan not actor" do
     end
