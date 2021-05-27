@@ -58,7 +58,7 @@ class TransServer < Mjxproto::Agent::Service
         #①各プレイヤーのpossible_actitons
         #②各playerの手配
         player = @players[player_id]
-        with_response_hint = for_response && expect_response_from?(player)
+        with_response_hint = true #for_response && expect_response_from?(player)
         case action.type
           when :start_game
             return action.merge({:id => player_id})
@@ -66,7 +66,7 @@ class TransServer < Mjxproto::Agent::Service
             tehais_list = action.tehais.dup()
             for i in 0...4
               if i != player_id
-                tehais_list[i] = [Pai::UNKNOWN] * tehais_list[i].size
+                tehais_list[i] = ["none"] * tehais_list[i].size  # Pai::UNKNOWN
               end
             end
             return action.merge({:tehais => tehais_list})
@@ -77,7 +77,7 @@ class TransServer < Mjxproto::Agent::Service
                       with_response_hint ? player.possible_actions() : nil,
               })
             else
-              return action.merge({:pai => Pai::UNKNOWN})
+              return action.merge({:pai => "none"}) # Pai::UNKNOWN
             end
           when :dahai, :kakan
             if action.actor != player
