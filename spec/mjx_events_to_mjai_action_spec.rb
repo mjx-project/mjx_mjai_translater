@@ -53,7 +53,7 @@ RSpec.describe TransServer do
     it "ミンカン" do
         previous_history = observation_from_json(lines_1, 197).event_history.events
         observation = observation_from_json(lines_1, 198)
-        history_difference = trans_server.extract_difference(previous_history, observation)
+        history_difference = trans_server.extract_difference(previous_history, observation) 
         expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>1,"pai"=>"9m", "tsumogiri"=>true},{"type"=>"daiminkan","actor"=>2,"target"=>1, "pai"=>"9m","consumed"=>["9m","9m","9m"]},
         {"type"=>"tsumo","actor"=>2,"pai"=>"?"},{"type"=>"dora","dora_marker"=>"1s"},{"type"=>"dahai","actor"=>2,"pai"=>"W","tsumogiri"=>true},{"type"=>"tsumo","actor"=>3,"pai"=>"?"}, {"type"=>"dahai","actor"=>3,"pai"=>"5m","tsumogiri"=>true},
         {"type"=>"tsumo","actor"=>0,"pai"=>"?"},{"type"=>"dahai","actor"=>0,"pai"=>"1m","tsumogiri"=>true},{"type"=>"tsumo","actor"=>1,"pai"=>"?"}]

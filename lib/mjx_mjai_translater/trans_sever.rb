@@ -12,15 +12,16 @@ require 'mjai_action_to_mjx_action'
 class TransServer < Mjxproto::Agent::Service
     
     def initialize() # params paramsはcommandからextractされる。
-        #@params = params
-        #@num_player_size = @params[:num_player_size]
+        @params = nil# params
+        @num_player_size = 4#@params[:num_player_size]
         @players = []
-        #@server = TCPServer.open(params[:host], params[:port])
+        @server = nil #TCPServer.open(params[:host], params[:port]) 
         @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
         :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_event_history = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
+        initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
     end
 
     def run()
@@ -57,7 +58,7 @@ class TransServer < Mjxproto::Agent::Service
         #①各プレイヤーのpossible_actitons
         #②各playerの手配
         player = @players[player_id]
-        with_response_hint = for_response && expect_response_from?(player)
+        with_response_hint = true #for_response && expect_response_from?(player)
         case action.type
           when :start_game
             return action.merge({:id => player_id})
@@ -65,7 +66,7 @@ class TransServer < Mjxproto::Agent::Service
             tehais_list = action.tehais.dup()
             for i in 0...4
               if i != player_id
-                tehais_list[i] = [Pai::UNKNOWN] * tehais_list[i].size
+                tehais_list[i] = ["none"] * tehais_list[i].size  # Pai::UNKNOWN
               end
             end
             return action.merge({:tehais => tehais_list})
@@ -76,7 +77,7 @@ class TransServer < Mjxproto::Agent::Service
                       with_response_hint ? player.possible_actions() : nil,
               })
             else
-              return action.merge({:pai => Pai::UNKNOWN})
+              return action.merge({:pai => "none"}) # Pai::UNKNOWN
             end
           when :dahai, :kakan
             if action.actor != player
