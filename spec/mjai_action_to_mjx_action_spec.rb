@@ -14,8 +14,7 @@ RSpec.describe "mjai_action_to_mjx_action" do
     lines_1 = file_1.readlines
     file_3 = File.open("spec/resources/observations-003.json", "r")
     lines_3 = file_3.readlines
-    absolutepos_id_hash = {0=>0,1=>1,
-    2=>2, 3=>3}
+    absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
     it "discard" do
         observation = observation_from_json(lines,1)
         possible_actions = observation.possible_actions
