@@ -5,6 +5,27 @@ require './lib/mjxproto/mjx/internal/mjx_pb'
 require './lib/mjxproto/mjx/internal/mjx_services_pb'
 require 'google/protobuf'
 
+class RelativePos
+    def initialize()
+    end
+
+    def _self()
+        return 0
+    end
+
+    def right()
+        return 1
+    end
+
+    def mid()
+        return 2
+    end
+
+    def left()
+        return 3
+    end
+end
+
 
 class OpenConverter
   def initialize(open)
@@ -23,6 +44,7 @@ class OpenConverter
 
 
   def open_event_type()  # eventのtype
+    relative_pos = RelativePos.new()
     if (1 << 2 & @bits) != 0  # rubyでは0はfalseを意味しない
       return "chi"
     elsif 1 << 3 & @bits != 0
@@ -30,7 +52,7 @@ class OpenConverter
     elsif 1 << 4 & @bits != 0
       return "kakan"
     else
-      if Mjxproto::RelativePos::RELATIVE_POS_SELF == @bits & 3
+      if relative_pos._self() == @bits & 3
           return "ankan"
       else
           return "daiminkan"
@@ -40,13 +62,14 @@ class OpenConverter
 
 
   def open_from()  # 誰から鳴いたか
+    relative_pos = RelativePos.new()
     event_type = open_event_type()
     if event_type == "chi"
-        return Mjxproto::RelativePos::RELATIVE_POS_LEFT
+        return relative_pos.left()
     elsif event_type == "pon" or event_type == "daiminkan"  or event_type == "kakan"
         return @bits & 3 # ポンチーダイミンカンの場合はrelativeposは3通り
     else
-        return Mjxproto::RelativePos::RELATIVE_POS_SELF
+        return relative_pos._self()
     end
   end
 
