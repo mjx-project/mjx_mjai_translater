@@ -133,13 +133,13 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def extract_difference(previous_history = @_mjx_public_observatoin, observation)  # public_observatoinの差分を取り出す
-        if !previous_history
-            return current_history = observation.public_observatoin.events
+    def extract_difference(previous_public_observation = @_mjx_public_observatoin, observation)  # public_observatoinの差分を取り出す
+        if !previous_public_observation
+            return observation.public_observatoin.events
         end
-        current_history = observation.public_observatoin.events
-        difference_history = current_history[previous_history.length ..]
-        @_mjx_public_observatoin = current_history  #更新
+        current_public_observation = observation.public_observatoin.events
+        difference_history = current_public_observation[previous_public_observation.length ..]
+        @_mjx_public_observatoin = current_public_observation  #更新
         return difference_history
     end
 
