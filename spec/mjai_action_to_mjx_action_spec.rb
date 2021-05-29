@@ -18,7 +18,7 @@ RSpec.describe "mjai_action_to_mjx_action" do
     it "discard" do
         observation = observation_from_json(lines,1)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"8m", "tsumoigri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
+        mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"4m", "tsumoigri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "chi" do
