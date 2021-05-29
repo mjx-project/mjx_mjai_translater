@@ -1,7 +1,5 @@
 require 'json'
 require 'grpc'
-require './lib/mjxproto/mjx_pb'
-require './lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/trans_sever'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)

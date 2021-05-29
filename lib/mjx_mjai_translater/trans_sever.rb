@@ -1,8 +1,9 @@
 this_dir = __dir__
-lib_dir = File.join(this_dir, '../mjxproto')
+lib_dir = File.join(this_dir, '../mjxproto/')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require "grpc"
-require 'mjx_services_pb'
+require './lib/mjxproto/mjx/internal/mjx_pb'
+require './lib/mjxproto/mjx/internal/mjx_services_pb'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require 'random_agent'
 require 'mjx_to_mjai'
