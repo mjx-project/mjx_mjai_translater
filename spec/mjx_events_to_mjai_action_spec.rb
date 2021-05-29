@@ -15,7 +15,7 @@ RSpec.describe TransServer do
     lines_1 = file_1.readlines
     trans_server = TransServer.new()
     it "ツモ、捨て牌" do  # actor(id)とabsolute_posは=ではないので内部で変換している。
-        previous_history = observation_from_json(lines, 0).event_history.events
+        previous_history = observation_from_json(lines, 0).public_observatoin.events
         observation = observation_from_json(lines, 1)
         history_difference = trans_server.extract_difference(previous_history, observation)
         expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"E", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},
@@ -25,7 +25,7 @@ RSpec.describe TransServer do
         #0 1                                                                                
     end
     it "リーチ, ポン" do
-        previous_history = observation_from_json(lines, 38).event_history.events
+        previous_history = observation_from_json(lines, 38).public_observatoin.events
         observation = observation_from_json(lines, 39)
         history_difference = trans_server.extract_difference(previous_history, observation)
         expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,22000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"2p", "tsumogiri"=>false}, {"type"=>"pon","actor"=>2,"target"=>0,"pai"=>"2p","consumed"=>["2p","2p"]},
@@ -35,7 +35,7 @@ RSpec.describe TransServer do
         #38, 39
     end
     it "チー" do
-        previous_history = observation_from_json(lines, 84).event_history.events
+        previous_history = observation_from_json(lines, 84).public_observatoin.events
         observation = observation_from_json(lines, 85)
         history_difference = trans_server.extract_difference(previous_history, observation)
         expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"chi","actor"=>1,"target"=>0,"pai"=>"1p", "consumed"=>["2p","3p"]},
@@ -45,13 +45,13 @@ RSpec.describe TransServer do
         #84, 85
     end
     it "カカン" do
-        previous_history = observation_from_json(lines_1, 125).event_history.events
+        previous_history = observation_from_json(lines_1, 125).public_observatoin.events
         observation = observation_from_json(lines_1, 126)
         history_difference = trans_server.extract_difference(previous_history, observation)
         expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"kakan","actor"=>1,"pai"=>"P","consumed"=>["P","P","P"]}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"}]
     end
     it "ミンカン" do
-        previous_history = observation_from_json(lines_1, 197).event_history.events
+        previous_history = observation_from_json(lines_1, 197).public_observatoin.events
         observation = observation_from_json(lines_1, 198)
         history_difference = trans_server.extract_difference(previous_history, observation) 
         expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>1,"pai"=>"9m", "tsumogiri"=>true},{"type"=>"daiminkan","actor"=>2,"target"=>1, "pai"=>"9m","consumed"=>["9m","9m","9m"]},
@@ -59,7 +59,7 @@ RSpec.describe TransServer do
         {"type"=>"tsumo","actor"=>0,"pai"=>"?"},{"type"=>"dahai","actor"=>0,"pai"=>"1m","tsumogiri"=>true},{"type"=>"tsumo","actor"=>1,"pai"=>"?"}]
     end
     it "アンカン" do
-        previous_history = observation_from_json(lines, 153).event_history.events
+        previous_history = observation_from_json(lines, 153).public_observatoin.events
         observation = observation_from_json(lines, 154)
         history_difference = trans_server.extract_difference(previous_history, observation)
         expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"1s", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},

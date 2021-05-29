@@ -4,7 +4,6 @@ require './lib/mjx_mjai_translater/player'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
 
-
 RSpec.describe "action_in_view" do
     trans_server = TransServer.new()
     it "start_game" do

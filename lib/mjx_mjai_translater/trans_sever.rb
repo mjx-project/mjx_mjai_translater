@@ -18,7 +18,7 @@ class TransServer < Mjxproto::Agent::Service
         @server = nil #TCPServer.open(params[:host], params[:port]) 
         @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
         :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
-        @_mjx_event_history = nil
+        @_mjx_public_observatoin = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
         initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
@@ -132,13 +132,13 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def extract_difference(previous_history = @_mjx_event_history, observation)  # event_historyの差分を取り出す
+    def extract_difference(previous_history = @_mjx_public_observatoin, observation)  # public_observatoinの差分を取り出す
         if !previous_history
-            return current_history = observation.event_history.events
+            return current_history = observation.public_observatoin.events
         end
-        current_history = observation.event_history.events
+        current_history = observation.public_observatoin.events
         difference_history = current_history[previous_history.length ..]
-        @_mjx_event_history = current_history  #更新
+        @_mjx_public_observatoin = current_history  #更新
         return difference_history
     end
 
@@ -155,10 +155,10 @@ class TransServer < Mjxproto::Agent::Service
 
     
     def observe(observation)
-        history_difference = extract_difference(@_mjx_event_history, observation)
+        history_difference = extract_difference(@_mjx_public_observatoin, observation)
         @scores = observation.state.init_score.ten  # scoreを更新 mjaiのactionに変換する際に使用
         mjx_actions = convert_to_mjai_actions(history_difference,@scores)
-        # self._mjx_event_historyと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
+        # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
     end
 
 
