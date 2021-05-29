@@ -1,7 +1,5 @@
 require 'json'
 require 'grpc'
-require './lib/mjxproto/mjx_pb'
-require './lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/mjai_action_to_mjx_action'
 require './lib/mjx_mjai_translater/open_converter'
@@ -16,8 +14,8 @@ RSpec.describe "mjai_action_to_mjx_action" do
     lines_1 = file_1.readlines
     file_3 = File.open("spec/resources/observations-003.json", "r")
     lines_3 = file_3.readlines
-    absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
-    :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3}
+    absolutepos_id_hash = {0=>0,1=>1,
+    2=>2, 3=>3}
     it "discard" do
         observation = observation_from_json(lines,1)
         possible_actions = observation.possible_actions

@@ -5,8 +5,8 @@ require_relative "../../mjai/lib/mjai/tcp_active_game_server"
 class MjaiToMjx
   def initialize(absolutepos_id)
     @absolutepos_id_hash = absolutepos_id
-    @absolute_pos = [:ABSOLUTE_POS_INIT_EAST,:ABSOLUTE_POS_INIT_SOUTH,
-    :ABSOLUTE_POS_INIT_WEST, :ABSOLUTE_POS_INIT_NORTH]
+    @absolute_pos = [0,1,
+    2, 3]
   end
 
   def find_proper_action_idx(mjai_action, possible_actions)

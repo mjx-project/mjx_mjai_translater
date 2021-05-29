@@ -1,8 +1,6 @@
 #差分を取得する関数とその差分をactionに変換する関数のテスト
 require 'json'
 require 'grpc'
-require './lib/mjxproto/mjx_pb'
-require './lib/mjxproto/mjx_services_pb'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/trans_sever'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
@@ -35,7 +33,7 @@ RSpec.describe "observation間のdrawsの変動" do  # ツモ牌の情報の取�
     previous_draws = []
     it "変動が1以下であること" do
         lines.length.times do |line|
-            current_draws = observation_from_json(lines, line).private_observation.draws  
+            current_draws = observation_from_json(lines, line).private_info.draws  
             expect(current_draws.length - previous_draws.length).to be <= 1
             previous_draws = current_draws  # 更新
         end

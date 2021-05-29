@@ -4,8 +4,8 @@ require "open_converter.rb"
 this_dir = __dir__
 lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
-require 'mjx_pb'
-require 'mjx_services_pb'
+require './lib/mjxproto/mjx/internal/mjx_pb'
+require './lib/mjxproto/mjx/internal/mjx_services_pb'
 require 'google/protobuf'
 require "minitest"
 
@@ -17,8 +17,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   attr_accessor :assertions
   def initialize(absolutepos_id)
     @absolutepos_id_hash = absolutepos_id
-    @absolute_pos = [:ABSOLUTE_POS_INIT_EAST,:ABSOLUTE_POS_INIT_SOUTH,
-    :ABSOLUTE_POS_INIT_WEST, :ABSOLUTE_POS_INIT_NORTH]
+    @absolute_pos = [0,1,2, 3]
     self.assertions = 0
   end
 

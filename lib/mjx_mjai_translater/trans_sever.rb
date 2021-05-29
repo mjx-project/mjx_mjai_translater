@@ -1,8 +1,9 @@
 this_dir = __dir__
-lib_dir = File.join(this_dir, '../mjxproto')
+lib_dir = File.join(this_dir, '../mjxproto/')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require "grpc"
-require 'mjx_services_pb'
+require './lib/mjxproto/mjx/internal/mjx_pb'
+require './lib/mjxproto/mjx/internal/mjx_services_pb'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require 'random_agent'
 require 'mjx_to_mjai'
@@ -16,8 +17,8 @@ class TransServer < Mjxproto::Agent::Service
         @num_player_size = 4#@params[:num_player_size]
         @players = []
         @server = nil #TCPServer.open(params[:host], params[:port]) 
-        @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
-        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
+        @absolutepos_id_hash = {0=>0,1=>1,
+        2=>2, 3=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_public_observatoin = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
