@@ -38,8 +38,8 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
     lines_3 = file_3.readlines
     it "normal" do
         observation = observation_from_json(lines,0)
-        init_hand = observation.private_info.init_hand
-        draw = observation.private_info.draws[0]
+        init_hand = observation.private_observation.init_hand
+        draw = observation.private_observation.draws[0]
         init_hand.push(draw)
         possible_actions = observation.possible_actions
         player = Player.new(nil, nil) # playerのinstanceを作る

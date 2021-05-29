@@ -1,6 +1,6 @@
 require 'grpc'
-require './lib/mjxproto/mjx_pb'
-require './lib/mjxproto/mjx_services_pb'
+require './lib/mjxproto/mjx/internal/mjx_pb'
+require './lib/mjxproto/mjx/internal/mjx_services_pb'
 require 'google/protobuf'
 
 

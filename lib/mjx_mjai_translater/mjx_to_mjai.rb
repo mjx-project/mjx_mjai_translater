@@ -17,8 +17,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   attr_accessor :assertions
   def initialize(absolutepos_id)
     @absolutepos_id_hash = absolutepos_id
-    @absolute_pos = [:ABSOLUTE_POS_INIT_EAST,:ABSOLUTE_POS_INIT_SOUTH,
-    :ABSOLUTE_POS_INIT_WEST, :ABSOLUTE_POS_INIT_NORTH]
+    @absolute_pos = [0,1,2, 3]
     self.assertions = 0
   end
 

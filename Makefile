@@ -8,6 +8,6 @@ tests:
 	echo "tests"
 
 protos:
-	grpc_tools_ruby_protoc -I mjx --ruby_out=lib/mjxproto --grpc_out=lib/mjxproto mjx/mjx.proto
+	grpc_tools_ruby_protoc -I mjx --ruby_out=lib/mjxproto --grpc_out=lib/mjxproto mjx/mjx/internal/mjx.proto
 
 .PHONY: clear build tests protos

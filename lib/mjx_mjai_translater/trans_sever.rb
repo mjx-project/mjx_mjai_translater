@@ -16,8 +16,8 @@ class TransServer < Mjxproto::Agent::Service
         @num_player_size = 4#@params[:num_player_size]
         @players = []
         @server = nil #TCPServer.open(params[:host], params[:port]) 
-        @absolutepos_id_hash = {:ABSOLUTE_POS_INIT_EAST=>0,:ABSOLUTE_POS_INIT_SOUTH=>1,
-        :ABSOLUTE_POS_INIT_WEST=>2, :ABSOLUTE_POS_INIT_NORTH=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
+        @absolutepos_id_hash = {0=>0,1=>1,
+        2=>2, 3=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_public_observatoin = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
