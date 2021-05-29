@@ -28,9 +28,9 @@ RSpec.describe "mjai_action_to_mjx_action" do
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
     end
     it "chi" do
-        observation = observation_from_json(lines,7)
+        observation = observation_from_json(lines,11)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>"3p", "consumed"=>["4p", "5p"]}
+        mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>"7s", "consumed"=>["8s", "9s"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "pon" do
