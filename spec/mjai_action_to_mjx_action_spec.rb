@@ -12,6 +12,8 @@ RSpec.describe "mjai_action_to_mjx_action" do
     lines = file.readlines
     file_1 = File.open("spec/resources/observations-001.json", "r")
     lines_1 = file_1.readlines
+    file_2 = File.open("spec/resources/observations-002.json", "r")
+    lines_2 = file_2.readlines
     file_3 = File.open("spec/resources/observations-003.json", "r")
     lines_3 = file_3.readlines
     absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
@@ -40,15 +42,16 @@ RSpec.describe "mjai_action_to_mjx_action" do
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "kakan" do
-        observation = observation_from_json(lines_1,119)
+        observation = observation_from_json(lines_1,43)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"kakan","actor"=>1,"pai"=>"5s","consumed"=>["5s", "5s", "5sr"]}
+        mjai_action = {"type"=>"kakan","actor"=>1,"pai"=>"1s","consumed"=>["1s", "1s", "1s"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "daiminkan" do
-        observation = observation_from_json(lines,173)
+        observation = observation_from_json(lines_2,112)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"3p", "consumed"=>["3p", "3p", "3p"]}
+        p possible_actions[1]
+        mjai_action = {"type"=>"daiminkan", "actor"=>2, "target"=>3, "pai"=>"9p", "consumed"=>["9p", "9p", "9p"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
     end
     it "ankan" do
@@ -76,9 +79,9 @@ RSpec.describe "mjai_action_to_mjx_action" do
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "none" do
-        observation = observation_from_json(lines,9)
+        observation = observation_from_json(lines,5)
         possible_actions = observation.possible_actions
         mjai_action = {"type"=>"none"}
-        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[-1]
     end
 end
