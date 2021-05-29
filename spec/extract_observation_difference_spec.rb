@@ -33,7 +33,11 @@ RSpec.describe "observation間のdrawsの変動" do  # ツモ牌の情報の取�
     previous_draws = []
     it "変動が1以下であること" do
         lines.length.times do |line|
-            current_draws = observation_from_json(lines, line).private_info.draws  
+            current_possible_action = observation_from_json(lines, line).possible_actions[0]
+            if current_possible_action.type == :ACTION_TYPE_DUMMY
+                next
+            end
+            current_draws = observation_from_json(lines, line).private_observation.draw_history
             expect(current_draws.length - previous_draws.length).to be <= 1
             previous_draws = current_draws  # 更新
         end
