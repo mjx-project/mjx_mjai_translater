@@ -34,9 +34,9 @@ RSpec.describe "mjai_action_to_mjx_action" do
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "pon" do
-        observation = observation_from_json(lines,9)
+        observation = observation_from_json(lines,5)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"pon", "actor"=>0, "target"=>2, "pai"=>"2p", "consumed"=>["2p", "2p"]}
+        mjai_action = {"type"=>"pon", "actor"=>0, "target"=>2, "pai"=>"9s", "consumed"=>["9s", "9s"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "kakan" do
@@ -58,21 +58,21 @@ RSpec.describe "mjai_action_to_mjx_action" do
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "riichi" do
-        observation = observation_from_json(lines_3,30)
+        observation = observation_from_json(lines,113)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"reach","actor"=>3}
+        mjai_action = {"type"=>"reach","actor"=>0}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "tsumo" do
-        observation = observation_from_json(lines,96)
+        observation = observation_from_json(lines_1,128)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"hora","actor"=>0,"target"=>0,"pai"=>"1m","uradora_markers"=>["8p"],"hora_tehais"=>["1m","3m","5m","6m","7m","1p","2p","3p","4p","5pr","6p","W","W","2m"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1]],"fu":30,"fan":3,"hora_points"=>4000,"deltas"=>[-2100,-1100,6300,-1100],"scores"=>[25900,21900,29300,22900]}
+        mjai_action = {"type"=>"hora","actor"=>1,"target"=>1,"pai"=>"7p","uradora_markers"=>["8p"],"hora_tehais"=>["1m","2m","3m","1p","2p","3p","3p","3p","5pr","6pr","1s","2s", "3s"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1],["ippatsu",1]],"fu":30,"fan":4,"hora_points"=>7900,"deltas"=>[-2100,9200,-2100,-4000],"scores"=>[22300,34200,14600,28900]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "ron" do
-        observation = observation_from_json(lines,156)
+        observation = observation_from_json(lines,87)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"hora","actor"=>0,"target"=>3,"pai"=>"7m","uradora_markers"=>["8p"],"hora_tehais"=>["1m","3m","5m","6m","7m","1p","2p","3p","4p","5pr","6p","W","W","2m"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1]],"fu":30,"fan":3,"hora_points"=>4000,"deltas"=>[-2100,-1100,6300,-1100],"scores"=>[25900,21900,29300,22900]}
+        mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"5p","uradora_markers"=>["8p"],"hora_tehais"=>["4p","4p","5pr","5p","5p","6p","7p","8p","7s","7s","7s","5s","5s","5s", "5sr"],"yakus"=>[["akadora",2],["pinfu",1],["dora",1]],"fu":40,"fan":4,"hora_points"=>8000,"deltas"=>[9600,0,-8600,0],"scores"=>[29300,33200,17400,20100]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "none" do
