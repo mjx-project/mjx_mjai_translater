@@ -21,6 +21,12 @@ RSpec.describe "mjai_action_to_mjx_action" do
         mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"4m", "tsumoigri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
+    it "tsumogiri" do 
+        observation = observation_from_json(lines,2)
+        possible_actions = observation.possible_actions
+        mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"6m", "tsumoigri"=>true} 
+        expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
+    end
     it "chi" do
         observation = observation_from_json(lines,7)
         possible_actions = observation.possible_actions
