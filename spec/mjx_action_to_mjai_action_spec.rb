@@ -84,20 +84,20 @@ RSpec.describe  MjxToMjai do
   it "ツモ" do
     observation = observation_from_json(lines,96)
     possible_actions = observation.possible_actions
-    event_history = observation.event_history.events
+    public_observatoin = observation.public_observatoin.events
     mjx_action = possible_actions[0]
-    p event_history[-1].type
+    p public_observatoin[-1].type
     expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>0,"pai"=>"1m"}
-    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, event_history)).to eq expected_mjai_action
+    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
   it "ロン" do
     observation = observation_from_json(lines,156)
     possible_actions = observation.possible_actions
-    event_history = observation.event_history.events
+    public_observatoin = observation.public_observatoin.events
     mjx_action = possible_actions[0]
-    p event_history[-1].tile
+    p public_observatoin[-1].tile
     expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>3,"pai"=>"7m"}
-    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, event_history)).to eq expected_mjai_action
+    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
   it "no" do
     observation = observation_from_json(lines,9)

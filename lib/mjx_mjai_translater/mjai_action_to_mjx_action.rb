@@ -49,7 +49,7 @@ class MjaiToMjx
     if mjai_action["type"] == "kakan"
       possible_actions.length.times do |i|
         action_type = possible_actions[i].type
-        if action_type == :ACTION_TYPE_KAN_ADDED  # 牌の種類が同じかどうか
+        if action_type == :ACTION_TYPE_ADDED_KAN  # 牌の種類が同じかどうか
             open_converter = OpenConverter.new(possible_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
@@ -62,7 +62,7 @@ class MjaiToMjx
     if mjai_action["type"] == "daiminkan"
       possible_actions.length.times do |i|
         action_type = possible_actions[i].type
-        if action_type == :ACTION_TYPE_KAN_OPENED  # 牌の種類が同じかどうか
+        if action_type == :ACTION_TYPE_OPEN_KAN  # 牌の種類が同じかどうか
             open_converter = OpenConverter.new(possible_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
@@ -75,7 +75,7 @@ class MjaiToMjx
     if mjai_action["type"] == "ankan"
       possible_actions.length.times do |i|
         action_type = possible_actions[i].type
-        if action_type == :ACTION_TYPE_KAN_CLOSED  # 牌の種類が同じかどうか
+        if action_type == :ACTION_TYPE_CLOSED_KAN  # 牌の種類が同じかどうか
             open_converter = OpenConverter.new(possible_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
