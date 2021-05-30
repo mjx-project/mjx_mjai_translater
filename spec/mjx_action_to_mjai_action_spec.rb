@@ -27,15 +27,21 @@ RSpec.describe  MjxToMjai do
   lines = file.readlines
   file_1 = File.open("spec/resources/observations-001.json", "r")
   lines_1 = file_1.readlines
+  file_2 = File.open("spec/resources/observations-002.json", "r")
+  lines_2 = file_2.readlines
   file_3 = File.open("spec/resources/observations-003.json", "r")
   lines_3 = file_3.readlines
   mjx_to_mjai = MjxToMjai.new({0=>0,1=>1,
   2=>2, 3=>3})
-  it "打牌" do
+  it "手出し" do
     observation = observation_from_json(lines,1)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"8m", "tsumoigri"=>false}
+    expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"4m", "tsumoigri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
+    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
+  end
+  it "ツモぎり" do
+
   end
   it "チー" do
     observation = observation_from_json(lines,7)
