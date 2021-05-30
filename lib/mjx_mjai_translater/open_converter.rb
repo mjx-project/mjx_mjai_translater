@@ -6,8 +6,6 @@ require './lib/mjxproto/mjx/internal/mjx_services_pb'
 require 'google/protobuf'
 
 class RelativePos
-    def initialize()
-    end
 
     def _self()
         return 0

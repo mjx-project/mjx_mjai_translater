@@ -20,13 +20,14 @@ end
 
 
 RSpec.describe "open_from" do   # 誰から鳴いたのか必要なのはpon chi daiminkanのみ
+    relative_pos = RelativePos.new()
     it "対面" do
         open_converter = OpenConverter.new(51306)
-        expect(open_converter.open_from()).to eq 2
+        expect(open_converter.open_from()).to eq relative_pos.mid()
     end
     it "上家" do
         open_converter = OpenConverter.new(49495)
-        expect(open_converter.open_from()).to eq 3
+        expect(open_converter.open_from()).to eq relative_pos.left()
     end
 end
 
