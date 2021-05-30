@@ -11,6 +11,10 @@ RSpec.describe "mjx_eventの変換" do
     lines = file.readlines
     file_1 = File.open("spec/resources/observations-001.json", "r")
     lines_1 = file_1.readlines
+    file_2 = File.open("spec/resources/observations-002.json", "r")
+    lines_2 = file_2.readlines
+    file_3 = File.open("spec/resources/observations-003.json", "r")
+    lines_3 = file_3.readlines
     absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
     mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash)
     trans_server = TransServer.new()
@@ -48,22 +52,25 @@ RSpec.describe "mjx_eventの変換" do
         previous_public_observation = observation_from_json(lines, 8).public_observation.events
         observation = observation_from_json(lines, 9)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
-        p public_observation_difference
         mjx_event = public_observation_difference[4]
         expected_mjai_action = {"type"=>"kakan","actor"=>2,"pai"=>"9m","consumed"=>["9m", "9m", "9m"]}
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action
     end
     it "OPEN_KAN" do
-        previous_public_observation = observation_from_json(lines_1, 197).public_observation.events
-        observation = observation_from_json(lines_1, 198)
-        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation) 
-        expect(trans_server.convert_to_mjai_actions(public_observation_difference, [26000,26000,26000,21000])).to eq 
+        previous_public_observation = observation_from_json(lines_2, 129).public_observation.events
+        observation = observation_from_json(lines_2, 130)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[5]
+        expected_mjai_action = {"type"=>"daiminkan", "actor"=>1, "target"=>0, "pai"=>"W", "consumed"=>["W", "W", "W"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action
     end
     it "CLOSED_KAN" do
-        previous_public_observation = observation_from_json(lines, 153).public_observation.events
-        observation = observation_from_json(lines, 154)
+        previous_public_observation = observation_from_json(lines, 84).public_observation.events
+        observation = observation_from_json(lines, 85)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
-        expect(trans_server.convert_to_mjai_actions(public_observation_difference, [26000,26000,26000,21000])).to eq   # public_observation_differenceを目視で確認し、mjconvertにかけてmjaiのformatと照合した。
+        mjx_event = public_observation_difference[0]
+        expected_mjai_action = {"type"=>"ankan","actor"=>0,"consumed"=>["5s", "5s", "5s", "5sr"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action
         # 153 154  
     end  
     it "RIICHI" do
