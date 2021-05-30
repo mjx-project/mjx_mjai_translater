@@ -55,7 +55,7 @@ RSpec.describe  MjxToMjai do
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ポン" do
-    observation = observation_from_json(lines,0)
+    observation = observation_from_json(lines,5)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
     expected_mjai_action = {"type"=>"pon", "actor"=>0, "target"=>2, "pai"=>"9s", "consumed"=>["9s", "9s"]}
