@@ -82,7 +82,19 @@ RSpec.describe "mjx_eventの変換" do
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action
     end
     it "RIICHI_SCORE_CHANGE" do
+        previous_public_observation = observation_from_json(lines, 40).public_observation.events
+        observation = observation_from_json(lines, 41)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[6]
+        expected_mjai_action = {"type"=>"reach_accepted","actor"=>3,"deltas"=>[0,0,0,-1000],"scores"=>[25000,28900,25000,20100]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, [25000,28900,25000,21100])).to eq expected_mjai_action
     end
     it "NEW_DORA" do
+        previous_public_observation = observation_from_json(lines, 8).public_observation.events
+        observation = observation_from_json(lines, 9)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[6]
+        expected_mjai_action = {"type"=>"dora","dora_marker"=>"4m"}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action
     end                                               
 end
