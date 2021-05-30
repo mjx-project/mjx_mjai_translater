@@ -45,7 +45,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_event_to_mjai_action(event,scores)  # observationはreach_accepted, ron tsumoの時しか使わない。
+  def mjx_event_to_mjai_action(event, observation, scores)  # observationはreach_accepted, ron tsumoの時しか使わない。
     if event.type == :EVENT_TYPE_DRAW
       return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # ツモ牌 全て？で統一
     end
