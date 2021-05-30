@@ -101,8 +101,12 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     action_type = mjx_act.type
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
+      tile = mjx_act.discard
+      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumoigri"=>false}
     end
     if action_type == :ACTION_TYPE_TSUMOGIRI
+      tile = mjx_act.discard
+      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumoigri"=>true}
     end
     if action_type == :ACTION_TYPE_CHI || action_type == :ACTION_TYPE_PON || action_type == :ACTION_TYPE_OPEN_KAN
       open_converter = OpenConverter.new(mjx_act.open)
