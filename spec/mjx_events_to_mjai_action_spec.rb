@@ -6,65 +6,107 @@ $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
 
 
-RSpec.describe TransServer do
+RSpec.describe "mjx_eventの変換" do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
     file_1 = File.open("spec/resources/observations-001.json", "r")
     lines_1 = file_1.readlines
+    file_2 = File.open("spec/resources/observations-002.json", "r")
+    lines_2 = file_2.readlines
+    file_3 = File.open("spec/resources/observations-003.json", "r")
+    lines_3 = file_3.readlines
+    absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
+    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash)
     trans_server = TransServer.new()
-    it "ツモ、捨て牌" do  # actor(id)とabsolute_posは=ではないので内部で変換している。
-        previous_history = observation_from_json(lines, 0).public_observatoin.events
+    it "DRAW" do  # actor(id)とabsolute_posは=ではないので内部で変換している。
+        previous_public_observation = observation_from_json(lines, 0).public_observation.events
         observation = observation_from_json(lines, 1)
-        history_difference = trans_server.extract_difference(previous_history, observation)
-        expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"E", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>1,"pai"=>"S", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>2,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
-                                                                                {"type"=>"dahai","actor"=>3,"pai"=>"E", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # mjaiのwikiを参考に作成
-        #0 1                                                                                
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[0]
+        expected_mjai_action = {"type"=>"tsumo","actor"=>0,"pai"=>"?"}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action  # mjaiのwikiを参考に作成                                                                       
     end
-    it "リーチ, ポン" do
-        previous_history = observation_from_json(lines, 38).public_observatoin.events
-        observation = observation_from_json(lines, 39)
-        history_difference = trans_server.extract_difference(previous_history, observation)
-        expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,22000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"2p", "tsumogiri"=>false}, {"type"=>"pon","actor"=>2,"target"=>0,"pai"=>"2p","consumed"=>["2p","2p"]},
-        {"type"=>"dahai","actor"=>2,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"tsumo", "actor"=>3,"pai"=>"?"},{"type"=>"reach","actor"=>3}, 
-        {"type"=>"dahai", "actor"=>3,"pai"=>"3p", "tsumogiri"=>false}, {"type"=>"reach_accepted","actor"=>3, "deltas"=>[0,0,0,-1000], "scoers"=>[26000,26000,26000,21000]},
-        {"type"=>"tsumo", "actor"=>0, "pai"=>"?"}]
+    it "DISCARD" do
+        previous_public_observation = observation_from_json(lines, 1).public_observation.events
+        observation = observation_from_json(lines, 2)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[0]
+        expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"E", "tsumogiri"=>false}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action 
+    end
+    it "TSUMOGIRI" do
+        previous_public_observation = observation_from_json(lines, 2).public_observation.events
+        observation = observation_from_json(lines, 3)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[4]
+        expected_mjai_action = {"type"=>"dahai", "actor"=>2, "pai"=>"P", "tsumogiri"=>true}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action 
+    end
+    it "CHI" do
+        previous_public_observation = observation_from_json(lines, 4).public_observation.events
+        observation = observation_from_json(lines, 5)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[3]
+        expected_mjai_action = {"type"=>"chi", "actor"=>2, "target"=>1, "pai"=>"4p", "consumed"=>["5p", "6p"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
         #38, 39
     end
-    it "チー" do
-        previous_history = observation_from_json(lines, 84).public_observatoin.events
-        observation = observation_from_json(lines, 85)
-        history_difference = trans_server.extract_difference(previous_history, observation)
-        expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"1p", "tsumogiri"=>false}, {"type"=>"chi","actor"=>1,"target"=>0,"pai"=>"1p", "consumed"=>["2p","3p"]},
-        {"type"=>"dahai","actor"=>1,"pai"=>"6s", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},
-        {"type"=>"dahai","actor"=>2,"pai"=>"1s", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
-        {"type"=>"dahai","actor"=>3,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]
+    it "PON" do
+        previous_public_observation = observation_from_json(lines, 1).public_observation.events
+        observation = observation_from_json(lines, 2)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[1]
+        expected_mjai_action = {"type"=>"pon", "actor"=>1, "target"=>0, "pai"=>"E", "consumed"=>["E", "E"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
         #84, 85
     end
-    it "カカン" do
-        previous_history = observation_from_json(lines_1, 125).public_observatoin.events
-        observation = observation_from_json(lines_1, 126)
-        history_difference = trans_server.extract_difference(previous_history, observation)
-        expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"kakan","actor"=>1,"pai"=>"P","consumed"=>["P","P","P"]}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"}]
+    it "ADDED_KAN" do
+        previous_public_observation = observation_from_json(lines, 8).public_observation.events
+        observation = observation_from_json(lines, 9)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[4]
+        expected_mjai_action = {"type"=>"kakan","actor"=>2,"pai"=>"9m","consumed"=>["9m", "9m", "9m"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
     end
-    it "ミンカン" do
-        previous_history = observation_from_json(lines_1, 197).public_observatoin.events
-        observation = observation_from_json(lines_1, 198)
-        history_difference = trans_server.extract_difference(previous_history, observation) 
-        expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>1,"pai"=>"9m", "tsumogiri"=>true},{"type"=>"daiminkan","actor"=>2,"target"=>1, "pai"=>"9m","consumed"=>["9m","9m","9m"]},
-        {"type"=>"tsumo","actor"=>2,"pai"=>"?"},{"type"=>"dora","dora_marker"=>"1s"},{"type"=>"dahai","actor"=>2,"pai"=>"W","tsumogiri"=>true},{"type"=>"tsumo","actor"=>3,"pai"=>"?"}, {"type"=>"dahai","actor"=>3,"pai"=>"5m","tsumogiri"=>true},
-        {"type"=>"tsumo","actor"=>0,"pai"=>"?"},{"type"=>"dahai","actor"=>0,"pai"=>"1m","tsumogiri"=>true},{"type"=>"tsumo","actor"=>1,"pai"=>"?"}]
+    it "OPEN_KAN" do
+        previous_public_observation = observation_from_json(lines_2, 129).public_observation.events
+        observation = observation_from_json(lines_2, 130)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[5]
+        expected_mjai_action = {"type"=>"daiminkan", "actor"=>1, "target"=>0, "pai"=>"W", "consumed"=>["W", "W", "W"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
     end
-    it "アンカン" do
-        previous_history = observation_from_json(lines, 153).public_observatoin.events
-        observation = observation_from_json(lines, 154)
-        history_difference = trans_server.extract_difference(previous_history, observation)
-        expect(trans_server.convert_to_mjai_actions(history_difference, [26000,26000,26000,21000])).to eq [{"type"=>"dahai","actor"=>0,"pai"=>"1s", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>1,"pai"=>"?"},
-        {"type"=>"dahai","actor"=>1,"pai"=>"9p", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},{"type"=>"ankan","actor"=>2,"consumed"=>["1p","1p","1p","1p"]},
-        {"type"=>"dora","dora_marker"=>"W"}, {"type"=>"tsumo","actor"=>2,"pai"=>"?"},{"type"=>"dahai","actor"=>2,"pai"=>"9m", "tsumogiri"=>false}, {"type"=>"tsumo","actor"=>3,"pai"=>"?"},
-        {"type"=>"dahai","actor"=>3,"pai"=>"N", "tsumogiri"=>true}, {"type"=>"tsumo","actor"=>0,"pai"=>"?"}]  # history_differenceを目視で確認し、mjconvertにかけてmjaiのformatと照合した。
+    it "CLOSED_KAN" do
+        previous_public_observation = observation_from_json(lines, 84).public_observation.events
+        observation = observation_from_json(lines, 85)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[0]
+        expected_mjai_action = {"type"=>"ankan","actor"=>0,"consumed"=>["5s", "5s", "5s", "5sr"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
         # 153 154  
-    end                                                        
-
+    end  
+    it "RIICHI" do
+        previous_public_observation = observation_from_json(lines, 40).public_observation.events
+        observation = observation_from_json(lines, 41)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[4]
+        expected_mjai_action = {"type"=>"reach","actor"=>3}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
+    end
+    it "RIICHI_SCORE_CHANGE" do
+        previous_public_observation = observation_from_json(lines, 40).public_observation.events
+        observation = observation_from_json(lines, 41)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[6]
+        expected_mjai_action = {"type"=>"reach_accepted","actor"=>3,"deltas"=>[0,0,0,-1000],"scores"=>[25000,28900,25000,20100]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event,nil ,[25000,28900,25000,21100])).to eq expected_mjai_action
+    end
+    it "NEW_DORA" do
+        previous_public_observation = observation_from_json(lines, 8).public_observation.events
+        observation = observation_from_json(lines, 9)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[6]
+        expected_mjai_action = {"type"=>"dora","dora_marker"=>"4m"}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
+    end                                               
 end
