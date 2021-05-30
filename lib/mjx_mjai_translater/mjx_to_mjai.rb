@@ -102,6 +102,8 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
     end
+    if action_type == :ACTION_TYPE_TSUMOGIRI
+    end
     if action_type == :ACTION_TYPE_CHI || action_type == :ACTION_TYPE_PON || action_type == :ACTION_TYPE_OPEN_KAN
       open_converter = OpenConverter.new(mjx_act.open)
       type = open_converter.open_event_type()
