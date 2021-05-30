@@ -48,45 +48,45 @@ RSpec.describe  MjxToMjai do
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "チー" do
-    observation = observation_from_json(lines,7)
+    observation = observation_from_json(lines,11)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>"3p", "consumed"=>["4p", "5p"]}
+    expected_mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>"7s", "consumed"=>["8s", "9s"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ポン" do
-    observation = observation_from_json(lines,9)
+    observation = observation_from_json(lines,0)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"pon", "actor"=>0, "target"=>2, "pai"=>"2p", "consumed"=>["2p", "2p"]}
+    expected_mjai_action = {"type"=>"pon", "actor"=>0, "target"=>2, "pai"=>"9s", "consumed"=>["9s", "9s"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "カカン" do
-    observation = observation_from_json(lines_1,119)
+    observation = observation_from_json(lines_1,43)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"kakan","actor"=>1,"pai"=>"5s","consumed"=>["5s", "5s", "5sr"]}
+    expected_mjai_action = {"type"=>"kakan","actor"=>1,"pai"=>"1s","consumed"=>["1s", "1s", "1s"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ダイミンカン" do 
-    observation = observation_from_json(lines,173)
+    observation = observation_from_json(lines_2,112)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[1]
-    expected_mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"3p", "consumed"=>["3p", "3p", "3p"]}
+    expected_mjai_action = {"type"=>"daiminkan", "actor"=>2, "target"=>3, "pai"=>"9p", "consumed"=>["9p", "9p", "9p"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "アンカン" do
-    observation = observation_from_json(lines_3,42)
+    observation = observation_from_json(lines,84)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"ankan","actor"=>3,"consumed"=>["P", "P", "P", "P"]}
+    expected_mjai_action = {"type"=>"ankan","actor"=>0,"consumed"=>["5s", "5s", "5s", "5sr"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "リーチ" do
-    observation = observation_from_json(lines_3,30)
+    observation = observation_from_json(lines,113)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"reach","actor"=>3}
+    expected_mjai_action = {"type"=>"reach","actor"=>0}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ツモ" do
