@@ -41,7 +41,11 @@ RSpec.describe  MjxToMjai do
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ツモぎり" do
-
+    observation = observation_from_json(lines,2)
+    possible_actions = observation.possible_actions
+    mjx_action = possible_actions[1]
+    expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"6m", "tsumoigri"=>true} 
+    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "チー" do
     observation = observation_from_json(lines,7)
