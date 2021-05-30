@@ -15,7 +15,7 @@ class MjaiToMjx
       possible_actions.length.times do |i|
         action_type = possible_actions[i].type
         discard_in_mjai = mjx_to_mjai.proto_tile_to_mjai_tile(possible_actions[i].discard)
-        if mjai_action["pai"] == discard_in_mjai && action_type == :ACTION_TYPE_DISCARD 
+        if mjai_action["pai"] == discard_in_mjai && (action_type == :ACTION_TYPE_DISCARD || action_type == :ACTION_TYPE_TSUMOGIRI)
           return i  # indexを返す
         end
       end
