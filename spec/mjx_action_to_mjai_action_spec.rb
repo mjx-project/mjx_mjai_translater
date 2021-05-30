@@ -90,27 +90,27 @@ RSpec.describe  MjxToMjai do
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ツモ" do
-    observation = observation_from_json(lines,96)
+    observation = observation_from_json(lines_1,128)
     possible_actions = observation.possible_actions
-    public_observatoin = observation.public_observatoin.events
+    public_observatoin = observation.public_observation.events
     mjx_action = possible_actions[0]
-    p public_observatoin[-1].type
-    expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>0,"pai"=>"1m"}
+    p public_observatoin[-1].tile
+    expected_mjai_action = {"type"=>"hora","actor"=>1,"target"=>1,"pai"=>"7p"}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
   it "ロン" do
-    observation = observation_from_json(lines,156)
+    observation = observation_from_json(lines,87)
     possible_actions = observation.possible_actions
-    public_observatoin = observation.public_observatoin.events
+    public_observatoin = observation.public_observation.events
     mjx_action = possible_actions[0]
     p public_observatoin[-1].tile
-    expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>3,"pai"=>"7m"}
+    expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"5p"}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
   it "no" do
-    observation = observation_from_json(lines,9)
+    observation = observation_from_json(lines,5)
     possible_actions = observation.possible_actions
-    mjx_action = possible_actions[1]
+    mjx_action = possible_actions[-1]
     expected_mjai_action = {"type"=>"none"}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
