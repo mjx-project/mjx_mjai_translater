@@ -74,6 +74,12 @@ RSpec.describe "mjx_eventの変換" do
         # 153 154  
     end  
     it "RIICHI" do
+        previous_public_observation = observation_from_json(lines, 40).public_observation.events
+        observation = observation_from_json(lines, 41)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[4]
+        expected_mjai_action = {"type"=>"reach","actor"=>3}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action
     end
     it "RIICHI_SCORE_CHANGE" do
     end
