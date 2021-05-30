@@ -36,17 +36,22 @@ RSpec.describe "mjx_eventの変換" do
         #38, 39
     end
     it "PON" do
-        previous_public_observation = observation_from_json(lines, 84).public_observation.events
-        observation = observation_from_json(lines, 85)
+        previous_public_observation = observation_from_json(lines, 1).public_observation.events
+        observation = observation_from_json(lines, 2)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
-        expect(trans_server.convert_to_mjai_actions(public_observation_difference, [26000,26000,26000,21000])).to eq 
+        mjx_event = public_observation_difference[1]
+        expected_mjai_action = {"type"=>"pon", "actor"=>1, "target"=>0, "pai"=>"E", "consumed"=>["E", "E"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action
         #84, 85
     end
     it "ADDED_KAN" do
-        previous_public_observation = observation_from_json(lines_1, 125).public_observation.events
-        observation = observation_from_json(lines_1, 126)
+        previous_public_observation = observation_from_json(lines, 8).public_observation.events
+        observation = observation_from_json(lines, 9)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
-        expect(trans_server.convert_to_mjai_actions(public_observation_difference, [26000,26000,26000,21000])).to eq 
+        p public_observation_difference
+        mjx_event = public_observation_difference[4]
+        expected_mjai_action = {"type"=>"kakan","actor"=>2,"pai"=>"9m","consumed"=>["9m", "9m", "9m"]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action
     end
     it "OPEN_KAN" do
         previous_public_observation = observation_from_json(lines_1, 197).public_observation.events
