@@ -68,13 +68,13 @@ RSpec.describe "mjai_action_to_mjx_action" do
     it "tsumo" do
         observation = observation_from_json(lines_1,128)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"hora","actor"=>1,"target"=>1,"pai"=>"7p","uradora_markers"=>["8p"],"hora_tehais"=>["1m","2m","3m","1p","2p","3p","3p","3p","5pr","6pr","1s","2s", "3s"],"yakus"=>[["akadora",1],["reach",1],["menzenchin_tsumoho",1],["ippatsu",1]],"fu":30,"fan":4,"hora_points"=>7900,"deltas"=>[-2100,9200,-2100,-4000],"scores"=>[22300,34200,14600,28900]}
+        mjai_action = {"type"=>"hora","actor"=>1,"target"=>1,"pai"=>"7p"}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "ron" do
         observation = observation_from_json(lines,87)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"5p","uradora_markers"=>["8p"],"hora_tehais"=>["4p","4p","5pr","5p","5p","6p","7p","8p","7s","7s","7s","5s","5s","5s", "5sr"],"yakus"=>[["akadora",2],["pinfu",1],["dora",1]],"fu":40,"fan":4,"hora_points"=>8000,"deltas"=>[9600,0,-8600,0],"scores"=>[29300,33200,17400,20100]}
+        mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"5p"}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "none" do

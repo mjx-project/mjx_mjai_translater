@@ -101,6 +101,12 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     action_type = mjx_act.type
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
+      tile = mjx_act.discard
+      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumoigri"=>false}
+    end
+    if action_type == :ACTION_TYPE_TSUMOGIRI
+      tile = mjx_act.discard
+      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumoigri"=>true}
     end
     if action_type == :ACTION_TYPE_CHI || action_type == :ACTION_TYPE_PON || action_type == :ACTION_TYPE_OPEN_KAN
       open_converter = OpenConverter.new(mjx_act.open)
@@ -132,7 +138,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
     if action_type == :ACTION_TYPE_RON || action_type == :ACTION_TYPE_TSUMO # trans_serverが持っている previous_public_observatoinの情報を使う
       last_event = public_observatoin[-1]
-      assert_types = [:EVENT_TYPE_DISCARD_DRAWN_TILE, :EVENT_TYPE_DISCARD_FROM_HAND, :EVENT_TYPE_DRAW, :EVENT_TYPE_ADDED_KAN]
+      assert_types = [:EVENT_TYPE_TSUMOGIRI, :EVENT_TYPE_DISCARD, :EVENT_TYPE_DRAW, :EVENT_TYPE_ADDED_KAN]
       assert_includes assert_types, last_event.type
       target = last_event.who
       hora_tile = last_event.tile
