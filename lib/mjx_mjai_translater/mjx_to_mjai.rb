@@ -49,10 +49,10 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if event.type == :EVENT_TYPE_DRAW
       return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # ツモ牌 全て？で統一
     end
-    if event.type == :EVENT_TYPE_DISCARD_FROM_HAND
+    if event.type == :EVENT_TYPE_DISCARD
       return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>false}
     end
-    if event.type == :EVENT_TYPE_DISCARD_DRAWN_TILE
+    if event.type == :EVENT_TYPE_TSUMOGIRI
       return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>true}
     end 
     if event.type == :EVENT_TYPE_CHI || event.type == :EVENT_TYPE_PON || event.type == :EVENT_TYPE_OPEN_KAN  # pon, chi, daiminkan
@@ -102,11 +102,11 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
       tile = mjx_act.discard
-      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumoigri"=>false}
+      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumogiri"=>false}
     end
     if action_type == :ACTION_TYPE_TSUMOGIRI
       tile = mjx_act.discard
-      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumoigri"=>true}
+      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumogiri"=>true}
     end
     if action_type == :ACTION_TYPE_CHI || action_type == :ACTION_TYPE_PON || action_type == :ACTION_TYPE_OPEN_KAN
       open_converter = OpenConverter.new(mjx_act.open)

@@ -27,8 +27,20 @@ RSpec.describe "mjx_eventの変換" do
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action  # mjaiのwikiを参考に作成                                                                       
     end
     it "DISCARD" do
+        previous_public_observation = observation_from_json(lines, 1).public_observation.events
+        observation = observation_from_json(lines, 2)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[0]
+        expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"E", "tsumogiri"=>false}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action 
     end
     it "TSUMOGIRI" do
+        previous_public_observation = observation_from_json(lines, 2).public_observation.events
+        observation = observation_from_json(lines, 3)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[4]
+        expected_mjai_action = {"type"=>"dahai", "actor"=>2, "pai"=>"P", "tsumogiri"=>true}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil)).to eq expected_mjai_action 
     end
     it "CHI" do
         previous_public_observation = observation_from_json(lines, 4).public_observation.events
