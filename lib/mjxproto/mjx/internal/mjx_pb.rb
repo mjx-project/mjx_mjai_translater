@@ -83,7 +83,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :game_id, :string, 1
       optional :who, :int32, 2
       optional :type, :enum, 3, "mjxproto.ActionType"
-      optional :discard, :uint32, 4
+      optional :tile, :uint32, 4
       optional :open, :uint32, 5
     end
     add_enum "mjxproto.ActionType" do
