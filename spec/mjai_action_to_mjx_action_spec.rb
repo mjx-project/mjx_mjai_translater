@@ -20,7 +20,8 @@ RSpec.describe "mjai_action_to_mjx_action" do
     it "discard" do
         observation = observation_from_json(lines,1)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"4m", "tsumogiri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
+        p possible_actions
+        mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"am", "tsumogiri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "tsumogiri" do 
@@ -30,55 +31,55 @@ RSpec.describe "mjai_action_to_mjx_action" do
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
     end
     it "chi" do
-        observation = observation_from_json(lines,11)
+        observation = observation_from_json(lines,10)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>"7s", "consumed"=>["8s", "9s"]}
+        mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>"3m", "consumed"=>["2m", "4m"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "pon" do
-        observation = observation_from_json(lines,5)
+        observation = observation_from_json(lines,6)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"pon", "actor"=>0, "target"=>2, "pai"=>"9s", "consumed"=>["9s", "9s"]}
+        mjai_action = {"type"=>"pon", "actor"=>0, "target"=>1, "pai"=>"4p", "consumed"=>["4p", "4p"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "kakan" do
-        observation = observation_from_json(lines_1,43)
+        observation = observation_from_json(lines,35)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"kakan","actor"=>1,"pai"=>"1s","consumed"=>["1s", "1s", "1s"]}
+        mjai_action = {"type"=>"kakan","actor"=>0,"pai"=>"N","consumed"=>["N", "N", "N"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "daiminkan" do
-        observation = observation_from_json(lines_2,112)
+        observation = observation_from_json(lines,23)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"daiminkan", "actor"=>2, "target"=>3, "pai"=>"9p", "consumed"=>["9p", "9p", "9p"]}
+        mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"2p", "consumed"=>["2p", "2p", "2p"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[1]
     end
     it "ankan" do
-        observation = observation_from_json(lines,84)
+        observation = observation_from_json(lines_1,31)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"ankan","actor"=>0,"consumed"=>["5s", "5s", "5s", "5sr"]}
+        mjai_action = {"type"=>"ankan","actor"=>1,"consumed"=>["P", "P", "P", "P"]}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "riichi" do
-        observation = observation_from_json(lines,113)
+        observation = observation_from_json(lines,135)
         possible_actions = observation.possible_actions
         mjai_action = {"type"=>"reach","actor"=>0}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "tsumo" do
-        observation = observation_from_json(lines_1,128)
+        observation = observation_from_json(lines,160)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"hora","actor"=>1,"target"=>1,"pai"=>"7p"}
+        mjai_action = {"type"=>"hora","actor"=>0,"target"=>0,"pai"=>"8s"}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "ron" do
         observation = observation_from_json(lines,87)
         possible_actions = observation.possible_actions
-        mjai_action = {"type"=>"hora","actor"=>0,"target"=>2,"pai"=>"5p"}
+        mjai_action = {"type"=>"hora","actor"=>0,"target"=>3,"pai"=>"7m"}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[0]
     end
     it "none" do
-        observation = observation_from_json(lines,5)
+        observation = observation_from_json(lines,6)
         possible_actions = observation.possible_actions
         mjai_action = {"type"=>"none"}
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, possible_actions)).to eq possible_actions[-1]
