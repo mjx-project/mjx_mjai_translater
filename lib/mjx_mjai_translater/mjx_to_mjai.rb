@@ -36,6 +36,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     return num_zihai_dict[(proto_tile % 36).div(4)]  #字牌
   end
 
+
   def proto_tiles_to_mjai_tiles(proto_tiles)
     mjai_tiles = []
     proto_tiles.length.times do |i|
@@ -92,6 +93,9 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         ten_change[pos_index] = -1000
         scores[pos_index] -= 1000
         return  {"type"=>"reach_accepted","actor"=>@absolutepos_id_hash[event.who], "deltas"=>ten_change, "scores"=>scores}
+    end
+    if event.type == :EVENT_TYPE_RON || event.type == :EVENT_TYPE_TSUMO
+      
     end
   end
 
