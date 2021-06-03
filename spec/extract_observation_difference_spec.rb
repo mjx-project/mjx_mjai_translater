@@ -20,7 +20,7 @@ RSpec.describe  TransServer do
         observation_previous = observation_from_json(lines, 1)
         observation = observation_from_json(lines, 2)
         difference_extracted = TransServer.new().extract_difference(observation_previous.public_observation.events, observation)
-        expected_hash = {"publicObservation":{"events":[{"tile":111},{"type":"EVENT_TYPE_PON","who":1,"open":42571},{"who":1,"tile":69},{"type":"EVENT_TYPE_DRAW","who":2},{"who":2,"tile":121},{"type":"EVENT_TYPE_DRAW","who":3},{"who":3,"tile":119},{"type":"EVENT_TYPE_DRAW"}]}}
+        expected_hash = {"publicObservation":{"events":[{"tile":108},{"type":"EVENT_TYPE_DRAW","who":1},{"who":1,"tile":116},{"type":"EVENT_TYPE_DRAW","who":2},{"type":"EVENT_TYPE_TSUMOGIRI","who":2,"tile":112},{"type":"EVENT_TYPE_DRAW","who":3},{"who":3,"tile":114},{"type":"EVENT_TYPE_DRAW"}]}}
         expected_proto = Google::Protobuf.decode_json(Mjxproto::Observation,expected_hash.to_json.to_s)
         expect(difference_extracted).to eq  expected_proto.public_observation.events
     end
