@@ -11,11 +11,20 @@ class MjaiToMjx
 
   def find_proper_action_idx(mjai_action, possible_actions)
     mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
-    if mjai_action["type"] == "dahai"  # TODO ツモぎりもpossible actionsに加わる予定。 
+    if mjai_action["type"] == "dahai"  && mjai_action["tsumogiri"] == false
       possible_actions.length.times do |i|
         action_type = possible_actions[i].type
-        discard_in_mjai = mjx_to_mjai.proto_tile_to_mjai_tile(possible_actions[i].discard)
-        if mjai_action["pai"] == discard_in_mjai && (action_type == :ACTION_TYPE_DISCARD || action_type == :ACTION_TYPE_TSUMOGIRI)
+        discard_in_mjai = mjx_to_mjai.proto_tile_to_mjai_tile(possible_actions[i].tile)
+        if mjai_action["pai"] == discard_in_mjai && (action_type == :ACTION_TYPE_DISCARD)
+          return i  # indexを返す
+        end
+      end
+    end
+    if mjai_action["type"] == "dahai"  && mjai_action["tsumogiri"] == true
+      possible_actions.length.times do |i|
+        action_type = possible_actions[i].type
+        discard_in_mjai = mjx_to_mjai.proto_tile_to_mjai_tile(possible_actions[i].tile)
+        if mjai_action["pai"] == discard_in_mjai && (action_type == :ACTION_TYPE_TSUMOGIRI)
           return i  # indexを返す
         end
       end
