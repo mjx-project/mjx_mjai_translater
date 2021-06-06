@@ -37,7 +37,7 @@ RSpec.describe  MjxToMjai do
     observation = observation_from_json(lines,1)
     possible_actions = observation.possible_actions
     mjx_action = possible_actions[0]
-    expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"4m", "tsumogiri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
+    expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"1m", "tsumogiri"=>false}  # 今は起家から順番に恣意的に0,1,2,3とidを決めている。trans_server のインスタンス変数がその対応を全て管理しているので別の問題
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ツモぎり" do
