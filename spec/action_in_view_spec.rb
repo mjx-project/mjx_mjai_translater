@@ -37,32 +37,30 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
     file_3 = File.open("spec/resources/observations-003.json", "r")
     lines_3 = file_3.readlines
     it "normal" do
-        observation = observation_from_json(lines,0)
-        init_hand = observation.private_observation.init_hand
-        draw = observation.private_observation.draws[0]
-        init_hand.push(draw)
+        observation = observation_from_json(lines,2)
+        hand = observation.private_observation.curr_hand.closed_tiles
         possible_actions = observation.possible_actions
         player = Player.new(nil, nil) # playerのinstanceを作る
         player.update_possible_actoins(possible_actions)  # possible_actionsを更新
-        player.update_hand(init_hand)  # handを更新
+        player.update_hand(hand)  # handを更新
         expect(player.forbidden_tiles_mjai()).to eq []
     end
     it "riichi" do  # 聴牌にならないはいを返しているか
-        observation = observation_from_json(lines_3,31)
-        hand = [1,101,67,5,17,13,56,11,63,124,127,102,18,125]
+        observation = observation_from_json(lines,136)
+        hand = observation.private_observation.curr_hand.closed_tiles
         possible_actions = observation.possible_actions
         player = Player.new(nil, nil) # playerのinstanceを作る
         player.update_possible_actoins(possible_actions) 
         player.update_hand(hand) 
-        expect(player.forbidden_tiles_mjai()).to eq ["8s", "8p", "2m","6p", "3m", "7p", "P"]
+        expect(player.forbidden_tiles_mjai()).to eq ["1p","2p","3p","5p","6p","7p","8p","9p","8s"]
     end
     it "chi" do # 喰い替えになる牌を返しているか
-        observation = observation_from_json(lines,208)
-        hand = [73,106,75,102,2,4,91,84,99,79,105]  # 実際に渡されるhandは晒したはいは除かれている
+        observation = observation_from_json(lines,74)
+        hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒したはいは除かれている
         possible_actions = observation.possible_actions
         player = Player.new(nil, nil)
         player.update_possible_actoins(possible_actions)  
         player.update_hand(hand) 
-        expect(player.forbidden_tiles_mjai()).to eq ["7s"] # 7sを鳴いて7sを持っている。
+        expect(player.forbidden_tiles_mjai()).to eq ["3m"] # 7sを鳴いて7sを持っている。
     end
 end
