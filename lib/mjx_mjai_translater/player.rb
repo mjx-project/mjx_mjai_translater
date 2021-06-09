@@ -42,7 +42,7 @@ class Player
       tiles = []
       if actions.length.times do |i|
         if actions[i].type == :ACTION_TYPE_DISCARD
-           tiles.push(actions[i].discard)
+           tiles.push(actions[i].tile)
         end
       end
       return tiles
