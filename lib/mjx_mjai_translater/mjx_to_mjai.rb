@@ -12,6 +12,72 @@ require "minitest"
 include Minitest::Assertions
 
 
+class MjxYakuToMjaiYaku
+  def initialize()
+    mjai_yakus = yaku_list = [
+      "menzenchin_tsumo",
+      "reach",
+      "ippatsu",
+      "chankan",
+      "rinshankaiho",
+      "haiteiraoyue",
+      "hoteiraoyue",
+      "pinfu",
+      "tanyaochu",
+      "ipeko",
+      "jikaze",
+      "jikaze",
+      "jikaze",
+      "jikaze",
+      "bakaze",
+      "bakaze",
+      "bakaze",
+      "bakaze",
+      "sangenpai",
+      "sangenpai",
+      "sangenpai",
+      "double_reach",
+      "chitoitsu",
+      "honchantaiyao",
+      "ikkitsukan",
+      "sansyokudojun",
+      "sanshokudoko",
+      "sankantsu",
+      "toitoiho",
+      "sananko",
+      "shosangen",
+      "honroto",
+      "ryanpeko",
+      "junchantaiyao",
+      "honiso",
+      "chiniso",
+      "renho",  # 天鳳は人和なし
+      "tenho",
+      "chiho",
+      "daisangen",
+      "suanko",
+      "suanko",
+      "tsuiso",
+      "ryuiso",
+      "chinroto",
+      "churenpoton",
+      "churenpoton",
+      "kokushimuso",
+      "kokushimuso",
+      "daisushi",
+      "shosushi",
+      "sukantsu",
+      "dora",
+      "uradora",
+      "akadora",
+  ]
+  end
+  
+  def mjai_yaku(mjx_yaku_idx)
+    mjai_yakus[mjx_yaku_idx]
+  end
+end
+
 
 class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラスじゃなくても良いかも
   attr_accessor :assertions
@@ -151,5 +217,9 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if action_type == :ACTION_TYPE_NO
       return {"type"=>"none"}
     end
+  end
+
+  def mjx_terminal_to_mjai_action(observation)
+    
   end
 end
