@@ -108,13 +108,20 @@ RSpec.describe "mjx_eventの変換" do
         mjx_event = public_observation_difference[8]
         expected_mjai_action = {"type"=>"dora","dora_marker"=>"4s"}
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
-    end      
+    end  
     it "RON" do 
+        previous_public_observation = observation_from_json(lines, 102).public_observation.events
+        observation = observation_from_json(lines, 103)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[-1]
+        expected_action = {"type"=>"hora","actor"=>3,"target"=>1,"pai"=>"8m","uradora_markers"=>"E","hora_tehais"=>["4m", "4m", "5m", "5m", "6m", "6m", "8m", "8m", "8m", "3p", "3p", "7s","8s", "9s"],
+        "yakus"=>[["reach",1],["ipeko",1]],"fu"=>40,"fan"=>2,"hora_points"=>ten,"deltas"=>[0,-3500,0,4500],"scores"=>[29100,31500,23000,16400]}
+
+    end     
+    it "DOUBLE_RON" do 
         previous_public_observation = observation_from_json(lines, 55).public_observation.events
         observation = observation_from_json(lines, 56)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
         mjx_event = public_observation_difference[-1]
-        expected_mjai_action = {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>3,"pai"=>25,"uradora_markers"=>proto_tile_to_mjai_tile(ura_dora_indicator),"hora_tehais"=>[9,11,24,25,27,51,52,57],
-        "yakus"=>[],"fu"=>30,"fan"=>3,"hora_points"=>5800,"deltas"=>[6100,0,0,-6100],"scores"=>[32100,34000,22000,11900]}
     end                                         
 end
