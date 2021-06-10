@@ -152,4 +152,68 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       return {"type"=>"none"}
     end
   end
-end
+end]
+
+@mjai_yaku_list = yaku_list = [
+  "menzenchin_tsumoho",
+  "reachi",
+  "ippatsu",
+  "chankan",
+  "rinshankaihou",
+  "haiteiraoyue",
+  "hoteiraoyue",
+  "pinhu",
+  "tanyaochu",
+  "ipeko",
+  "jikaze",
+  "jikaze",
+  "jikaze",
+  "jikaze",
+  "bakaze",
+  "bakaze",
+  "bakaze",
+  "bakaze",
+  "sangenpai",
+  "sangenpai",
+  "sangenpai",
+  "double_reach",
+  "chitoitsu",
+  "honchantaiyao",
+  "ikkitsukan",
+  "sansyokudojun",
+  "sansyokudoko",
+  "sankantsu",
+  "toitoiho",
+  "sananko",
+  "shosangen",
+  "honroto",
+  "ryanpeko",
+  "junchantaiyao",
+  "honiso",
+  "chiniso",
+  "renho",  # 天鳳は人和なし
+  "tenho",
+  "chiho",
+  "daisangen",
+  "suanko",
+  "suankotanki",
+  "tsuiso",
+  "ryuiso",
+  "chinroto",
+  "churenpoton",
+  "churenpoton",
+  "kokusimusou",
+  "kokusimusou",
+  "daisushi",
+  "shousushi",
+  "sukantsu",
+  "dora",
+  "uradora",
+  "akadora",
+]
+
+def mjx_terminal_to_mjai_action(event){
+
+}
+
+
