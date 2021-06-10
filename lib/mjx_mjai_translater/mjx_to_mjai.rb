@@ -233,9 +233,11 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     yakus = terminal_info.yakus
     yakumans = terminal_info.yakumans
     ura_dora_indicator = terminal_info.ura_dora_indicator
+    return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>win_tile,"uradora_markers"=>proto_tile_to_mjai_tile(ura_dora_indicator),"hora_tehais"=>proto_tiles_to_mjai_tile(hand),
+    "yakus"=>_to_mjai_yakus(fans, yakus),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>final_score}
   end
 
-  def to_mjai_yakus(fans, mjx_yakus)
+  def _to_mjai_yakus(fans, mjx_yakus)
     mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku()
     mjai_yakus = []
     fans.length.times do |i|
