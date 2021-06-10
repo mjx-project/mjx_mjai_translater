@@ -8,7 +8,7 @@ require "mjx_to_mjai"
 class Player 
 
     def initialize(socket, id)
-        @possible_actions = []  # mjxとのやりとりで更新していく
+        @legal_actions = []  # mjxとのやりとりで更新していく
         @hand = []  # mjxとのやりとりで更新していく。
         @socket = socket
         @id = id
@@ -17,8 +17,8 @@ class Player
     end
 
 
-    def update_possible_actoins(possible_actions)
-      @possible_actions= possible_actions
+    def update_possible_actoins(legal_actions)
+      @legal_actions= legal_actions
     end
 
 
@@ -27,9 +27,9 @@ class Player
     end
 
 
-    def possible_actions()
+    def legal_actions()
       mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
-      return @possible_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x) }
+      return @legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x) }
     end
 
 
@@ -51,7 +51,7 @@ class Player
 
 
   def forbidden_tiles_mjai()  # 手牌のうち,possible action に含まれていないものを返す。
-        possible_tiles = from_actions_to_discard_tiles(@possible_actions)
+        possible_tiles = from_actions_to_discard_tiles(@legal_actions)
         mjx_to_mjai = MjxToMjai.new(nil)
         return mjx_to_mjai.proto_tiles_to_mjai_tiles(@hand).uniq() - mjx_to_mjai.proto_tiles_to_mjai_tiles(possible_tiles)  #mjaiのformatで処理する。
   end
