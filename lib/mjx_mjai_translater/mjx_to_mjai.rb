@@ -224,7 +224,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     final_score = observation.round_terminal.final_score
     who = terminal_info.who
     from_who = terminal_info.from_who
-    hand = terminal_info.hand
+    hand = terminal_info.hand.closed_tiles
     win_tile = terminal_info.win_tile
     fu = terminal_info.fu
     fans = terminal_info.fans
