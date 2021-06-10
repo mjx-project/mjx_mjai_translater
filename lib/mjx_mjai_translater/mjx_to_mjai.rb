@@ -14,7 +14,7 @@ include Minitest::Assertions
 
 class MjxYakuToMjaiYaku
   def initialize()
-    mjai_yakus = yaku_list = [
+    @mjai_yaku_list = [
       "menzenchin_tsumo",
       "reach",
       "ippatsu",
@@ -74,7 +74,7 @@ class MjxYakuToMjaiYaku
   end
 
   def mjai_yaku(mjx_yaku_idx)
-    mjai_yakus[mjx_yaku_idx]
+    @mjai_yaku_list[mjx_yaku_idx]
   end
 end
 
@@ -220,8 +220,8 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
   def mjx_win_terminal_to_mjai_action(observation)
-    terminal_info = observation.round_terminal.wins
-    final_score = observation.round_terminal.final_score
+    terminal_info = observation.round_terminal.wins[0]
+    final_score = observation.round_terminal.final_score.tens
     who = terminal_info.who
     from_who = terminal_info.from_who
     hand = terminal_info.hand.closed_tiles
@@ -232,27 +232,28 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     ten_changes = terminal_info.ten_changes
     yakus = terminal_info.yakus
     yakumans = terminal_info.yakumans
-    ura_dora_indicator = terminal_info.ura_dora_indicator
-    return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>win_tile,"uradora_markers"=>proto_tile_to_mjai_tile(ura_dora_indicator),"hora_tehais"=>proto_tiles_to_mjai_tile(hand),
-    "yakus"=>_to_mjai_yakus(fans, yakus),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>final_score}
+    ura_dora_indicators = terminal_info.ura_dora_indicators
+    return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>proto_tile_to_mjai_tile(win_tile),"uradora_markers"=>proto_tiles_to_mjai_tiles(ura_dora_indicators),"hora_tehais"=>proto_tiles_to_mjai_tiles(hand),
+    "yakus"=>_to_mjai_yakus(fans, yakus, yakumans),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>final_score}
   end
 
   def _to_mjai_yakus(fans, mjx_yakus, mjx_yakumans)
     mjai_yakus = []
-    mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku()
-    if yakumans.length >0  # 役満の時
-      yakumans.length.times do |i|
-        mjai_yaku = mjx_yaku_to_mjai_yaku.mjai_yaku[mjx_yaku_idx]
-        mjai_yakus.push[mjai_yaku,1]
+    mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku.new()
+    if mjx_yakumans.length >0  # 役満の時
+      mjx_yakumans.length.times do |i|
+        mjx_yakuman_idx = mjx_yakumans[i]  # mjxでは役は数字で定義されている。
+        mjai_yakumans = mjx_yaku_to_mjai_yaku.mjai_yaku(mjx_yakuman_idx)
+        mjai_yakus.push([mjai_yaku,1])
         return mjai_yaku
       end
     end
     fans.length.times do |i|
       fan = fans[i]
       mjx_yaku_idx = mjx_yakus[i]
-      mjai_yaku = mjx_yaku_to_mjai_yaku.mjai_yaku[mjx_yaku_idx]
+      mjai_yaku = mjx_yaku_to_mjai_yaku.mjai_yaku(mjx_yaku_idx)
       if fan>0
-        mjai_yakus.push[mjai_yaku, fan]
+        mjai_yakus.push([mjai_yaku, fan])
       end
     end
     return mjai_yakus
