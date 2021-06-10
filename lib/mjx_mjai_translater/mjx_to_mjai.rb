@@ -72,7 +72,7 @@ class MjxYakuToMjaiYaku
       "akadora",
   ]
   end
-  
+
   def mjai_yaku(mjx_yaku_idx)
     mjai_yakus[mjx_yaku_idx]
   end
@@ -219,7 +219,19 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def mjx_terminal_to_mjai_action(observation)
-    
+  def mjx_win_terminal_to_mjai_action(observation)
+    terminal_info = observation.round_terminal.wins
+    final_score = observation.round_terminal.final_score
+    who = terminal_info.who
+    from_who = terminal_info.from_who
+    hand = terminal_info.hand
+    win_tile = terminal_info.win_tile
+    fu = terminal_info.fu
+    fans = terminal_info.fans
+    ten = terminal_info.ten
+    ten_changes = terminal_info.ten_changes
+    yakus = terminal_info.yakus
+    yakumans = terminal_info.yakumans
+    ura_dora_indicator = terminal_info.ura_dora_indicator
   end
 end
