@@ -237,9 +237,16 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     "yakus"=>_to_mjai_yakus(fans, yakus),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>final_score}
   end
 
-  def _to_mjai_yakus(fans, mjx_yakus)
-    mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku()
+  def _to_mjai_yakus(fans, mjx_yakus, mjx_yakumans)
     mjai_yakus = []
+    mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku()
+    if yakumans.length >0  # 役満の時
+      yakumans.length.times do |i|
+        mjai_yaku = mjx_yaku_to_mjai_yaku.mjai_yaku[mjx_yaku_idx]
+        mjai_yakus.push[mjai_yaku,1]
+        return mjai_yaku
+      end
+    end
     fans.length.times do |i|
       fan = fans[i]
       mjx_yaku_idx = mjx_yakus[i]
@@ -248,6 +255,6 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         mjai_yakus.push[mjai_yaku, fan]
       end
     end
+    return mjai_yakus
   end
-  return mjai_yakus
 end
