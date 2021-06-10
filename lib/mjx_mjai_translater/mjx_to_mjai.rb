@@ -234,4 +234,18 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     yakumans = terminal_info.yakumans
     ura_dora_indicator = terminal_info.ura_dora_indicator
   end
+
+  def to_mjai_yakus(fans, mjx_yakus)
+    mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku()
+    mjai_yakus = []
+    fans.length.times do |i|
+      fan = fans[i]
+      mjx_yaku_idx = mjx_yakus[i]
+      mjai_yaku = mjx_yaku_to_mjai_yaku.mjai_yaku[mjx_yaku_idx]
+      if fan>0
+        mjai_yakus.push[mjai_yaku, fan]
+      end
+    end
+  end
+  return mjai_yakus
 end
