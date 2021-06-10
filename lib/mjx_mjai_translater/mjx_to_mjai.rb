@@ -212,8 +212,17 @@ end]
   "akadora",
 ]
 
-def mjx_terminal_to_mjai_action(event){
-
+def _mjx_terminal_to_mjai_action(observation){
+  terminal_info = observation.round_terminal
+  who = nil
+  from_who = nil
+  hora_hand = nil
+  fans = nil
+  fu = nil
+  yakus = nil # ここだけ処理が必要
+  hora_point = nil
+  delta = nil
+  scores = nil
 }
 
 
