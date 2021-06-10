@@ -9,7 +9,7 @@ require './lib/mjxproto/mjx/internal/mjx_services_pb'
 
 class RandomAgent < Mjxproto::Agent::Service
   def take_action(observation, _unused_call)
-    observation.possible_actions.sample
+    observation.legal_actions.sample
   end
 end
 

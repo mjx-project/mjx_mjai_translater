@@ -39,7 +39,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :public_observation, :message, 2, "mjxproto.PublicObservation"
       optional :private_observation, :message, 3, "mjxproto.PrivateObservation"
       optional :round_terminal, :message, 4, "mjxproto.RoundTerminal"
-      repeated :possible_actions, :message, 5, "mjxproto.Action"
+      repeated :legal_actions, :message, 5, "mjxproto.Action"
     end
     add_message "mjxproto.Win" do
       optional :who, :int32, 1

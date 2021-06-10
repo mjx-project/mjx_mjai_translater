@@ -72,8 +72,8 @@ class TransServer < Mjxproto::Agent::Service
           when :tsumo
             if action.actor == player
               return action.merge({
-                  :possible_actions =>
-                      with_response_hint ? player.possible_actions() : nil,
+                  :legal_actions =>
+                      with_response_hint ? player.legal_actions() : nil,
               })
             else
               return action.merge({:pai => "none"}) # Pai::UNKNOWN
@@ -81,8 +81,8 @@ class TransServer < Mjxproto::Agent::Service
           when :dahai, :kakan
             if action.actor != player
               return action.merge({
-                  :possible_actions =>
-                      with_response_hint ? player.possible_actions() : nil,
+                  :legal_actions =>
+                      with_response_hint ? player.legal_actions() : nil,
               })
             else
               return action
