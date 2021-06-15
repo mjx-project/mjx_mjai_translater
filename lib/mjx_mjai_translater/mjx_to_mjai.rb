@@ -226,6 +226,12 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if terminal_info = observation.round_terminal.wins != nil
       return mjx_win_terminal_to_mjai_action(observation)
     end
+
+  end
+
+
+  def mjx_no_win_terminal_to_mjai_action(observation)
+    return nil
   end
 
   def mjx_win_terminal_to_mjai_action(observation)  # winnerがいる場合
