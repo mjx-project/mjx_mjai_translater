@@ -117,7 +117,14 @@ RSpec.describe "mjx_eventの変換" do
         expected_mjai_action = {"type"=>"hora","actor"=>3,"target"=>1,"pai"=>"8m","uradora_markers"=>["E"],"hora_tehais"=>["4m", "4m", "5m", "5m", "6m", "6m", "8m", "8m", "8m", "3p", "3p", "7s","8s", "9s"],
         "yakus"=>[["reach",1],["ipeko",1]],"fu"=>40,"fan"=>2,"hora_points"=>2600,"deltas"=>[0,-3500,0,4500],"scores"=>[29100,31500,23000,16400]}
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, nil)).to eq expected_mjai_action
-    end     
+    end 
+    it "RYUKYOKU" do
+        previous_public_observation = observation_from_json(lines, 102).public_observation.events
+        observation = observation_from_json(lines, 103)
+        public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
+        mjx_event = public_observation_difference[-1]
+        {"type"=>"ryukyoku","reason"=>"fanpai","tehais"=>[["1p", "2p", "3p","3p", "4p", "5p", "C"],["?","?","?","?","?","?","?","?","?","?","?","?","?"],["?","?","?","?","?","?","?","?","?","?","?","?","?"],["5mr", "5m", "7m", "8m", "9m", "7s", "7s"]],"tenpais"=>[true,false,false,true],"deltas"=>[1500,-1500,-1500,1500],"scores"=>[37600,23900,4500,34000]}
+    end    
     it "DOUBLE_RON" do 
         previous_public_observation = observation_from_json(lines, 55).public_observation.events
         observation = observation_from_json(lines, 56)
