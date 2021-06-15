@@ -160,8 +160,10 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         scores[pos_index] -= 1000
         return  {"type"=>"reach_accepted","actor"=>@absolutepos_id_hash[event.who], "deltas"=>ten_change, "scores"=>scores}
     end
-    if event.type == :EVENT_TYPE_RON || event.type == :EVENT_TYPE_TSUMO
-      
+    if observation.round_terminal != nil
+      assert_types = [:EVENT_TYPE_RON, :EVENT_TYPE_TSUMO]
+      assert_includes assert_types, event.type
+      return mjx_win_terminal_to_mjai_action(observation)
     end
   end
 
@@ -216,6 +218,13 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
     if action_type == :ACTION_TYPE_NO
       return {"type"=>"none"}
+    end
+  end
+
+
+  def mjx_terminal_to_mjai_action(observation)
+    if terminal_info = observation.round_terminal.wins != nil
+      return mjx_win_terminal_to_mjai_action(observation)
     end
   end
 
