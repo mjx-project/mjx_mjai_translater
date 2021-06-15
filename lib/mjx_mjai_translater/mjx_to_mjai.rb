@@ -228,7 +228,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def mjx_win_terminal_to_mjai_action(observation)
+  def mjx_win_terminal_to_mjai_action(observation)  # winnerがいる場合
     terminal_info = observation.round_terminal.wins[0]
     final_score = observation.round_terminal.final_score.tens
     who = terminal_info.who
