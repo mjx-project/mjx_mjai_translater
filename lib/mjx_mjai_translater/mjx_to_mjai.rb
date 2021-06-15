@@ -12,6 +12,72 @@ require "minitest"
 include Minitest::Assertions
 
 
+class MjxYakuToMjaiYaku
+  def initialize()
+    @mjai_yaku_list = [
+      "menzenchin_tsumo",
+      "reach",
+      "ippatsu",
+      "chankan",
+      "rinshankaiho",
+      "haiteiraoyue",
+      "hoteiraoyue",
+      "pinfu",
+      "tanyaochu",
+      "ipeko",
+      "jikaze",
+      "jikaze",
+      "jikaze",
+      "jikaze",
+      "bakaze",
+      "bakaze",
+      "bakaze",
+      "bakaze",
+      "sangenpai",
+      "sangenpai",
+      "sangenpai",
+      "double_reach",
+      "chitoitsu",
+      "honchantaiyao",
+      "ikkitsukan",
+      "sansyokudojun",
+      "sanshokudoko",
+      "sankantsu",
+      "toitoiho",
+      "sananko",
+      "shosangen",
+      "honroto",
+      "ryanpeko",
+      "junchantaiyao",
+      "honiso",
+      "chiniso",
+      "renho",  # 天鳳は人和なし
+      "tenho",
+      "chiho",
+      "daisangen",
+      "suanko",
+      "suanko",
+      "tsuiso",
+      "ryuiso",
+      "chinroto",
+      "churenpoton",
+      "churenpoton",
+      "kokushimuso",
+      "kokushimuso",
+      "daisushi",
+      "shosushi",
+      "sukantsu",
+      "dora",
+      "uradora",
+      "akadora",
+  ]
+  end
+
+  def mjai_yaku(mjx_yaku_idx)
+    @mjai_yaku_list[mjx_yaku_idx]
+  end
+end
+
 
 class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラスじゃなくても良いかも
   attr_accessor :assertions
@@ -94,8 +160,10 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         scores[pos_index] -= 1000
         return  {"type"=>"reach_accepted","actor"=>@absolutepos_id_hash[event.who], "deltas"=>ten_change, "scores"=>scores}
     end
-    if event.type == :EVENT_TYPE_RON || event.type == :EVENT_TYPE_TSUMO
-      
+    if observation.round_terminal != nil
+      assert_types = [:EVENT_TYPE_RON, :EVENT_TYPE_TSUMO]
+      assert_includes assert_types, event.type
+      return mjx_win_terminal_to_mjai_action(observation)
     end
   end
 
@@ -151,5 +219,52 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     if action_type == :ACTION_TYPE_NO
       return {"type"=>"none"}
     end
+  end
+
+
+  def mjx_terminal_to_mjai_action(observation)
+    if terminal_info = observation.round_terminal.wins != nil
+      return mjx_win_terminal_to_mjai_action(observation)
+    end
+  end
+
+  def mjx_win_terminal_to_mjai_action(observation)  # winnerがいる場合
+    terminal_info = observation.round_terminal.wins[0]
+    final_score = observation.round_terminal.final_score.tens
+    who = terminal_info.who
+    from_who = terminal_info.from_who
+    hand = terminal_info.hand.closed_tiles
+    win_tile = terminal_info.win_tile
+    fu = terminal_info.fu
+    fans = terminal_info.fans
+    ten = terminal_info.ten
+    ten_changes = terminal_info.ten_changes
+    yakus = terminal_info.yakus
+    yakumans = terminal_info.yakumans
+    ura_dora_indicators = terminal_info.ura_dora_indicators
+    return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>proto_tile_to_mjai_tile(win_tile),"uradora_markers"=>proto_tiles_to_mjai_tiles(ura_dora_indicators),"hora_tehais"=>proto_tiles_to_mjai_tiles(hand),
+    "yakus"=>_to_mjai_yakus(fans, yakus, yakumans),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>final_score}
+  end
+
+  def _to_mjai_yakus(fans, mjx_yakus, mjx_yakumans)
+    mjai_yakus = []
+    mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku.new()
+    if mjx_yakumans.length >0  # 役満の時
+      mjx_yakumans.length.times do |i|
+        mjx_yakuman_idx = mjx_yakumans[i]  # mjxでは役は数字で定義されている。
+        mjai_yakumans = mjx_yaku_to_mjai_yaku.mjai_yaku(mjx_yakuman_idx)
+        mjai_yakus.push([mjai_yaku,1])
+        return mjai_yaku
+      end
+    end
+    fans.length.times do |i|
+      fan = fans[i]
+      mjx_yaku_idx = mjx_yakus[i]
+      mjai_yaku = mjx_yaku_to_mjai_yaku.mjai_yaku(mjx_yaku_idx)
+      if fan>0
+        mjai_yakus.push([mjai_yaku, fan])
+      end
+    end
+    return mjai_yakus
   end
 end
