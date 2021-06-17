@@ -71,10 +71,22 @@ class MjxYakuToMjaiYaku
       "uradora",
       "akadora",
   ]
+    @ryukyoku_reasons_dict = {
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS
+      :EVENT_TYPE_ABORTIVE_DRAW_THREE_RONS=>"sanchaho",  
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_KANS=>"sukaikan",
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_WINDS=>"sufonrenta",
+      :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL=>"fanpai",
+      :EVENT_TYPE_EXHAUSTIVE_DRAW_NAGASHI_MANGAN=>"nagashimangan"
+}
   end
 
   def mjai_yaku(mjx_yaku_idx)
     @mjai_yaku_list[mjx_yaku_idx]
+  end
+
+  def mjai_reason(mjx_event)
+    return @ryukyoku_reasons_dict[mjx_event]
   end
 end
 
@@ -232,13 +244,22 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_no_win_terminal_to_mjai_action(event, observation)
+  def mjx_no_win_terminal_to_mjai_action(event, observation, players)
     return nil
   end
 
-  def _terminal_hand(terminal_info)
+  def _terminal_hand(terminal_info, players)
     tenpais = terminal_info.no_winner.tenpais
-    
+    tenpai_players = tenpais.map {|x| x.who}
+    tenpai_closed_hands = tenpis.map{|x| x.hand.closed_tiles}
+    terminal_hands = []
+    players.length.times do |i|
+      if !tenpai_players.include?(i)
+        terminal_hands.push(["?"]*players[i].hand.length)
+      end
+      terminal_hand.push(tenpai_closed_hands[i])
+    end
+    return terminal_hands
   end
 
   def mjx_win_terminal_to_mjai_action(observation)  # winnerがいる場合
