@@ -119,13 +119,17 @@ RSpec.describe "mjx_eventの変換" do
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, nil)).to eq expected_mjai_action
     end 
     it "RYUKYOKU" do
-        previous_public_observation = observation_from_json(lines, 102).public_observation.events
-        observation = observation_from_json(lines, 103)
+        previous_public_observation = observation_from_json(lines, 283).public_observation.events
+        observation = observation_from_json(lines, 284)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
         mjx_event = public_observation_difference[-1]
-        players = 
-        {"type"=>"ryukyoku","reason"=>"fanpai","tehais"=>[["1p", "2p", "3p","3p", "4p", "5p", "C"],["?","?","?","?","?","?","?","?","?","?","?","?","?"],["?","?","?","?","?","?","?","?","?","?","?","?","?"],["5mr", "5m", "7m", "8m", "9m", "7s", "7s"]],"tenpais"=>[true,false,false,true],"deltas"=>[1500,-1500,-1500,1500],"scores"=>[37600,23900,4500,34000]}
-        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, nil)).to eq expected_mjai_action
+        players = []
+        4.times do |i|
+            players.push(Player.new(i, nil))
+            players[i].update_hand(["?"]*13)
+        end
+        expected_mjai_action = {"type"=>"ryukyoku","reason"=>"fanpai","tehais"=>[["1p", "2p", "3p","3p", "4p", "5p", "C"],["?","?","?","?","?","?","?","?","?","?","?","?","?"],["?","?","?","?","?","?","?","?","?","?","?","?","?"],["5mr", "5m", "7m", "8m", "9m", "7s", "7s"]],"tenpais"=>[true,false,false,true],"deltas"=>[1500,-1500,-1500,1500],"scores"=>[37600,23900,4500,34000]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, players)).to eq expected_mjai_action
     end    
     it "DOUBLE_RON" do 
         previous_public_observation = observation_from_json(lines, 55).public_observation.events

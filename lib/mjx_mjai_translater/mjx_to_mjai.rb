@@ -174,9 +174,10 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         return  {"type"=>"reach_accepted","actor"=>@absolutepos_id_hash[event.who], "deltas"=>ten_change, "scores"=>scores}
     end
     if observation.round_terminal != nil
-      assert_types = [:EVENT_TYPE_RON, :EVENT_TYPE_TSUMO]
+      assert_types = [:EVENT_TYPE_RON, :EVENT_TYPE_TSUMO,:EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS, :EVENT_TYPE_ABORTIVE_DRAW_THREE_RONS, :EVENT_TYPE_ABORTIVE_DRAW_FOUR_KANS,
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_WINDS, :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL, :EVENT_TYPE_EXHAUSTIVE_DRAW_NAGASHI_MANGAN]
       assert_includes assert_types, event.type
-      return mjx_win_terminal_to_mjai_action(observation)
+      return mjx_terminal_to_mjai_action(event, observation, players)
     end
   end
 
@@ -235,42 +236,43 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_terminal_to_mjai_action(event, observation)
+  def mjx_terminal_to_mjai_action(event, observation, players)
     terminal_info = observation.round_terminal.wins
-    if terminal_info != nil
+    if terminal_info != []
       return mjx_win_terminal_to_mjai_action(observation)
     end
-
+    return mjx_no_win_terminal_to_mjai_action(event, observation, players)
   end
 
 
   def mjx_no_win_terminal_to_mjai_action(event, observation, players)
     mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku.new()
-    terminal_info = observation.round/terminal.no_winner
+    terminal_info = observation.round_terminal.no_winner
     reason = mjx_yaku_to_mjai_yaku.mjai_reason(event.type)
     tenpai_hands =  _terminal_hand(terminal_info, players)
     tenpais = [0, 1, 2, 3].map {|x| _tenpai_players(terminal_info).include?(x)} # 聴牌者のidに含まれているか
     delta = terminal_info.ten_changes
     init_scores = observation.public_observation.init_score.tens
-    changed_score = init_scores.zip(delta).map{|n,p| n+p}
-    return nil
+    changed_scores = init_scores.zip(delta).map{|n,p| n+p}
+    return {"type"=>"ryukyoku", "reason"=>reason, "tehais"=>tenpai_hands, tenpais=>tenpais, "delta"=>delta, "scores"=>changed_scores }
   end
 
-  def _tenpai_players(terminal_info)
+  def _tenpai_players(terminal_info) # 聴牌しているplayer
     tenpais = terminal_info.tenpais
     tenpai_players = tenpais.map {|x| x.who}
     return tenpai_players
   end
 
-  def _terminal_hand(terminal_info, players)
+  def _terminal_hand(terminal_info, players)  # mjaiには聴牌者の手配ははいの情報を入れ、ノーテンのplayerの手牌は?でうめる。
     tenpai_players = _tenpai_players(terminal_info)
-    tenpai_closed_hands = tenpis.map{|x| x.hand.closed_tiles}
+    tenpais = terminal_info.tenpais
+    tenpai_closed_hands = tenpais.map{|x| x.hand.closed_tiles} # mjaiはclosed_tileしか渡していない
     terminal_hands = []
     players.length.times do |i|
       if !tenpai_players.include?(i)
         terminal_hands.push(["?"]*players[i].hand.length)
       end
-      terminal_hand.push(tenpai_closed_hands[i])
+      terminal_hands.push(tenpai_closed_hands[i])
     end
     return terminal_hands
   end
