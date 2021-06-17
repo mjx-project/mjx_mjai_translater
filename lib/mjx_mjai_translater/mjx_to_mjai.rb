@@ -112,7 +112,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_event_to_mjai_action(event, observation, scores)  # observationはreach_accepted, ron tsumoの時しか使わない。
+  def mjx_event_to_mjai_action(event, observation, players)  # observationはreach_accepted, ron tsumoの時しか使わない。
     if event.type == :EVENT_TYPE_DRAW
       return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # ツモ牌 全て？で統一
     end
@@ -157,6 +157,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         ten_change = [0,0,0,0]
         pos_index = @absolute_pos.find_index(event.who)
         ten_change[pos_index] = -1000
+        scores = observation.public_observation.init_score.tens
         scores[pos_index] -= 1000
         return  {"type"=>"reach_accepted","actor"=>@absolutepos_id_hash[event.who], "deltas"=>ten_change, "scores"=>scores}
     end
@@ -222,16 +223,22 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_terminal_to_mjai_action(observation)
-    if terminal_info = observation.round_terminal.wins != nil
+  def mjx_terminal_to_mjai_action(event, observation)
+    terminal_info = observation.round_terminal.wins
+    if terminal_info != nil
       return mjx_win_terminal_to_mjai_action(observation)
     end
 
   end
 
 
-  def mjx_no_win_terminal_to_mjai_action(observation)
+  def mjx_no_win_terminal_to_mjai_action(event, observation)
     return nil
+  end
+
+  def _terminal_hand(terminal_info)
+    tenpais = terminal_info.no_winner.tenpais
+    
   end
 
   def mjx_win_terminal_to_mjai_action(observation)  # winnerがいる場合

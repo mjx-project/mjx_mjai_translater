@@ -98,8 +98,8 @@ RSpec.describe "mjx_eventの変換" do
         observation = observation_from_json(lines, 97)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
         mjx_event = public_observation_difference[8]
-        expected_mjai_action = {"type"=>"reach_accepted","actor"=>3,"deltas"=>[0,0,0,-1000],"scores"=>[25000,28900,25000,20100]}
-        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event,nil ,[25000,28900,25000,21100])).to eq expected_mjai_action
+        expected_mjai_action = {"type"=>"reach_accepted","actor"=>3,"deltas"=>[0,0,0,-1000],"scores"=>[29100, 35000, 23000, 11900]}
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event,observation ,nil)).to eq expected_mjai_action
     end
     it "NEW_DORA" do
         previous_public_observation = observation_from_json(lines, 43).public_observation.events
