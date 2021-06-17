@@ -72,7 +72,7 @@ class MjxYakuToMjaiYaku
       "akadora",
   ]
     @ryukyoku_reasons_dict = {
-      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS=>"suchareach",
       :EVENT_TYPE_ABORTIVE_DRAW_THREE_RONS=>"sanchaho",  
       :EVENT_TYPE_ABORTIVE_DRAW_FOUR_KANS=>"sukaikan",
       :EVENT_TYPE_ABORTIVE_DRAW_FOUR_WINDS=>"sufonrenta",
@@ -245,12 +245,25 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
 
 
   def mjx_no_win_terminal_to_mjai_action(event, observation, players)
+    mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku.new()
+    terminal_info = observation.round/terminal.no_winner
+    reason = mjx_yaku_to_mjai_yaku.mjai_reason(event.type)
+    tenpai_hands =  _terminal_hand(terminal_info, players)
+    tenpais = [0, 1, 2, 3].map {|x| _tenpai_players(terminal_info).include?(x)} # 聴牌者のidに含まれているか
+    delta = terminal_info.ten_changes
+    init_scores = observation.public_observation.init_score.tens
+    changed_score = init_scores.zip(delta).map{|n,p| n+p}
     return nil
   end
 
-  def _terminal_hand(terminal_info, players)
-    tenpais = terminal_info.no_winner.tenpais
+  def _tenpai_players(terminal_info)
+    tenpais = terminal_info.tenpais
     tenpai_players = tenpais.map {|x| x.who}
+    return tenpai_players
+  end
+
+  def _terminal_hand(terminal_info, players)
+    tenpai_players = _tenpai_players(terminal_info)
     tenpai_closed_hands = tenpis.map{|x| x.hand.closed_tiles}
     terminal_hands = []
     players.length.times do |i|
