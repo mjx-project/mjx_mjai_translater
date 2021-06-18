@@ -71,10 +71,22 @@ class MjxYakuToMjaiYaku
       "uradora",
       "akadora",
   ]
+    @ryukyoku_reasons_dict = {
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS=>"suchareach",
+      :EVENT_TYPE_ABORTIVE_DRAW_THREE_RONS=>"sanchaho",  
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_KANS=>"sukaikan",
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_WINDS=>"sufonrenta",
+      :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL=>"fanpai",
+      :EVENT_TYPE_EXHAUSTIVE_DRAW_NAGASHI_MANGAN=>"nagashimangan"
+}
   end
 
   def mjai_yaku(mjx_yaku_idx)
     @mjai_yaku_list[mjx_yaku_idx]
+  end
+
+  def mjai_reason(mjx_event)
+    return @ryukyoku_reasons_dict[mjx_event]
   end
 end
 
@@ -112,7 +124,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_event_to_mjai_action(event, observation, scores)  # observationはreach_accepted, ron tsumoの時しか使わない。
+  def mjx_event_to_mjai_action(event, observation, players)  # observationはreach_accepted, ron tsumoの時しか使わない。
     if event.type == :EVENT_TYPE_DRAW
       return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # ツモ牌 全て？で統一
     end
@@ -157,13 +169,15 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         ten_change = [0,0,0,0]
         pos_index = @absolute_pos.find_index(event.who)
         ten_change[pos_index] = -1000
+        scores = observation.public_observation.init_score.tens
         scores[pos_index] -= 1000
         return  {"type"=>"reach_accepted","actor"=>@absolutepos_id_hash[event.who], "deltas"=>ten_change, "scores"=>scores}
     end
     if observation.round_terminal != nil
-      assert_types = [:EVENT_TYPE_RON, :EVENT_TYPE_TSUMO]
+      assert_types = [:EVENT_TYPE_RON, :EVENT_TYPE_TSUMO,:EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS, :EVENT_TYPE_ABORTIVE_DRAW_THREE_RONS, :EVENT_TYPE_ABORTIVE_DRAW_FOUR_KANS,
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_WINDS, :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL, :EVENT_TYPE_EXHAUSTIVE_DRAW_NAGASHI_MANGAN]
       assert_includes assert_types, event.type
-      return mjx_win_terminal_to_mjai_action(observation)
+      return mjx_terminal_to_mjai_action(event, observation, players)
     end
   end
 
@@ -222,10 +236,41 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_terminal_to_mjai_action(observation)
-    if terminal_info = observation.round_terminal.wins != nil
+  def mjx_terminal_to_mjai_action(event, observation, players)
+    terminal_info = observation.round_terminal.wins
+    if terminal_info != []
       return mjx_win_terminal_to_mjai_action(observation)
     end
+    return mjx_no_win_terminal_to_mjai_action(event, observation, players)
+  end
+
+
+  def mjx_no_win_terminal_to_mjai_action(event, observation, players)
+    mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku.new()
+    terminal_info = observation.round_terminal.no_winner # 流局時の情報が格納されている。
+    reason = mjx_yaku_to_mjai_yaku.mjai_reason(event.type)
+    terminal_hands =  _terminal_hand(terminal_info, players)
+    tenpais = [0, 1, 2, 3].map {|x| terminal_info.tenpais.map{|x| x.who}.include?(x)} # 聴牌者のidに含まれているか booleanのリスト
+    delta = terminal_info.ten_changes
+    init_scores = observation.public_observation.init_score.tens
+    changed_scores = init_scores.zip(delta).map{|n,p| n+p}
+    return {"type"=>"ryukyoku", "reason"=>reason, "tehais"=>terminal_hands, "tenpais"=>tenpais, "deltas"=>delta, "scores"=>changed_scores }
+  end
+
+
+  def _terminal_hand(terminal_info, players)  # mjaiには聴牌者の手配ははいの情報を入れ、ノーテンのplayerの手牌は?でうめる。
+    tenpais = terminal_info.tenpais  # 聴牌者の情報
+    tenpai_players = tenpais.map {|x| x.who}
+    tenpai_closed_hands = tenpais.map{|x| x.hand.closed_tiles}# mjaiはclosed_tileしか渡していない
+    terminal_hands = []
+    players.length.times do |i|
+      if !tenpai_players.include?(i)
+        terminal_hands.push(["?"]*players[i].hand.length)
+      else
+        terminal_hands.push(proto_tiles_to_mjai_tiles(tenpai_closed_hands.shift()))
+      end
+    end
+    return terminal_hands
   end
 
   def mjx_win_terminal_to_mjai_action(observation)  # winnerがいる場合
