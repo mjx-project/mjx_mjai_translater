@@ -136,5 +136,6 @@ RSpec.describe "mjx_eventの変換" do
         observation = observation_from_json(lines, 56)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
         mjx_event = public_observation_difference[-1]
+        
     end                                         
 end
