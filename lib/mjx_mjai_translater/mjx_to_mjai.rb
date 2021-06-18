@@ -247,32 +247,28 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
 
   def mjx_no_win_terminal_to_mjai_action(event, observation, players)
     mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku.new()
-    terminal_info = observation.round_terminal.no_winner
+    terminal_info = observation.round_terminal.no_winner # 流局時の情報が格納されている。
     reason = mjx_yaku_to_mjai_yaku.mjai_reason(event.type)
-    tenpai_hands =  _terminal_hand(terminal_info, players)
-    tenpais = [0, 1, 2, 3].map {|x| _tenpai_players(terminal_info).include?(x)} # 聴牌者のidに含まれているか
+    terminal_hands =  _terminal_hand(terminal_info, players)
+    tenpais = [0, 1, 2, 3].map {|x| terminal_info.tenpais.map{|x| x.who}.include?(x)} # 聴牌者のidに含まれているか booleanのリスト
     delta = terminal_info.ten_changes
     init_scores = observation.public_observation.init_score.tens
     changed_scores = init_scores.zip(delta).map{|n,p| n+p}
-    return {"type"=>"ryukyoku", "reason"=>reason, "tehais"=>tenpai_hands, tenpais=>tenpais, "delta"=>delta, "scores"=>changed_scores }
+    return {"type"=>"ryukyoku", "reason"=>reason, "tehais"=>terminal_hands, "tenpais"=>tenpais, "deltas"=>delta, "scores"=>changed_scores }
   end
 
-  def _tenpai_players(terminal_info) # 聴牌しているplayer
-    tenpais = terminal_info.tenpais
-    tenpai_players = tenpais.map {|x| x.who}
-    return tenpai_players
-  end
 
   def _terminal_hand(terminal_info, players)  # mjaiには聴牌者の手配ははいの情報を入れ、ノーテンのplayerの手牌は?でうめる。
-    tenpai_players = _tenpai_players(terminal_info)
-    tenpais = terminal_info.tenpais
-    tenpai_closed_hands = tenpais.map{|x| x.hand.closed_tiles} # mjaiはclosed_tileしか渡していない
+    tenpais = terminal_info.tenpais  # 聴牌者の情報
+    tenpai_players = tenpais.map {|x| x.who}
+    tenpai_closed_hands = tenpais.map{|x| x.hand.closed_tiles}# mjaiはclosed_tileしか渡していない
     terminal_hands = []
     players.length.times do |i|
       if !tenpai_players.include?(i)
         terminal_hands.push(["?"]*players[i].hand.length)
+      else
+        terminal_hands.push(proto_tiles_to_mjai_tiles(tenpai_closed_hands.shift()))
       end
-      terminal_hands.push(tenpai_closed_hands[i])
     end
     return terminal_hands
   end
