@@ -287,11 +287,9 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       fans = terminal_info.fans
       ten = terminal_info.ten
       ten_changes = terminal_info.ten_changes
-      p scores
-      p ten_changes
-      scores = _get_scores(scores, ten_changes)
       yakus = terminal_info.yakus
       yakumans = terminal_info.yakumans
+      scores = _get_scores(scores, ten_changes, yakus, who)
       ura_dora_indicators = terminal_info.ura_dora_indicators
       win_terminals.push({"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>proto_tile_to_mjai_tile(win_tile),"uradora_markers"=>proto_tiles_to_mjai_tiles(ura_dora_indicators),"hora_tehais"=>proto_tiles_to_mjai_tiles(hand),
       "yakus"=>_to_mjai_yakus(fans, yakus, yakumans),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>scores})
@@ -299,7 +297,10 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     return win_terminals
   end
 
-  def _get_scores(score, ten_changes)
+  def _get_scores(score, ten_changes, yakus, who)
+    if yakus.include?(1)  # ten_changeは和了者のリーチ棒も考慮に入れる。
+      _ten_changes = (0...4).map(){ |i| if i==who ten_changes[i] -1000 else ten_changes[i] }
+    end
     return (0...4).map(){ |i| score[i] + ten_changes[i] }
   end
 
