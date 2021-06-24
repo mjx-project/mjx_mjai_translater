@@ -10,15 +10,15 @@ RSpec.describe  TransServer do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
     it "局の最初" do
-        observation = observation_from_json(lines, 1)
+        observation = observation_from_json(lines, 0)
         difference_extracted = TransServer.new().extract_difference(observation)  # 差分を取得する関数を動かす  
         expected_hash = {"publicObservation":{"events":[{"type":"EVENT_TYPE_DRAW"}]}}
         expected_proto = Google::Protobuf.decode_json(Mjxproto::Observation,expected_hash.to_json.to_s)
         expect(difference_extracted).to eq  expected_proto.public_observation.events                       
     end
     it "局の途中" do
-        observation_previous = observation_from_json(lines, 1)
-        observation = observation_from_json(lines, 2)
+        observation_previous = observation_from_json(lines, 0)
+        observation = observation_from_json(lines, 1)
         difference_extracted = TransServer.new().extract_difference(observation_previous.public_observation.events, observation)
         expected_hash = {"publicObservation":{"events":[{"tile":108},{"type":"EVENT_TYPE_DRAW","who":1},{"who":1,"tile":116},{"type":"EVENT_TYPE_DRAW","who":2},{"type":"EVENT_TYPE_TSUMOGIRI","who":2,"tile":112},{"type":"EVENT_TYPE_DRAW","who":3},{"who":3,"tile":114},{"type":"EVENT_TYPE_DRAW"}]}}
         expected_proto = Google::Protobuf.decode_json(Mjxproto::Observation,expected_hash.to_json.to_s)

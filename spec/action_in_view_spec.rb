@@ -37,7 +37,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
     file_3 = File.open("spec/resources/observations-003.json", "r")
     lines_3 = file_3.readlines
     it "normal" do
-        observation = observation_from_json(lines,2)
+        observation = observation_from_json(lines,1)
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil) # playerのinstanceを作る
@@ -46,7 +46,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         expect(player.forbidden_tiles_mjai()).to eq []
     end
     it "riichi" do  # 聴牌にならないはいを返しているか
-        observation = observation_from_json(lines,136)
+        observation = observation_from_json(lines,130)
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil) # playerのinstanceを作る
@@ -55,7 +55,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         expect(player.forbidden_tiles_mjai()).to eq ["1p","2p","3p","5p","6p","7p","8p","9p","8s"]
     end
     it "chi" do # 喰い替えになる牌を返しているか
-        observation = observation_from_json(lines,74)
+        observation = observation_from_json(lines,71)
         hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒したはいは除かれている
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil)

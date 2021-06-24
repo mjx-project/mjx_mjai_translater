@@ -41,56 +41,56 @@ RSpec.describe  MjxToMjai do
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ツモぎり" do
-    observation = observation_from_json(lines,26)
+    observation = observation_from_json(lines,25)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[-1]
     expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>"W", "tsumogiri"=>true} 
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "チー" do
-    observation = observation_from_json(lines,10)
+    observation = observation_from_json(lines,9)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
     expected_mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>"3m", "consumed"=>["2m", "4m"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ポン" do
-    observation = observation_from_json(lines,6)
+    observation = observation_from_json(lines,5)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
     expected_mjai_action = {"type"=>"pon", "actor"=>0, "target"=>1, "pai"=>"4p", "consumed"=>["4p", "4p"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "カカン" do
-    observation = observation_from_json(lines,35)
+    observation = observation_from_json(lines,33)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
     expected_mjai_action = {"type"=>"kakan","actor"=>0,"pai"=>"N","consumed"=>["N", "N", "N"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ダイミンカン" do 
-    observation = observation_from_json(lines,23)
+    observation = observation_from_json(lines,22)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[1]
     expected_mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>"2p", "consumed"=>["2p", "2p", "2p"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "アンカン" do
-    observation = observation_from_json(lines_1,31)
+    observation = observation_from_json(lines_1,29)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
     expected_mjai_action = {"type"=>"ankan","actor"=>1,"consumed"=>["P", "P", "P", "P"]}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "リーチ" do
-    observation = observation_from_json(lines,135)
+    observation = observation_from_json(lines,129)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
     expected_mjai_action = {"type"=>"reach","actor"=>0}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ツモ" do
-    observation = observation_from_json(lines,160)
+    observation = observation_from_json(lines,153)
     legal_actions = observation.legal_actions
     public_observatoin = observation.public_observation.events
     mjx_action = legal_actions[0]
@@ -99,7 +99,7 @@ RSpec.describe  MjxToMjai do
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
   it "ロン" do
-    observation = observation_from_json(lines,55)
+    observation = observation_from_json(lines,53)
     legal_actions = observation.legal_actions
     public_observatoin = observation.public_observation.events
     mjx_action = legal_actions[0]
@@ -108,7 +108,7 @@ RSpec.describe  MjxToMjai do
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
   it "no" do
-    observation = observation_from_json(lines,6)
+    observation = observation_from_json(lines,5)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[-1]
     expected_mjai_action = {"type"=>"none"}
