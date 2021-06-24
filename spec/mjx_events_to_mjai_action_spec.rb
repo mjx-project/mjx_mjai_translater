@@ -131,8 +131,8 @@ RSpec.describe "mjx_eventの変換" do
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, players)).to eq expected_mjai_action
     end    
     it "DOUBLE_RON" do 
-        previous_public_observation = observation_from_json(lines, 55).public_observation.events
-        observation = observation_from_json(lines, 56)
+        previous_public_observation = observation_from_json(lines, 53).public_observation.events
+        observation = observation_from_json(lines, 54)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
         mjx_event = public_observation_difference[-1]
     end                                         
