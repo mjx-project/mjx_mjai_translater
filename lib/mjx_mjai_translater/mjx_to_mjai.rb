@@ -274,21 +274,33 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
   def mjx_win_terminal_to_mjai_action(observation)  # winnerがいる場合
-    terminal_info = observation.round_terminal.wins[0]
-    final_score = observation.round_terminal.final_score.tens
-    who = terminal_info.who
-    from_who = terminal_info.from_who
-    hand = terminal_info.hand.closed_tiles
-    win_tile = terminal_info.win_tile
-    fu = terminal_info.fu
-    fans = terminal_info.fans
-    ten = terminal_info.ten
-    ten_changes = terminal_info.ten_changes
-    yakus = terminal_info.yakus
-    yakumans = terminal_info.yakumans
-    ura_dora_indicators = terminal_info.ura_dora_indicators
-    return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>proto_tile_to_mjai_tile(win_tile),"uradora_markers"=>proto_tiles_to_mjai_tiles(ura_dora_indicators),"hora_tehais"=>proto_tiles_to_mjai_tiles(hand),
-    "yakus"=>_to_mjai_yakus(fans, yakus, yakumans),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>final_score}
+    terminal_infos = observation.round_terminal.wins
+    scores = observation.public_observation.init_score.tens
+    win_terminals = []
+    terminal_infos.length.times do |i|
+      terminal_info = terminal_infos[i]
+      who = terminal_info.who
+      from_who = terminal_info.from_who
+      hand = terminal_info.hand.closed_tiles
+      win_tile = terminal_info.win_tile
+      fu = terminal_info.fu
+      fans = terminal_info.fans
+      ten = terminal_info.ten
+      ten_changes = terminal_info.ten_changes
+      p scores
+      p ten_changes
+      scores = _get_scores(scores, ten_changes)
+      yakus = terminal_info.yakus
+      yakumans = terminal_info.yakumans
+      ura_dora_indicators = terminal_info.ura_dora_indicators
+      win_terminals.push({"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>proto_tile_to_mjai_tile(win_tile),"uradora_markers"=>proto_tiles_to_mjai_tiles(ura_dora_indicators),"hora_tehais"=>proto_tiles_to_mjai_tiles(hand),
+      "yakus"=>_to_mjai_yakus(fans, yakus, yakumans),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>scores})
+    end
+    return win_terminals
+  end
+
+  def _get_scores(score, ten_changes)
+    return (0...4).map(){ |i| score[i] + ten_changes[i] }
   end
 
   def _to_mjai_yakus(fans, mjx_yakus, mjx_yakumans)
