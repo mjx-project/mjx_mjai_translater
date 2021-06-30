@@ -127,7 +127,7 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def get_curr_player(observation)
-        #  行動したプレイヤーをobservationから出力する。
+        #  行動したプレイヤーをobservationから出力する。→必要ない
     end
 
 
@@ -143,8 +143,7 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def convert_to_mjai_actions(observation, scores)  # scoresはriichi_acceptedを送る場合などに使う
-        # event_histryの差分に対して他のfileで定義されている変換関数を適用する。
-        public_observation_difference = history_difference = extract_difference(@_mjx_public_observatoin, observation)
+        public_observation_difference = history_difference = extract_difference(@_mjx_public_observatoin, observation) # 差分
         mjai_actions = []
         public_observation_difference.length.times do |i|
            mjai_action = MjxToMjai.new(@absolutepos_id_hash).mjx_event_to_mjai_action(public_observation_difference[i],observation, scores)  # mjxのeventをmjai actioinに変換
@@ -156,19 +155,18 @@ class TransServer < Mjxproto::Agent::Service
     
     def observe(observation)
         @scores = observation.state.init_score.ten  # scoreを更新 mjaiのactionに変換する際に使用
-        mjx_actions = convert_to_mjai_actions(history_difference,@scores)
-        # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） この関数の中でdrawsを追加する。
+        @new_mjai_acitons = convert_to_mjai_actions(history_difference,@scores) # mjai_actionsを更新
+        # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
     end
 
 
     def take_action(observation, _unused_call)
         obserbve(observation)
-        curr_player = get_curr_player(observation)
-        responses = none
+        responses = []
         for mjai_action in self.mjai_new_actinos
-            responses = self.do_action(mjai_action)
+            responses.push(self.do_action(mjai_action))
         end
-        self.next_mjx_actions = update_next_actions(responses)
-        return self.next_mjx_actions[curr_player]
+        @next_mjx_actions = update_next_actions(responses)
+        return @next_mjx_actions #mjxへactionを返す。
     end
 end

@@ -299,7 +299,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
 
   def _get_scores(score, ten_changes, yakus, who)
     if yakus.include?(1)  # ten_changeは和了者のリーチ棒も考慮に入れる。
-      _ten_changes = (0...4).map(){ |i| if i==who ten_changes[i] -1000 else ten_changes[i] }
+      _ten_changes = ten_changes[who] -= 1000
     end
     return (0...4).map(){ |i| score[i] + ten_changes[i] }
   end

@@ -11,13 +11,13 @@ class Player
         @legal_actions = []  # mjxとのやりとりで更新していく
         @hand = []  # mjxとのやりとりで更新していく。
         @socket = socket
-        @id = id
+        @id = id # mjaiのid
         @absolutepos_id_hash = {0=>0,1=>1,
         2=>2, 3=>3}
     end
 
 
-    def update_possible_actoins(legal_actions)
+    def update_possible_actions(legal_actions)
       @legal_actions= legal_actions
     end
 
