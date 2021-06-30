@@ -25,23 +25,33 @@ class TransServer < Mjxproto::Agent::Service
 
     def run()
         #TCPserverにおけるrunの部分
-        #- Clientと最初の通信をする。(クライアントの数がわかっていればいらないかも)
+        initial_communication()
+        initialize_players(socket)
+        while true
+          observation = get_observation()
+          take_action(observation)
+        end
+        
+    end
+
+
+    def initial_communication() # clientとの最初の通信
     end
 
     def initialize_players(socket)
         @num_player_size.times do |i|
-             @players.push(Player.new(socket, i)) # ここの作る順番がidになる。 TODO やっぱり,最初にidとmjxのabsolute_posを対応させる関数がいる。
+             @players.push(Player.new(socket, i)) # ここの作る順番がidになる。 
         end
     end          
 
-    def do_action(action)
+    def do_action(action) # mjai_clientにactionを渡してresponseを得る。
         #mjaiと同じ実装
         if action.is_a?(Hash)
             action = Action.new(action)
           end
           #update_state(action)これはmjxがやる
           #@on_action.call(action) if @on_action
-          responses = (0...4).map() do |i|  # TODO ここ4固定なの気になるな
+          responses = (0...4).map() do |i|  
             @players[i].respond_to_action(action_in_view(action, i, true))  # aciton_in_view()実装する必要あり
           end
           #action_with_logs = action.merge({:logs => responses.map(){ |r| r && r.log }})
@@ -110,12 +120,6 @@ class TransServer < Mjxproto::Agent::Service
         end
     end
 
-        
-    def step(new_event)
-        # do_actionの呼ばれ方がActiveGame内で11パターンあったので、それらを模倣する
-    end
-    
-
     def update_next_actions(responses)
         #　ユーザーのアクションに対してmjaiのアクションからmjxのアクションに変更する
         next_mjai_actions = []
@@ -123,11 +127,6 @@ class TransServer < Mjxproto::Agent::Service
             next_mjai_actions.push(mjai_act_to_mjx_act(responses[i]))
         end
         return next_mjai_actions
-    end
-
-
-    def get_curr_player(observation)
-        #  行動したプレイヤーをobservationから出力する。→必要ない
     end
 
 
@@ -157,6 +156,11 @@ class TransServer < Mjxproto::Agent::Service
         @scores = observation.state.init_score.ten  # scoreを更新 mjaiのactionに変換する際に使用
         @new_mjai_acitons = convert_to_mjai_actions(history_difference,@scores) # mjai_actionsを更新
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
+    end
+
+
+    def get_mjx_actions()  # mjxからobservagtionを取得する。
+      return observation
     end
 
 
