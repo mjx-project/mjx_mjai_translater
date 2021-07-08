@@ -141,3 +141,34 @@ RSpec.describe "mjx_eventの変換" do
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, nil)).to eq expected_mjai_action
     end                                         
 end
+
+RSpec.describe "局、半荘の開始終了" do
+    file = File.open("spec/resources/observations-000.json", "r")
+    lines = file.readlines
+    absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
+    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash)
+    it "start_kyoku only" do
+        observation = observation_from_json(lines, 30)
+        is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation)
+        is_start_game = mjx_to_mjai.is_start_game(observation)
+        expect(is_start_kyoku).to eq true
+        expect(is_start_game).to eq false
+    end
+    it "start_game" do
+        observation = observation_from_json(lines, 0)
+        is_start_game = mjx_to_mjai.is_start_game(observation)
+        expect(is_start_game).to eq true
+    end
+    it "end_kyoku only" do
+        observation = observation_from_json(lines, 29)
+        is_kyoku_over = mjx_to_mjai.is_kyoku_over(observation)
+        is_game_over = mjx_to_mjai.is_game_over(observation)
+        expect(is_kyoku_over).to eq true
+        expect(is_game_over).to eq false
+    end
+    it "end_game" do
+        observation = observation_from_json(lines, 286)
+        is_game_over = mjx_to_mjai.is_game_over(observation)
+        expect(is_game_over).to eq true
+    end
+end

@@ -333,4 +333,23 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
     return mjai_yakus
   end
+
+  def is_start_kyoku(observation)
+    return observation.public_observation.events.length == 1
+  end
+
+  def is_start_game(observation)
+    round = observation.public_observation.init_score.round
+    honba = observation.public_observation.init_score.honba
+    return is_start_kyoku(observation) && round == 0 && honba == 0
+  end
+
+  def is_kyoku_over(observation)
+    return observation.round_terminal != nil
+  end
+
+  def is_game_over(observation)
+    p observation.round_terminal.is_game_over
+    return is_kyoku_over(observation) && observation.round_terminal.is_game_over
+  end
 end

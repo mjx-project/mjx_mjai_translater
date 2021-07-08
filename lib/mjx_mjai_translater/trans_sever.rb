@@ -148,11 +148,11 @@ class TransServer < Mjxproto::Agent::Service
         public_observation_difference.length.times do |i|
            mjai_action = mjx_to_mjai.mjx_event_to_mjai_action(public_observation_difference[i],observation, scores)  # mjxのeventをmjai actioinに変換
            mjai_actions.push(mjai_action)
-           if mjx_to_mjai.is_kyoku_end(observation)
+           if mjx_to_mjai.is_kyoku_over(observation)
               mjai_actions.push({"type"=>"end_kyoku"})
-              if mjx_to_mjai_.is_game_over(observation)
+           end
+           if mjx_to_mjai_.is_game_over(observation)
                 mjai_actions.push({"type"=>"end_game"})
-              end
            end
         end
         return mjai_actions
