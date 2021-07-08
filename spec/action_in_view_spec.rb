@@ -41,7 +41,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil) # playerのinstanceを作る
-        player.update_possible_actoins(legal_actions)  # legal_actionsを更新
+        player.update_possible_actions(legal_actions)  # legal_actionsを更新
         player.update_hand(hand)  # handを更新
         expect(player.forbidden_tiles_mjai()).to eq []
     end
@@ -50,7 +50,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil) # playerのinstanceを作る
-        player.update_possible_actoins(legal_actions) 
+        player.update_possible_actions(legal_actions) 
         player.update_hand(hand) 
         expect(player.forbidden_tiles_mjai()).to eq ["1p","2p","3p","5p","6p","7p","8p","9p","8s"]
     end
@@ -59,7 +59,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒したはいは除かれている
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil)
-        player.update_possible_actoins(legal_actions)  
+        player.update_possible_actions(legal_actions)  
         player.update_hand(hand) 
         expect(player.forbidden_tiles_mjai()).to eq ["3m"] # 7sを鳴いて7sを持っている。
     end

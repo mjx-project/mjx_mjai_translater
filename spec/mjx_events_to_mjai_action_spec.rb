@@ -113,8 +113,8 @@ RSpec.describe "mjx_eventの変換" do
         observation = observation_from_json(lines, 99)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
         mjx_event = public_observation_difference[-1]
-        expected_mjai_action = {"type"=>"hora","actor"=>3,"target"=>1,"pai"=>"8m","uradora_markers"=>["E"],"hora_tehais"=>["4m", "4m", "5m", "5m", "6m", "6m", "8m", "8m", "8m", "3p", "3p", "7s","8s", "9s"],
-        "yakus"=>[["reach",1],["ipeko",1]],"fu"=>40,"fan"=>2,"hora_points"=>2600,"deltas"=>[0,-3500,0,4500],"scores"=>[29100,31500,23000,16400]}
+        expected_mjai_action = [{"type"=>"hora","actor"=>3,"target"=>1,"pai"=>"8m","uradora_markers"=>["E"],"hora_tehais"=>["4m", "4m", "5m", "5m", "6m", "6m", "8m", "8m", "8m", "3p", "3p", "7s","8s", "9s"],
+        "yakus"=>[["reach",1],["ipeko",1]],"fu"=>40,"fan"=>2,"hora_points"=>2600,"deltas"=>[0,-3500,0,4500],"scores"=>[29100,31500,23000,16400]}]
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, nil)).to eq expected_mjai_action
     end 
     it "RYUKYOKU" do
@@ -131,9 +131,13 @@ RSpec.describe "mjx_eventの変換" do
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, players)).to eq expected_mjai_action
     end    
     it "DOUBLE_RON" do 
-        previous_public_observation = observation_from_json(lines, 55).public_observation.events
-        observation = observation_from_json(lines, 56)
+        previous_public_observation = observation_from_json(lines, 53).public_observation.events
+        observation = observation_from_json(lines, 54)
         public_observation_difference = trans_server.extract_difference(previous_public_observation, observation)
         mjx_event = public_observation_difference[-1]
+        expected_mjai_action = [{"type"=>"hora", "actor"=>0, "target"=>3, "pai"=>"7m", "uradora_markers"=>[], "hora_tehais"=>["3m", "3m", "7m", "7m", "7m", "4p", "5pr", "6p"],
+        "yakus"=>[["houteiraoyui",1],["dora",1],["akadora",1]], "fu"=>30, "fan"=>3, "hora_points"=>5800, "deltas"=>[6100,0,0,-6100], "scores"=>[32100,26000,22000,19900]},
+        {"type"=> "hora", "actor"=>1,"target"=>3,"pai"=>"7m","uradora_markers"=>[] , "hora_tehais"=>["6m", "7m", "8m","1s", "2s", "3s","P","P"], "fan"=>5,"fu"=>30,"hora_points"=>8000,"deltas"=>[0,8000,0,-8000],"yakus"=>[["houteiraoyui",1],["dora",3],["akadora",1]], "scores"=>[32100,34000,22000,11900]}]
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, nil)).to eq expected_mjai_action
     end                                         
 end

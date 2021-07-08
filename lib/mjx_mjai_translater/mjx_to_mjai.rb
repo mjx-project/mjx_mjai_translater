@@ -20,8 +20,8 @@ class MjxYakuToMjaiYaku
       "ippatsu",
       "chankan",
       "rinshankaiho",
-      "haiteiraoyue",
-      "hoteiraoyue",
+      "haiteiraoyui",
+      "houteiraoyui",
       "pinfu",
       "tanyaochu",
       "ipeko",
@@ -245,7 +245,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_no_win_terminal_to_mjai_action(event, observation, players)
+  def mjx_no_win_terminal_to_mjai_action(event, observation, players) # 流局時はplayer classから手配の情報を取得する必要がある。
     mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku.new()
     terminal_info = observation.round_terminal.no_winner # 流局時の情報が格納されている。
     reason = mjx_yaku_to_mjai_yaku.mjai_reason(event.type)
@@ -274,21 +274,42 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
   def mjx_win_terminal_to_mjai_action(observation)  # winnerがいる場合
-    terminal_info = observation.round_terminal.wins[0]
-    final_score = observation.round_terminal.final_score.tens
-    who = terminal_info.who
-    from_who = terminal_info.from_who
-    hand = terminal_info.hand.closed_tiles
-    win_tile = terminal_info.win_tile
-    fu = terminal_info.fu
-    fans = terminal_info.fans
-    ten = terminal_info.ten
-    ten_changes = terminal_info.ten_changes
-    yakus = terminal_info.yakus
-    yakumans = terminal_info.yakumans
-    ura_dora_indicators = terminal_info.ura_dora_indicators
-    return {"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>proto_tile_to_mjai_tile(win_tile),"uradora_markers"=>proto_tiles_to_mjai_tiles(ura_dora_indicators),"hora_tehais"=>proto_tiles_to_mjai_tiles(hand),
-    "yakus"=>_to_mjai_yakus(fans, yakus, yakumans),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>final_score}
+    terminal_infos = observation.round_terminal.wins
+    scores = observation.public_observation.init_score.tens
+    win_terminals = []
+    terminal_infos.length.times do |i|  # listとして返している
+      terminal_info = terminal_infos[i]
+      who = terminal_info.who
+      from_who = terminal_info.from_who
+      hand = terminal_info.hand.closed_tiles
+      win_tile = terminal_info.win_tile
+      fu = terminal_info.fu
+      fans = terminal_info.fans
+      ten = terminal_info.ten
+      ten_changes = terminal_info.ten_changes
+      yakus = terminal_info.yakus
+      yakumans = terminal_info.yakumans
+      scores = _get_scores(scores, ten_changes, yakus, who)
+      ura_dora_indicators = terminal_info.ura_dora_indicators
+      win_terminals.push({"type"=>"hora","actor"=>@absolutepos_id_hash[who],"target"=>@absolutepos_id_hash[from_who],"pai"=>proto_tile_to_mjai_tile(win_tile),"uradora_markers"=>proto_tiles_to_mjai_tiles(ura_dora_indicators),"hora_tehais"=>proto_tiles_to_mjai_tiles(hand),
+      "yakus"=>_to_mjai_yakus(fans, yakus, yakumans),"fu"=>fu,"fan"=>fans.sum(),"hora_points"=>ten,"deltas"=>ten_changes,"scores"=>scores})
+    end
+    return win_terminals
+  end
+
+  def _fix_riichi_ten_change(index, who)  # ten_change に直接変更を加えると、関数外でも変更された状態になってしまうため。
+    if index == who
+      return -1000
+    else
+      return 0
+    end
+  end
+
+  def _get_scores(score, ten_changes, yakus, who)
+    if yakus.include?(1)  # ten_changeは和了者のリーチ棒も考慮に入れる。
+      return (0...4).map(){ |i| score[i] + ten_changes[i] + _fix_riichi_ten_change(i, who)}
+    end
+    return (0...4).map(){ |i| score[i] + ten_changes[i] }
   end
 
   def _to_mjai_yakus(fans, mjx_yakus, mjx_yakumans)
