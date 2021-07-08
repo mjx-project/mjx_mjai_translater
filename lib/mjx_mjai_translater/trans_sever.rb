@@ -25,7 +25,7 @@ class TransServer < Mjxproto::Agent::Service
 
     def run()
         #TCPserverにおけるrunの部分
-        initial_communication()
+        initial_communication() #mjaiのclientとの最初の通信
         initialize_players(socket)
         while true
           observation = get_observation()
@@ -171,6 +171,6 @@ class TransServer < Mjxproto::Agent::Service
             responses.push(self.do_action(mjai_action))
         end
         @next_mjx_actions = update_next_actions(responses)
-        return @next_mjx_actions #mjxへactionを返す。
+        return @next_mjx_actions #mjxへactionを返す。最後のactionだけ参照勝すれば良い
     end
 end

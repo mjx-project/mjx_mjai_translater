@@ -20,8 +20,8 @@ class MjxYakuToMjaiYaku
       "ippatsu",
       "chankan",
       "rinshankaiho",
-      "haiteiraoyue",
-      "hoteiraoyue",
+      "haiteiraoyui",
+      "houteiraoyui",
       "pinfu",
       "tanyaochu",
       "ipeko",
@@ -245,7 +245,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 
-  def mjx_no_win_terminal_to_mjai_action(event, observation, players)
+  def mjx_no_win_terminal_to_mjai_action(event, observation, players) # 流局時はplayer classから手配の情報を取得する必要がある。
     mjx_yaku_to_mjai_yaku = MjxYakuToMjaiYaku.new()
     terminal_info = observation.round_terminal.no_winner # 流局時の情報が格納されている。
     reason = mjx_yaku_to_mjai_yaku.mjai_reason(event.type)
@@ -277,7 +277,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     terminal_infos = observation.round_terminal.wins
     scores = observation.public_observation.init_score.tens
     win_terminals = []
-    terminal_infos.length.times do |i|
+    terminal_infos.length.times do |i|  # listとして返している
       terminal_info = terminal_infos[i]
       who = terminal_info.who
       from_who = terminal_info.from_who
@@ -297,9 +297,17 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     return win_terminals
   end
 
+  def _fix_riichi_ten_change(index, who)  # ten_change に直接変更を加えると、関数外でも変更された状態になってしまうため。
+    if index == who
+      return -1000
+    else
+      return 0
+    end
+  end
+
   def _get_scores(score, ten_changes, yakus, who)
     if yakus.include?(1)  # ten_changeは和了者のリーチ棒も考慮に入れる。
-      _ten_changes = ten_changes[who] -= 1000
+      return (0...4).map(){ |i| score[i] + ten_changes[i] + _fix_riichi_ten_change(i, who)}
     end
     return (0...4).map(){ |i| score[i] + ten_changes[i] }
   end
