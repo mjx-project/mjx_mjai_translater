@@ -142,11 +142,18 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def convert_to_mjai_actions(observation, scores)  # scoresはriichi_acceptedを送る場合などに使う
-        public_observation_difference = history_difference = extract_difference(@_mjx_events, observation) # 差分
+        public_observation_difference  = extract_difference(@_mjx_events, observation) # 差分
         mjai_actions = []
+        mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
         public_observation_difference.length.times do |i|
-           mjai_action = MjxToMjai.new(@absolutepos_id_hash).mjx_event_to_mjai_action(public_observation_difference[i],observation, scores)  # mjxのeventをmjai actioinに変換
+           mjai_action = mjx_to_mjai.mjx_event_to_mjai_action(public_observation_difference[i],observation, scores)  # mjxのeventをmjai actioinに変換
            mjai_actions.push(mjai_action)
+           if mjx_to_mjai.is_kyoku_end(observation)
+              mjai_actions.push({"type"=>"end_kyoku"})
+              if mjx_to_mjai_.is_game_over(observation)
+                mjai_actions.push({"type"=>"end_game"})
+              end
+           end
         end
         return mjai_actions
     end
