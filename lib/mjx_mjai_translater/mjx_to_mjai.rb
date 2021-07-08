@@ -305,7 +305,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def _get_scores(score, ten_changes, yakus, who)
+  def _get_scores(score, ten_changes, yakus, who)  # ダブロンの時スコアを逐次的に変える
     if yakus.include?(1)  # ten_changeは和了者のリーチ棒も考慮に入れる。
       return (0...4).map(){ |i| score[i] + ten_changes[i] + _fix_riichi_ten_change(i, who)}
     end
