@@ -8,6 +8,7 @@ require './lib/mjxproto/mjx/internal/mjx_pb'
 require './lib/mjxproto/mjx/internal/mjx_services_pb'
 require 'google/protobuf'
 require "minitest"
+require_relative "../../mjai/lib/mjai/pai"
 
 include Minitest::Assertions
 
