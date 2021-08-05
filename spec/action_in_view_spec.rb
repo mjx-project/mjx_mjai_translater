@@ -52,7 +52,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         player = Player.new(nil, nil) # playerのinstanceを作る
         player.update_possible_actions(legal_actions) 
         player.update_hand(hand) 
-        expect(player.forbidden_tiles_mjai()).to eq ["1p","2p","3p","5p","6p","7p","8p","9p","8s"]
+        expect(player.forbidden_tiles_mjai()).to eq [Mjai::Pai.new("1p"),Mjai::Pai.new("2p"),Mjai::Pai.new("3p"),Mjai::Pai.new("5p"),Mjai::Pai.new("6p"),Mjai::Pai.new("7p"),Mjai::Pai.new("8p"),Mjai::Pai.new("9p"),Mjai::Pai.new("8s")]
     end
     it "chi" do # 喰い替えになる牌を返しているか
         observation = observation_from_json(lines,71)
@@ -61,6 +61,6 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         player = Player.new(nil, nil)
         player.update_possible_actions(legal_actions)  
         player.update_hand(hand) 
-        expect(player.forbidden_tiles_mjai()).to eq ["3m"] # 7sを鳴いて7sを持っている。
+        expect(player.forbidden_tiles_mjai()).to eq [Mjai::Pai.new("3m")] # 7sを鳴いて7sを持っている。
     end
 end
