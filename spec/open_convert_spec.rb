@@ -6,15 +6,15 @@ require './lib/mjx_mjai_translater/open_converter'
 RSpec.describe "event_type" do
     it "ポン" do
         open_converter = OpenConverter.new(47723)
-        expect(open_converter.open_event_type()).to eq "pon" 
+        expect(open_converter.open_event_type()).to eq :pon 
     end
     it "チー" do
         open_converter = OpenConverter.new(49495)
-        expect(open_converter.open_event_type()).to eq "chi" 
+        expect(open_converter.open_event_type()).to eq :chi 
     end
     it "カカン" do
         open_converter = OpenConverter.new(28722)
-        expect(open_converter.open_event_type()).to eq "kakan" 
+        expect(open_converter.open_event_type()).to eq :kakan 
     end
 end
 
@@ -39,7 +39,7 @@ RSpec.describe "red" do
     end
     it "transform_red" do
         open_converter = OpenConverter.new(52503)
-        expect(open_converter.transform_red_open([21, 22, 23], "chi")).to eq [21, 53, 23]
+        expect(open_converter.transform_red_open([21, 22, 23], :chi)).to eq [21, 53, 23]
     end
 end
 
