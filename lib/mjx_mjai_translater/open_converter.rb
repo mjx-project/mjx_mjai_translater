@@ -241,12 +241,12 @@ end
     mod9_kind_dict = {0 => "m", 1 => "p", 2 => "s"}
     num_zihai_dict = {0 => "E", 1 => "S", 2 => "W", 3 => "N", 4 => "P", 5 => "F", 6 => "C"}
     if open_red_mjai_tile_dict.include?(open)
-        return open_red_mjai_tile_dict[open]
+        return Mjai::Pai.new(open_red_mjai_tile_dict[open])
     end
     if open.div(9) <= 2
-        return ((open % 9) + 1).to_i.to_s + mod9_kind_dict[open.div(9)]
+        return Mjai::Pai.new(((open % 9) + 1).to_i.to_s + mod9_kind_dict[open.div(9)])
     end
-    return num_zihai_dict[open % 9]
+    return Mjai::Pai.new(num_zihai_dict[open % 9])
   end 
 
 

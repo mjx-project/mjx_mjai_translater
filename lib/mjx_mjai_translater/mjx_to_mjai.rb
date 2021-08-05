@@ -107,12 +107,13 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     mod36_kind_dict = {0 => "m", 1 => "p", 2 => "s"}
     num_zihai_dict = {0 => "E", 1 => "S", 2 => "W", 3 => "N", 4 => "P", 5 => "F", 6 => "C"}
     if reds_in_proto.include?(proto_tile)  # 赤
-      return reds_dict[proto_tile]
+      return Mjai::Pai.new(reds_dict[proto_tile])
     end
     if proto_tile.div(36) <= 2  #数牌
-      return ((proto_tile % 36 ).div(4) + 1).to_i.to_s + mod36_kind_dict[proto_tile.div(36)]
+      tile_num = ((proto_tile % 36 ).div(4) + 1).to_i.to_s + mod36_kind_dict[proto_tile.div(36)]
+      return Mjai::Pai.new(tile_num.to_s)
     end
-    return num_zihai_dict[(proto_tile % 36).div(4)]  #字牌
+    return Mjai::Pai.new(num_zihai_dict[(proto_tile % 36).div(4)])  #字牌
   end
 
 
@@ -127,7 +128,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
 
   def mjx_event_to_mjai_action(event, observation, players)  # observationはreach_accepted, ron tsumoの時しか使わない。
     if event.type == :EVENT_TYPE_DRAW
-      return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>"?"}  # ツモ牌 全て？で統一
+      return {"type"=>"tsumo","actor"=>@absolutepos_id_hash[event.who],"pai"=>Mjai::Pai.new("?")}  # ツモ牌 全て？で統一
     end
     if event.type == :EVENT_TYPE_DISCARD
       return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[event.who], "pai"=>proto_tile_to_mjai_tile(event.tile), "tsumogiri"=>false}
@@ -266,7 +267,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     terminal_hands = []
     players.length.times do |i|
       if !tenpai_players.include?(i)
-        terminal_hands.push(["?"]*players[i].hand.length)
+        terminal_hands.push([Mjai::Pai.new("?")]*players[i].hand.length)
       else
         terminal_hands.push(proto_tiles_to_mjai_tiles(tenpai_closed_hands.shift()))
       end

@@ -88,19 +88,19 @@ end
 RSpec.describe "open_to_mjai_tile" do  # openからmjaiのtileへの変換のテスト
     it "1s" do
         open_converter = OpenConverter.new(31744)
-        expect(open_converter.open_to_mjai_tile(9)).to eq "1p"
+        expect(open_converter.open_to_mjai_tile(9)).to eq Mjai::Pai.new("1p")
     end
     it "5s" do
         open_converter = OpenConverter.new(31744)
-        expect(open_converter.open_to_mjai_tile(22)).to eq "5s"
+        expect(open_converter.open_to_mjai_tile(22)).to eq Mjai::Pai.new("5s")
     end
     it "P" do
         open_converter = OpenConverter.new(31744)
-        expect(open_converter.open_to_mjai_tile(31)).to eq "P"
+        expect(open_converter.open_to_mjai_tile(31)).to eq Mjai::Pai.new("P")
     end
     it "red" do
         open_converter = OpenConverter.new(31744)
-        expect(open_converter.open_to_mjai_tile(51)).to eq "5mr"
+        expect(open_converter.open_to_mjai_tile(51)).to eq Mjai::Pai.new("5mr")
     end
 end
 
@@ -108,11 +108,11 @@ end
 RSpec.describe "mjai_stolen" do  # 鳴いた牌のmjaiのformatへの変換
     it "pon C" do
         open_converter = OpenConverter.new(51306)
-        expect(open_converter.mjai_stolen()).to eq  "C"
+        expect(open_converter.mjai_stolen()).to eq  Mjai::Pai.new("C")
     end
     it "chi 3s4s5s" do
         open_converter = OpenConverter.new(49495)
-        expect(open_converter.mjai_stolen()).to eq  "3s"
+        expect(open_converter.mjai_stolen()).to eq  Mjai::Pai.new("3s")
    end
 end
 
@@ -120,10 +120,10 @@ end
 RSpec.describe "mjai_consumed" do # 晒した牌のmjaiのformatへの変換
      it "pon C" do
          open_converter = OpenConverter.new(51306)
-         expect(open_converter.mjai_consumed()).to eq  ["C", "C"]
+         expect(open_converter.mjai_consumed()).to eq  [Mjai::Pai.new("C"), Mjai::Pai.new("C")]
      end
      it "chi 3s4s5s" do
          open_converter = OpenConverter.new(49495)
-         expect(open_converter.mjai_consumed()).to eq  ["4s", "5s"]
+         expect(open_converter.mjai_consumed()).to eq  [Mjai::Pai.new("4s"), Mjai::Pai.new("5s")]
     end
 end
