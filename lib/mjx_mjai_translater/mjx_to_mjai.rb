@@ -305,7 +305,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def _get_scores(score, ten_changes, yakus, who)
+  def _get_scores(score, ten_changes, yakus, who)  # ダブロンの時スコアを逐次的に変える
     if yakus.include?(1)  # ten_changeは和了者のリーチ棒も考慮に入れる。
       return (0...4).map(){ |i| score[i] + ten_changes[i] + _fix_riichi_ten_change(i, who)}
     end
@@ -332,5 +332,24 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       end
     end
     return mjai_yakus
+  end
+
+  def is_start_kyoku(observation)
+    return observation.public_observation.events.length == 1
+  end
+
+  def is_start_game(observation)
+    round = observation.public_observation.init_score.round
+    honba = observation.public_observation.init_score.honba
+    return is_start_kyoku(observation) && round == 0 && honba == 0
+  end
+
+  def is_kyoku_over(observation)
+    return observation.round_terminal != nil
+  end
+
+  def is_game_over(observation)
+    p observation.round_terminal.is_game_over
+    return is_kyoku_over(observation) && observation.round_terminal.is_game_over
   end
 end
