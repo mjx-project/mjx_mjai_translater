@@ -50,49 +50,49 @@ RSpec.describe  MjxToMjai do
     observation = observation_from_json(lines,25)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[-1]
-    expected_mjai_action = {"type"=>"dahai", "actor"=>0, "pai"=>Mjai::Pai.new("W"), "tsumogiri"=>true} 
+    expected_mjai_action = Mjai::Action.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("W"), :tsumogiri=>true})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "チー" do
     observation = observation_from_json(lines,9)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
-    expected_mjai_action = {"type"=>"chi", "actor"=>0, "target"=>3, "pai"=>Mjai::Pai.new("3m"), "consumed"=>[Mjai::Pai.new("2m"), Mjai::Pai.new("4m")]}
+    expected_mjai_action = Mjai::Action.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("3m"), :consumed=>[Mjai::Pai.new("2m"), Mjai::Pai.new("4m")]})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ポン" do
     observation = observation_from_json(lines,5)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
-    expected_mjai_action = {"type"=>"pon", "actor"=>0, "target"=>1, "pai"=>Mjai::Pai.new("4p"), "consumed"=>[Mjai::Pai.new("4p"), Mjai::Pai.new("4p")]}
+    expected_mjai_action = Mjai::Action.new({:type=>:pon, :actor=>0, :target=>1, :pai=>Mjai::Pai.new("4p"), :consumed=>[Mjai::Pai.new("4p"), Mjai::Pai.new("4p")]})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "カカン" do
     observation = observation_from_json(lines,33)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
-    expected_mjai_action = {"type"=>"kakan","actor"=>0,"pai"=>Mjai::Pai.new("N"),"consumed"=>[Mjai::Pai.new("N"), Mjai::Pai.new("N"), Mjai::Pai.new("N")]}
+    expected_mjai_action = Mjai::Action.new({:type=>:kakan,:actor=>0,:pai=>Mjai::Pai.new("N"),:consumed=>[Mjai::Pai.new("N"), Mjai::Pai.new("N"), Mjai::Pai.new("N")]})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ダイミンカン" do 
     observation = observation_from_json(lines,22)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[1]
-    expected_mjai_action = {"type"=>"daiminkan", "actor"=>0, "target"=>2, "pai"=>Mjai::Pai.new("2p"), "consumed"=>[Mjai::Pai.new("2p"), Mjai::Pai.new("2p"), Mjai::Pai.new("2p")]}
+    expected_mjai_action = Mjai::Action.new({:type=>:daiminkan, :actor=>0, :target=>2, :pai=>Mjai::Pai.new("2p"), :consumed=>[Mjai::Pai.new("2p"), Mjai::Pai.new("2p"), Mjai::Pai.new("2p")]})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "アンカン" do
     observation = observation_from_json(lines_1,29)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
-    expected_mjai_action = {"type"=>"ankan","actor"=>1,"consumed"=>[Mjai::Pai.new("P"), Mjai::Pai.new("P"),Mjai::Pai.new("P"), Mjai::Pai.new("P")]}
+    expected_mjai_action = Mjai::Action.new({:type=>:ankan,:actor=>1,:consumed=>[Mjai::Pai.new("P"), Mjai::Pai.new("P"),Mjai::Pai.new("P"), Mjai::Pai.new("P")]})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "リーチ" do
     observation = observation_from_json(lines,129)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[0]
-    expected_mjai_action = {"type"=>"reach","actor"=>0}
+    expected_mjai_action = Mjai::Action.new({:type=>:reach,:actor=>0})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
   it "ツモ" do
@@ -101,7 +101,7 @@ RSpec.describe  MjxToMjai do
     public_observatoin = observation.public_observation.events
     mjx_action = legal_actions[0]
     p public_observatoin[-1].tile
-    expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>0,"pai"=>Mjai::Pai.new("8s")}
+    expected_mjai_action = Mjai::Action.new({:type=>:hora,:actor=>0,:target=>0,:pai=>Mjai::Pai.new("8s")})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
   it "ロン" do
@@ -110,14 +110,14 @@ RSpec.describe  MjxToMjai do
     public_observatoin = observation.public_observation.events
     mjx_action = legal_actions[0]
     p public_observatoin[-1].tile
-    expected_mjai_action = {"type"=>"hora","actor"=>0,"target"=>3,"pai"=>Mjai::Pai.new("7m")}
+    expected_mjai_action = Mjai::Action.new({:type=>:hora,:actor=>0,:target=>3,:pai=>Mjai::Pai.new("7m")})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
   it "no" do
     observation = observation_from_json(lines,5)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[-1]
-    expected_mjai_action = {"type"=>"none"}
+    expected_mjai_action = {:type=>:none}
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
 end
