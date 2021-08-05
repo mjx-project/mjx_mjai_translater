@@ -44,16 +44,16 @@ class OpenConverter
   def open_event_type()  # eventのtype
     relative_pos = RelativePos.new()
     if (1 << 2 & @bits) != 0  # rubyでは0はfalseを意味しない
-      return "chi"
+      return :chi
     elsif 1 << 3 & @bits != 0
-      return "pon"
+      return :pon
     elsif 1 << 4 & @bits != 0
-      return "kakan"
+      return :kakan
     else
       if relative_pos._self() == @bits & 3
-          return "ankan"
+          return :ankan
       else
-          return "daiminkan"
+          return :daiminkan
       end
     end
   end
@@ -62,9 +62,9 @@ class OpenConverter
   def open_from()  # 誰から鳴いたか
     relative_pos = RelativePos.new()
     event_type = open_event_type()
-    if event_type == "chi"
+    if event_type == :chi
         return relative_pos.left()
-    elsif event_type == "pon" or event_type == "daiminkan"  or event_type == "kakan"
+    elsif event_type == :pon or event_type == :daiminkan  or event_type == :kakan
         return @bits & 3 # ポンチーダイミンカンの場合はrelativeposは3通り
     else
         return relative_pos._self()
@@ -86,11 +86,11 @@ class OpenConverter
       if !fives.include?(stolen_tile_kind)
           return false
       end
-      if event_type == "chi"
+      if event_type == :chi
           stolen_tile_mod3 = (@bits >> 10) % 3  # 鳴いた牌のindex
           stolen_tile_id_mod4 = (@bits >> (3 + 2 * stolen_tile_mod3)) % 4  # 鳴いた牌のi
           return stolen_tile_id_mod4 == 0  # 鳴いた牌のid mod 4=0→赤
-      elsif event_type == "pon" || event_type == "kakan"
+      elsif event_type == :pon || event_type == :kakan
           unused_id_mod4 = (@bits >> 5) % 4  # 未使用牌のid mod 4
           stolen_tile_mod3 = (@bits >> 9) % 3  # 鳴いた牌のindex
           return unused_id_mod4 != 0 && stolen_tile_mod3 == 0  # 未使用牌が赤でなく、鳴いた牌のインデックスが0の時→赤
@@ -149,9 +149,9 @@ class OpenConverter
 
   def has_red()  # 赤を持っているか
     event_type = open_event_type()
-    if event_type == "chi"
+    if event_type == :chi
         return has_red_chi()
-    elsif event_type == "pon" or event_type == "kakan"
+    elsif event_type == :pon or event_type == :kakan
         return has_red_pon_kan_added()
     else
         return has_red_kan_closed_kan_opend()  # ダイミンカンとアンカンは必ず赤を含む
@@ -185,7 +185,7 @@ end
       if !has_red()
           return open
       end
-      if event_type == "chi"
+      if event_type == :chi
           return replace_array_by_hash(open, red_dict)
       else
           open[-1] = red_dict[open[-1]]
@@ -197,11 +197,11 @@ end
 
   def open_stolen_tile_type()  # 鳴いた牌
       event_type = open_event_type()
-      if event_type == "chi"
+      if event_type == :chi
           min_tile = _min_tile_chi()
           stolen_tile_kind = min_tile + (@bits >> 10) % 3
           return transform_red_stolen(stolen_tile_kind)
-      elsif event_type == "pon" or event_type == "kakan"
+      elsif event_type == :pon or event_type == :kakan
           stolen_tile_kind = (@bits >> 9).div(3)
           return transform_red_stolen(stolen_tile_kind)
       else
@@ -215,7 +215,7 @@ end
     reds = [51, 52, 53]
     red_five_dict = { 51=>4, 52=>13, 53=>22 }
     event_type = open_event_type()
-    if event_type == "chi"
+    if event_type == :chi
         min_tile = _min_tile_chi()
         open = [min_tile, min_tile + 1, min_tile + 2]
         return transform_red_open(open, event_type)
@@ -226,7 +226,7 @@ end
     else
         nil
     end
-    if event_type == "pon"
+    if event_type == :pon
         open = [stolen_tile_kind] * 3
         return transform_red_open(open, event_type)
     else
@@ -261,9 +261,9 @@ end
     open_stolen_tile = open_stolen_tile_type()
     open_tiles = open_tile_types()
     event_type = open_event_type()
-    if event_type == "ankan"
+    if event_type == :ankan
         return open_tiles.map {|x| open_to_mjai_tile(x)}
-    elsif is_stolen_red(open_stolen_tile) || event_type == "chi"
+    elsif is_stolen_red(open_stolen_tile) || event_type == :chi
         open_tiles.delete(open_stolen_tile)  # 鳴いたはいを削除する。
         consumed_tiles = open_tiles.map {|x| open_to_mjai_tile(x)}
         return consumed_tiles

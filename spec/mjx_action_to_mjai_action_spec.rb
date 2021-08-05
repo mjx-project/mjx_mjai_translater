@@ -117,7 +117,7 @@ RSpec.describe  MjxToMjai do
     observation = observation_from_json(lines,5)
     legal_actions = observation.legal_actions
     mjx_action = legal_actions[-1]
-    expected_mjai_action = {:type=>:none}
+    expected_mjai_action =  Mjai::Action.new({:type=>:none})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, nil)).to eq expected_mjai_action
   end
 end
