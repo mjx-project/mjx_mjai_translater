@@ -190,7 +190,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     who = mjx_act.who
     if action_type == :ACTION_TYPE_DISCARD #新しいprotoを待つ
       tile = mjx_act.tile
-      return {"type"=>"dahai", "actor"=>@absolutepos_id_hash[who], "pai"=>proto_tile_to_mjai_tile(tile), "tsumogiri"=>false}
+      return Mjai::Action.new({:type=>:dahai, :actor=>@absolutepos_id_hash[who], :pai=>proto_tile_to_mjai_tile(tile), :tsumogiri=>false})
     end
     if action_type == :ACTION_TYPE_TSUMOGIRI
       tile = mjx_act.tile
