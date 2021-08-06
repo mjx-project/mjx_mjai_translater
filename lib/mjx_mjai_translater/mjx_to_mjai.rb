@@ -73,12 +73,12 @@ class MjxYakuToMjaiYaku
       :akadora,
   ]
     @ryukyoku_reasons_dict = {
-      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS=>"suchareach",
-      :EVENT_TYPE_ABORTIVE_DRAW_THREE_RONS=>"sanchaho",  
-      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_KANS=>"sukaikan",
-      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_WINDS=>"sufonrenta",
-      :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL=>"fonpai",
-      :EVENT_TYPE_EXHAUSTIVE_DRAW_NAGASHI_MANGAN=>"nagashimangan"
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS=>:suchareach,
+      :EVENT_TYPE_ABORTIVE_DRAW_THREE_RONS=>sanchaho,  
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_KANS=>:sukaikan,
+      :EVENT_TYPE_ABORTIVE_DRAW_FOUR_WINDS=>:sufonrenta,
+      :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL=>:fonpai,
+      :EVENT_TYPE_EXHAUSTIVE_DRAW_NAGASHI_MANGAN=>:nagashimangan
 }
   end
 
