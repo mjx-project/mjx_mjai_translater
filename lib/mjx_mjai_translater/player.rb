@@ -7,10 +7,10 @@ require "mjx_to_mjai"
 
 class Player < Mjai::TCPPlayer
 
-    def initialize(socket, id)
+    def initialize(socket, name, id)
+        super(socket, name)
         @legal_actions = []  # mjxとのやりとりで更新していく
         @hand = []  # mjxとのやりとりで更新していく。
-        @socket = socket
         @id = id # mjaiのid
         @absolutepos_id_hash = {0=>0,1=>1,
         2=>2, 3=>3}
