@@ -5,7 +5,7 @@
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "mjx_to_mjai"
 
-class Player 
+class Player < Mjai::TCPPlayer
 
     def initialize(socket, id)
         @legal_actions = []  # mjxとのやりとりで更新していく
@@ -57,7 +57,7 @@ class Player
   end
 
 
-  def respond_to_action(action)
+  def respond_to_action_of_translator(action)
         begin
           puts("server -> player %d\t%s" % [self.id, action.to_json()])
           @socket.puts(action.to_json())

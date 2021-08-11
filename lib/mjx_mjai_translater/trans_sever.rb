@@ -52,7 +52,7 @@ class TransServer < Mjxproto::Agent::Service
           #update_state(action)これはmjxがやる
           #@on_action.call(action) if @on_action
           responses = (0...4).map() do |i|  
-            @players[i].respond_to_action(action_in_view(action, i, true))  # aciton_in_view()実装する必要あり
+            @players[i].respond_to_action_of_translator(action_in_view(action, i, true))  # aciton_in_view()実装する必要あり
           end
           #action_with_logs = action.merge({:logs => responses.map(){ |r| r && r.log }})
           responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
