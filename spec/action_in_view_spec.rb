@@ -45,7 +45,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         player.update_hand(hand)  # handを更新
         expect(player.forbidden_tiles_mjai()).to eq []
     end
-    it "riichi" do  # 聴牌にならないはいを返しているか
+    it "riichi" do  # 聴牌にならない牌を返しているか
         observation = observation_from_json(lines,130)
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
