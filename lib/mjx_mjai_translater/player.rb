@@ -5,10 +5,10 @@
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "mjx_to_mjai"
 
-class Player < Mjai::TCPPlayer
+class Player
 
     def initialize(socket, id)
-        #super(socket, name)
+        @socket = socket
         @legal_actions = []  # mjxとのやりとりで更新していく
         @hand = []  # mjxとのやりとりで更新していく。
         @id = id # mjaiのid
