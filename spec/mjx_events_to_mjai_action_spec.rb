@@ -199,4 +199,5 @@ RSpec.describe "局開始時のaction" do
         expect(mjai_actions).to eq [Mjai::Action.new({:type => :start_game, :names => "mjai"}),Mjai::Action.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
         :tehais=>[non_tehai,expected_tehai, non_tehai, non_tehai]}), Mjai::Action.new({:type=>:tsumo,:actor=>0,:pai=>Mjai::Pai.new("?")}) ,Mjai::Action.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), Mjai::Action.new({:type=>:tsumo,:actor=>1,:pai=>Mjai::Pai.new("?")})]
     end
+    
 end
