@@ -353,4 +353,28 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   def is_game_over(observation)
     return is_kyoku_over(observation) && observation.round_terminal.is_game_over
   end
+
+  def start_kyoku(observation)
+    kyoku = observation.public_observation.init_score.round + 1
+    if kyoku <= 4
+      bakaze = Mjai::Pai.new("E")
+    elsif kyoku <= 8
+      bakaze = Mjai::Pai.new("S")
+    elsif kyoku <= 12
+      bakaze = Mjai::Pai.new("W")
+    else
+      bakaze = Mjai::Pai.new("N")
+    end
+    honba = observation.public_observation.init_score.honba
+    kyotaku = observation.public_observation.init_score.riichi
+    oya = observation.public_observation.events[0].who
+    dora_marker = proto_tile_to_mjai_tile(observation.public_observation.dora_indicators[0])
+    tehai = proto_tiles_to_mjai_tiles(observation.private_observation.init_hand.closed_tiles)
+    non_tehai = [Mjai::Pai.new("?")]*13
+    player_id = observation.legal_actions[0].who
+    tehais = [non_tehai]*4
+    tehais[player_id] = tehai
+    return Mjai::Action.new({:type=>:start_kyoku, :kyoku=>kyoku,:bakaze=>bakaze, :honba=>honba, :kyotaku=>kyotaku, :oya=>oya, :dora_marker=>dora_marker, :tehais=>tehais})
+  end
+
 end

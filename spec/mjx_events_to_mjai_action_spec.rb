@@ -194,9 +194,9 @@ RSpec.describe "局開始時のaction" do
     non_tehai = [Mjai::Pai.new("?")]*13
     it "initial_action" do
         observation = observation_from_json(lines_1, 0)
-        mjai_actions = trans_server.convert_to_mjai_actions(observation)
-        expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("C"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
-        expect(mjai_actions).to eq [{:type => :start_game, :names => "mjai"},{:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
-        :tehais=>[non_tehai,expected_tehai, non_tehai, non_tehai]}]
+        mjai_actions = trans_server.convert_to_mjai_actions(observation , nil)
+        expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
+        expect(mjai_actions).to eq [Mjai::Action.new({:type => :start_game, :names => "mjai"}),Mjai::Action.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        :tehais=>[non_tehai,expected_tehai, non_tehai, non_tehai]}), Mjai::Action.new({:type=>:tsumo,:actor=>0,:pai=>Mjai::Pai.new("?")}) ,Mjai::Action.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), Mjai::Action.new({:type=>:tsumo,:actor=>1,:pai=>Mjai::Pai.new("?")})]
     end
 end
