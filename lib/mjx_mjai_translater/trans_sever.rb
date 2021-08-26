@@ -20,7 +20,7 @@ class TransServer < Mjxproto::Agent::Service
         @_mjx_events = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
-        initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
+        #initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
     end
 
     def run()
@@ -61,7 +61,7 @@ class TransServer < Mjxproto::Agent::Service
     end
 
     def initialize_players(socket)
-        if @players.size >= self.num_tcp_players
+        if @players.size >= @num_tcp_players
           raise(LocalError, "The room is busy. Retry after a while.")
         end
         @num_player_size.times do |i|

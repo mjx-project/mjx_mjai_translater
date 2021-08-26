@@ -13,7 +13,7 @@ class RandomAgent < Mjxproto::Agent::Service
   end
 end
 
-def main
+def main  # agentを1対立てる
   s = GRPC::RpcServer.new
   s.add_http2_port('0.0.0.0:50051', :this_port_is_insecure)
   s.handle(RandomAgent)
