@@ -200,4 +200,5 @@ RSpec.describe "局開始時のaction" do
         :tehais=>[non_tehai,expected_tehai, non_tehai, non_tehai]}), Mjai::Action.new({:type=>:tsumo,:actor=>0,:pai=>Mjai::Pai.new("?")}) ,Mjai::Action.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), Mjai::Action.new({:type=>:tsumo,:actor=>1,:pai=>Mjai::Pai.new("?")})]
     end
     
+
 end
