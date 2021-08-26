@@ -180,7 +180,7 @@ class TransServer < Mjxproto::Agent::Service
         mjai_actions = []
         mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
         if mjx_to_mjai.is_start_game(observation)
-          mjai_actions.push(Mjai::Action.new({:type=>:start_game, :names=>"mjai"}))
+          mjai_actions.push(Mjai::Action.new({:type=>:start_game}))
         end
         if mjx_to_mjai.is_start_kyoku(observation)
           mjai_actions.push(mjx_to_mjai.start_kyoku(observation))
@@ -190,10 +190,10 @@ class TransServer < Mjxproto::Agent::Service
            mjai_actions.push(mjai_action)
         end
         if mjx_to_mjai.is_kyoku_over(observation)
-          mjai_actions.push({"type"=>"end_kyoku"})
+          mjai_actions.push({:type=>:end_kyoku})
        end
        if mjx_to_mjai.is_game_over(observation)
-            mjai_actions.push({"type"=>"end_game"})
+            mjai_actions.push({:type=>end_game})
        end
         return mjai_actions
     end
