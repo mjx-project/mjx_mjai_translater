@@ -145,10 +145,19 @@ end
 RSpec.describe "局、半荘の開始終了" do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
+    file_2 = File.open("spec/resources/observations-002.json", "r")
+    lines_2 = file_2.readlines
     absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
     mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash)
-    it "start_kyoku only" do
+    it "start_kyoku only 2" do
         observation = observation_from_json(lines, 30)
+        is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation)
+        is_start_game = mjx_to_mjai.is_start_game(observation)
+        expect(is_start_kyoku).to eq true
+        expect(is_start_game).to eq false
+    end
+    it "start_kyoku only 2" do
+        observation = observation_from_json(lines_2, 21)
         is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation)
         is_start_game = mjx_to_mjai.is_start_game(observation)
         expect(is_start_kyoku).to eq true
@@ -170,5 +179,24 @@ RSpec.describe "局、半荘の開始終了" do
         observation = observation_from_json(lines, 286)
         is_game_over = mjx_to_mjai.is_game_over(observation)
         expect(is_game_over).to eq true
+    end
+end
+
+
+RSpec.describe "局開始時のaction" do
+    file = File.open("spec/resources/observations-000.json", "r")
+    lines = file.readlines
+    file_1 = File.open("spec/resources/observations-001.json", "r")
+    lines_1 = file_1.readlines
+    absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
+    trans_server = TransServer.new()
+    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash) 
+    non_tehai = [Mjai::Pai.new("?")]*13
+    it "initial_action" do
+        observation = observation_from_json(lines_1, 0)
+        mjai_actions = trans_server.convert_to_mjai_actions(observation , nil)
+        expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
+        expect(mjai_actions).to eq [Mjai::Action.new({:type => :start_game, :names => "mjai"}),Mjai::Action.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        :tehais=>[non_tehai,expected_tehai, non_tehai, non_tehai]}), Mjai::Action.new({:type=>:tsumo,:actor=>0,:pai=>Mjai::Pai.new("?")}) ,Mjai::Action.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), Mjai::Action.new({:type=>:tsumo,:actor=>1,:pai=>Mjai::Pai.new("?")})]
     end
 end

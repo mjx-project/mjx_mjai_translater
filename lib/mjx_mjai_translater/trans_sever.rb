@@ -23,6 +23,7 @@ class TransServer < Mjxproto::Agent::Service
         #initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
     end
 
+
     def run()
         #TCPserverにおけるrunの部分
         while true
@@ -178,16 +179,22 @@ class TransServer < Mjxproto::Agent::Service
         public_observation_difference  = extract_difference(@_mjx_events, observation) # 差分
         mjai_actions = []
         mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
+        if mjx_to_mjai.is_start_game(observation)
+          mjai_actions.push(Mjai::Action.new({:type=>:start_game, :names=>"mjai"}))
+        end
+        if mjx_to_mjai.is_start_kyoku(observation)
+          mjai_actions.push(mjx_to_mjai.start_kyoku(observation))
+        end
         public_observation_difference.length.times do |i|
            mjai_action = mjx_to_mjai.mjx_event_to_mjai_action(public_observation_difference[i],observation, scores)  # mjxのeventをmjai actioinに変換
            mjai_actions.push(mjai_action)
-           if mjx_to_mjai.is_kyoku_over(observation)
-              mjai_actions.push({"type"=>"end_kyoku"})
-           end
-           if mjx_to_mjai_.is_game_over(observation)
-                mjai_actions.push({"type"=>"end_game"})
-           end
         end
+        if mjx_to_mjai.is_kyoku_over(observation)
+          mjai_actions.push({"type"=>"end_kyoku"})
+       end
+       if mjx_to_mjai.is_game_over(observation)
+            mjai_actions.push({"type"=>"end_game"})
+       end
         return mjai_actions
     end
 
