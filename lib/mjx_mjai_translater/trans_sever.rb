@@ -20,29 +20,62 @@ class TransServer < Mjxproto::Agent::Service
         @_mjx_events = nil
         @new_mjai_acitons = []
         @next_mjx_actions = []
-        initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
+        #initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
     end
 
     def run()
         #TCPserverにおけるrunの部分
-        initial_communication() #mjaiのclientとの最初の通信
-        initialize_players(socket)
         while true
-          observation = get_observation()
-          take_action(observation)
+          Thread.new(@server.accept()) do |socket|
+            message = initial_communication(socket)
+            if message["type"] != "join" || !message["name"] || !message["room"]
+              raise(LocalError, "Expected e.g. %s" %
+                  JSON.dump({"type" => "join", "name" => "noname", "room" => @params[:room]}))
+            end
+            if message["room"] != @params[:room]
+              raise(LocalError, "No such room. Available room: %s" % @params[:room])
+            end
+            initialize_players()
+            observation = get_observation()
+            take_action(observation)
+          end
         end
-        
     end
 
 
-    def initial_communication() # clientとの最初の通信
+    def initial_communication(socket) # clientとの最初の通信
+      socket.sync = true
+      socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+      send(socket, {
+          "type" => "hello",
+          "protocol" => "mjsonp",
+          "protocol_version" => 3,
+      })
+      line = socket.gets()
+      if !line
+        raise(LocalError, "Connection closed")
+      end
+      puts("server <- player ?\t#{line}")
+      message = JSON.parse(line)
+      return message
     end
 
     def initialize_players(socket)
+        if @players.size >= @num_tcp_players
+          raise(LocalError, "The room is busy. Retry after a while.")
+        end
         @num_player_size.times do |i|
              @players.push(Player.new(socket, i)) # ここの作る順番がidになる。 
         end
-    end          
+    end   
+    
+    def process_one_game()
+      # for 指定された局数
+      #     - while game
+      #         - 局開始
+      #         - 局終わり
+      #     - end game
+    end
 
     def do_action(action) # mjai_clientにactionを渡してresponseを得る。
         #mjaiと同じ実装
