@@ -23,6 +23,7 @@ class TransServer < Mjxproto::Agent::Service
         #initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
     end
 
+    
     def run()
         #TCPserverにおけるrunの部分
         while true
