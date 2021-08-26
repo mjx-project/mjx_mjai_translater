@@ -337,7 +337,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
   def is_start_kyoku(observation)
-    return observation.public_observation.events.length == 1
+    return observation.private_observation.draw_history.length <= 1
   end
 
   def is_start_game(observation)
@@ -351,7 +351,6 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
   def is_game_over(observation)
-    p observation.round_terminal.is_game_over
     return is_kyoku_over(observation) && observation.round_terminal.is_game_over
   end
 end

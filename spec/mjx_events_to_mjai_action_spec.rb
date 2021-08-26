@@ -145,10 +145,19 @@ end
 RSpec.describe "局、半荘の開始終了" do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
+    file_2 = File.open("spec/resources/observations-002.json", "r")
+    lines_2 = file_2.readlines
     absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
     mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash)
-    it "start_kyoku only" do
+    it "start_kyoku only 2" do
         observation = observation_from_json(lines, 30)
+        is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation)
+        is_start_game = mjx_to_mjai.is_start_game(observation)
+        expect(is_start_kyoku).to eq true
+        expect(is_start_game).to eq false
+    end
+    it "start_kyoku only 2" do
+        observation = observation_from_json(lines_2, 21)
         is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation)
         is_start_game = mjx_to_mjai.is_start_game(observation)
         expect(is_start_kyoku).to eq true
@@ -171,4 +180,12 @@ RSpec.describe "局、半荘の開始終了" do
         is_game_over = mjx_to_mjai.is_game_over(observation)
         expect(is_game_over).to eq true
     end
+end
+
+
+RSpec.describe "局開始時のaction" do
+    file = File.open("spec/resources/observations-000.json", "r")
+    lines = file.readlines
+    absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
+    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash) 
 end
