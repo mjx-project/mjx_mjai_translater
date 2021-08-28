@@ -9,22 +9,16 @@ require "test_utils"
 
 RSpec.describe  MjxToMjai do  # tile変換のテスト
   it "protoの赤tileがmjaiのtileに変換できること" do
-    p MjxToMjai.new({}).proto_tile_to_mjai_tile(16).data()
-    p MjxToMjai.new({}).proto_tile_to_mjai_tile(131)
-    p MjxToMjai.new({}).proto_tile_to_mjai_tile(121)
-    expect(MjxToMjai.new({}).proto_tile_to_mjai_tile(16)).to eq Mjai::Pai.new("5mr")
+    expect(MjxToMjai.new({}, 0).proto_tile_to_mjai_tile(16)).to eq Mjai::Pai.new("5mr")
   end
   it "protoの赤以外の数牌をmjaiのtileに変換できること" do
-    p MjxToMjai.new({}).proto_tile_to_mjai_tile(17).data()
-    expect(MjxToMjai.new({}).proto_tile_to_mjai_tile(17)).to eq Mjai::Pai.new("5m")
+    expect(MjxToMjai.new({}, 0).proto_tile_to_mjai_tile(17)).to eq Mjai::Pai.new("5m")
   end
   it "protoの字牌をmjaiのtileに変換できるか" do
-    p MjxToMjai.new({}).proto_tile_to_mjai_tile(131).data()
-    expect(MjxToMjai.new({}).proto_tile_to_mjai_tile(131)).to eq Mjai::Pai.new("F")
+    expect(MjxToMjai.new({}, 0).proto_tile_to_mjai_tile(131)).to eq Mjai::Pai.new("F")
   end
   it "protoの字牌をmjaiのtileに変換できるか" do
-    p MjxToMjai.new({}).proto_tile_to_mjai_tile(121).data()
-    expect(MjxToMjai.new({}).proto_tile_to_mjai_tile(121)).to eq Mjai::Pai.new("N")
+    expect(MjxToMjai.new({}, 0).proto_tile_to_mjai_tile(121)).to eq Mjai::Pai.new("N")
   end
 end
 
@@ -38,7 +32,7 @@ RSpec.describe  MjxToMjai do
   file_3 = File.open("spec/resources/observations-003.json", "r")
   lines_3 = file_3.readlines
   mjx_to_mjai = MjxToMjai.new({0=>0,1=>1,
-  2=>2, 3=>3})
+  2=>2, 3=>3}, 0)
   it "手出し" do
     observation = observation_from_json(lines,1)
     legal_actions = observation.legal_actions

@@ -16,14 +16,14 @@ RSpec.describe "mjx_eventの変換" do
     file_3 = File.open("spec/resources/observations-003.json", "r")
     lines_3 = file_3.readlines
     absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
-    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash)
-    trans_server = TransServer.new()
+    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash, 0)
+    trans_server = TransServer.new({:target_id=>0})
     it "DRAW" do  # actor(id)とabsolute_posは=ではないので内部で変換している。
         observation = observation_from_json(lines, 0)
         public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[0]
-        expected_mjai_action = Mjai::Action.new({:type=>:tsumo,:actor=>0,:pai=>Mjai::Pai.new("?")})
-        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action  # mjaiのwikiを参考に作成                                                                       
+        expected_mjai_action = Mjai::Action.new({:type=>:tsumo,:actor=>0,:pai=>Mjai::Pai.new("2m")})
+        expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, nil)).to eq expected_mjai_action  # mjaiのwikiを参考に作成                                                                       
     end
     it "DISCARD" do
         previous_events = observation_from_json(lines, 0).public_observation.events
@@ -148,7 +148,7 @@ RSpec.describe "局、半荘の開始終了" do
     file_2 = File.open("spec/resources/observations-002.json", "r")
     lines_2 = file_2.readlines
     absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
-    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash)
+    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash, 1)
     it "start_kyoku only 2" do
         observation = observation_from_json(lines, 30)
         is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation)
@@ -189,16 +189,15 @@ RSpec.describe "局開始時のaction" do
     file_1 = File.open("spec/resources/observations-001.json", "r")
     lines_1 = file_1.readlines
     absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
-    trans_server = TransServer.new()
-    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash) 
+    trans_server = TransServer.new({:target_id=>1})
+    mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash, 1) 
     non_tehai = [Mjai::Pai.new("?")]*13
     it "initial_action" do
         observation = observation_from_json(lines_1, 0)
+        p observation
         mjai_actions = trans_server.convert_to_mjai_actions(observation , nil)
         expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
         expect(mjai_actions).to eq [Mjai::Action.new({:type => :start_game}),Mjai::Action.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
-        :tehais=>[non_tehai,expected_tehai, non_tehai, non_tehai]}), Mjai::Action.new({:type=>:tsumo,:actor=>0,:pai=>Mjai::Pai.new("?")}) ,Mjai::Action.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), Mjai::Action.new({:type=>:tsumo,:actor=>1,:pai=>Mjai::Pai.new("?")})]
+        :tehais=>[non_tehai,expected_tehai, non_tehai, non_tehai]}), Mjai::Action.new({:type=>:tsumo,:actor=>0,:pai=>Mjai::Pai.new("?")}) ,Mjai::Action.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), Mjai::Action.new({:type=>:tsumo,:actor=>1,:pai=>Mjai::Pai.new("9m")})]
     end
-    
-
 end

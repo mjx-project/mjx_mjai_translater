@@ -94,9 +94,11 @@ end
 
 class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラスじゃなくても良いかも
   attr_accessor :assertions
-  def initialize(absolutepos_id)
+  attr_reader(:target_id)
+  def initialize(absolutepos_id, target_id)
     @absolutepos_id_hash = absolutepos_id
     @absolute_pos = [0,1,2, 3]
+    @target_id = target_id
     self.assertions = 0
   end
 
@@ -128,7 +130,11 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
 
   def mjx_event_to_mjai_action(event, observation, players)  # observationはreach_accepted, ron tsumoの時しか使わない。
     if event.type == :EVENT_TYPE_DRAW
-      return Mjai::Action.new({:type=>:tsumo,:actor=>@absolutepos_id_hash[event.who],:pai=>Mjai::Pai.new("?")})  # ツモ牌 全て？で統一
+      if event.who != @target_id
+        return Mjai::Action.new({:type=>:tsumo,:actor=>@absolutepos_id_hash[event.who],:pai=>Mjai::Pai.new("?")})  # ツモ牌 全て？で統一
+      else
+        return Mjai::Action.new({:type=>:tsumo,:actor=>@absolutepos_id_hash[event.who],:pai=>proto_tile_to_mjai_tile(observation.private_observation.draw_history[-1])})
+      end
     end
     if event.type == :EVENT_TYPE_DISCARD
       return Mjai::Action.new({:type=>:dahai, :actor=>@absolutepos_id_hash[event.who], :pai=>proto_tile_to_mjai_tile(event.tile), :tsumogiri=>false})

@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
 
 RSpec.describe "action_in_view" do
-    trans_server = TransServer.new()
+    trans_server = TransServer.new({:target_id=>1})
     it "start_game" do
     end
     it "start_kyoku" do
