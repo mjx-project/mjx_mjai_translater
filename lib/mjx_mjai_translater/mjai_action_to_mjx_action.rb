@@ -11,7 +11,7 @@ class MjaiToMjx
   end
 
   def find_proper_action_idx(mjai_action, legal_actions)
-    mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
+    mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, nil) # independent of target plyer
     if mjai_action["type"] == "dahai"  && mjai_action["tsumogiri"] == false
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type

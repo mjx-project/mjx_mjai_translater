@@ -10,14 +10,16 @@ require 'mjai_action_to_mjx_action'
 
 class TransServer < Mjxproto::Agent::Service
     
-    def initialize() # params paramsはcommandからextractされる。
+    def initialize(params) # params paramsはcommandからextractされる。
         @params = nil# params
         @num_player_size = 4#@params[:num_player_size]
+        @target_player_id = nil #param[:target_p]
         @players = []
         @server = nil #TCPServer.open(params[:host], params[:port]) 
         @absolutepos_id_hash = {0=>0,1=>1,
         2=>2, 3=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_events = nil
+        @target_id = params[:target_id]
         @new_mjai_acitons = []
         @next_mjx_actions = []
         #initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
@@ -178,7 +180,7 @@ class TransServer < Mjxproto::Agent::Service
     def convert_to_mjai_actions(observation, scores)  # scoresはriichi_acceptedを送る場合などに使う
         public_observation_difference  = extract_difference(@_mjx_events, observation) # 差分
         mjai_actions = []
-        mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
+        mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
         if mjx_to_mjai.is_start_game(observation)
           mjai_actions.push(Mjai::Action.new({:type=>:start_game}))
         end

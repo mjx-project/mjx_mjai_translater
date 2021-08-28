@@ -28,7 +28,7 @@ class Player
 
 
     def legal_actions()
-      mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash)
+      mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @id)  # leagal actionを参照するのはtarget playerのみ
       return @legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x) }
     end
 
@@ -52,7 +52,7 @@ class Player
 
   def forbidden_tiles_mjai()  # 手牌のうち,possible action に含まれていないものを返す。
         possible_tiles = from_actions_to_discard_tiles(@legal_actions)
-        mjx_to_mjai = MjxToMjai.new(nil)
+        mjx_to_mjai = MjxToMjai.new(nil, @id)
         return mjx_to_mjai.proto_tiles_to_mjai_tiles(@hand).uniq() - mjx_to_mjai.proto_tiles_to_mjai_tiles(possible_tiles)  #mjaiのformatで処理する。
   end
 
