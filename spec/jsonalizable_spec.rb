@@ -1,1 +1,0 @@
-require './lib/mjx_mjai_translater/jsonalizable
