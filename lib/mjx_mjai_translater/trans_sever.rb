@@ -5,6 +5,7 @@ require "grpc"
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require 'mjx_to_mjai'
 require 'mjai_action_to_mjx_action'
+require 'action'
 #変換サーバの本体
 
 class TransServer < Mjxproto::Agent::Service
@@ -181,7 +182,7 @@ class TransServer < Mjxproto::Agent::Service
         mjai_actions = []
         mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
         if mjx_to_mjai.is_start_game(observation)
-          mjai_actions.push(Mjai::Action.new({:type=>:start_game}))
+          mjai_actions.push(MjaiAction.new({:type=>:start_game}))
         end
         if mjx_to_mjai.is_start_kyoku(observation)
           mjai_actions.push(mjx_to_mjai.start_kyoku(observation))

@@ -4,6 +4,7 @@ require 'google/protobuf'
 require './lib/mjx_mjai_translater/mjai_action_to_mjx_action'
 require './lib/mjx_mjai_translater/open_converter'
 require './lib/mjx_mjai_translater/player'
+require './lib/mjx_mjai_translater/action'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
 

@@ -1,5 +1,6 @@
+require_relative "../../mjai/lib/mjai/jsonizable"
 
-class MjaiAction < Mjai::Action
+class MjaiAction < Mjai::JSONizable  # remove :player
     define_fields([
         [:type, :symbol],
         [:reason, :symbol],
