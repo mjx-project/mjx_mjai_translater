@@ -13,90 +13,90 @@ class MjaiToMjx
 
   def find_proper_action_idx(mjai_action, legal_actions)
     mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, nil) # independent of target plyer
-    if mjai_action[:type] == :dahai  && mjai_action[:tsumogiri] == false
+    if mjai_action.type == :dahai  && mjai_action.tsumogiri == false
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         discard_in_mjai = mjx_to_mjai.proto_tile_to_mjai_tile(legal_actions[i].tile)
-        if mjai_action[:pai] == discard_in_mjai && (action_type == :ACTION_TYPE_DISCARD)
+        if mjai_action.pai == discard_in_mjai && (action_type == :ACTION_TYPE_DISCARD)
           return i  # indexを返す
         end
       end
     end
-    if mjai_action[:type] == :dahai  && mjai_action[:tsumogiri] == true
+    if mjai_action.type == :dahai  && mjai_action.tsumogiri == true
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         discard_in_mjai = mjx_to_mjai.proto_tile_to_mjai_tile(legal_actions[i].tile)
-        if mjai_action[:pai] == discard_in_mjai && (action_type == :ACTION_TYPE_TSUMOGIRI)
+        if mjai_action.pai == discard_in_mjai && (action_type == :ACTION_TYPE_TSUMOGIRI)
           return i  # indexを返す
         end
       end
     end
-    if mjai_action[:type] == :chi
+    if mjai_action.type == :chi
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         if action_type == :ACTION_TYPE_CHI  # 牌の種類が同じかどうか
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action[:pai] == stolen_tile_in_mjai && mjai_action[:consumed] == consumed_tile_in_mjai
+            if mjai_action.pai == stolen_tile_in_mjai && mjai_action.consumed == consumed_tile_in_mjai
               return i
             end
         end
       end
     end
-    if mjai_action[:type] == :pon
+    if mjai_action.type == :pon
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         if action_type == :ACTION_TYPE_PON  # 牌の種類が同じかどうか
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action[:pai] == stolen_tile_in_mjai && mjai_action[:consumed] == consumed_tile_in_mjai
+            if mjai_action.pai == stolen_tile_in_mjai && mjai_action.consumed == consumed_tile_in_mjai
               return i
             end
         end
       end
     end
-    if mjai_action[:type] == :kakan
+    if mjai_action.type == :kakan
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         if action_type == :ACTION_TYPE_ADDED_KAN  # 牌の種類が同じかどうか
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action[:pai] == stolen_tile_in_mjai && mjai_action[:consumed] == consumed_tile_in_mjai
+            if mjai_action.pai == stolen_tile_in_mjai && mjai_action.consumed == consumed_tile_in_mjai
               return i
             end
         end
       end
     end
-    if mjai_action[:type] == :daiminkan
+    if mjai_action.type == :daiminkan
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         if action_type == :ACTION_TYPE_OPEN_KAN  # 牌の種類が同じかどうか
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action[:pai] == stolen_tile_in_mjai && mjai_action[:consumed] == consumed_tile_in_mjai
+            if mjai_action.pai == stolen_tile_in_mjai && mjai_action.consumed == consumed_tile_in_mjai
               return i
             end
         end
       end
     end
-    if mjai_action[:type] == :ankan
+    if mjai_action.type == :ankan
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         if action_type == :ACTION_TYPE_CLOSED_KAN  # 牌の種類が同じかどうか
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action[:consumed] == consumed_tile_in_mjai
+            if mjai_action.consumed == consumed_tile_in_mjai
               return i
             end
         end
       end
     end
-    if mjai_action[:type] == :reach
+    if mjai_action.type == :reach
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         if action_type == :ACTION_TYPE_RIICHI
@@ -104,7 +104,7 @@ class MjaiToMjx
         end
       end
     end
-    if mjai_action[:type] == :hora
+    if mjai_action.type == :hora
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         if action_type == :ACTION_TYPE_RON or action_type == :ACTION_TYPE_TSUMO  # mjaiはツモとロンを区別しない　同時に発生することはないので0K　
@@ -112,9 +112,9 @@ class MjaiToMjx
         end
       end
     end
-    if mjai_action[:type] == :ryukyoku
+    if mjai_action.type == :ryukyoku
     end
-    if mjai_action[:type] == :none
+    if mjai_action.type == :none
       legal_actions.length.times do |i|
         action_type = legal_actions[i].type
         if action_type == :ACTION_TYPE_NO # mjaiはツモとロンを区別しない　同時に発生することはないので0K　
