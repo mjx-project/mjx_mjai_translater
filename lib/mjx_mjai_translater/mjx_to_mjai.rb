@@ -273,7 +273,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     terminal_hands = []
     players.length.times do |i|
       if !tenpai_players.include?(i)
-        terminal_hands.push([Mjai::Pai.new("?")]*players[i].hand.length)
+        terminal_hands.push([Mjai::Pai.new("?")]*13) # TODO
       else
         terminal_hands.push(proto_tiles_to_mjai_tiles(tenpai_closed_hands.shift()))
       end

@@ -3,7 +3,6 @@ lib_dir = File.join(this_dir, '../mjxproto/')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require "grpc"
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
-require 'random_agent'
 require 'mjx_to_mjai'
 require 'mjai_action_to_mjx_action'
 #変換サーバの本体
