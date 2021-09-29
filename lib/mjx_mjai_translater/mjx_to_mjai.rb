@@ -4,8 +4,8 @@ require "open_converter.rb"
 this_dir = __dir__
 lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
-require './lib/mjxproto/mjx/internal/mjx_pb'
-require './lib/mjxproto/mjx/internal/mjx_services_pb'
+require_relative '../mjxproto/mjx/internal/mjx_pb'
+require_relative '../mjxproto/mjx/internal/mjx_services_pb'
 require 'google/protobuf'
 require "minitest"
 require 'action'

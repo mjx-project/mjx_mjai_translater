@@ -4,16 +4,26 @@
 #- mjaiのクライアントとのsocket通信 -> mjaiからのコピぺ
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "mjx_to_mjai"
-
+require "action"
+require "timeout"
 class Player
-
-    def initialize(socket, id)
+    TIMEOUT_SEC = 60
+    def initialize(socket, id, name)
         @socket = socket
         @legal_actions = []  # mjxとのやりとりで更新していく
         @hand = []  # mjxとのやりとりで更新していく。
         @id = id # mjaiのid
+        @name = name
         @absolutepos_id_hash = {0=>0,1=>1,
         2=>2, 3=>3}
+    end
+
+    def id()
+      return @id
+    end
+
+    def name()
+      return @name
     end
 
 
@@ -67,10 +77,10 @@ class Player
           end
           if line
             puts("server <- player %d\t%s" % [self.id, line])
-            return Action.from_json(line.chomp(), self.game)
+            return MjaiAction.from_json(line.chomp())
           else
             puts("server :  Player %d has disconnected." % self.id)
-            return Action.new({:type => :none})
+            return MjaiAction.new({:type => :none})
           end
           
         rescue Timeout::Error
