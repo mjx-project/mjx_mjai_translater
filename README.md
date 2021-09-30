@@ -51,6 +51,7 @@ $ ./mjx/build/scripts/speed_benchmark -client 256 16
 ```
 
 ## How to play
+Please follow the order
 1. start mjx agent
   ```
  $ cd lib
