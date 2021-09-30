@@ -69,7 +69,14 @@ $ ./mjx/build/scripts/speed_benchmark -client 256 16
  $ mjai client --port=11600 mjai-shanten
  ```
 4. start mjx simulator with code like below
+```py
+import mjx._mjx as _mjx
 
+agent = _mjx.GrpcAgent('0.0.0.0:50051')
+mjai_agent = _mjx.GrpcAgent('0.0.0.0:50052')
+agents = {"player_0": agent, "player_1": agent, "player_2": agent, "player_3": mjai_agent}
+_mjx.EnvRunner.run(agents)
+```
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/mjx-project/mjx_mjai_translater.
