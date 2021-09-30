@@ -15,15 +15,17 @@ class TransServer < Mjxproto::Agent::Service
     
     def initialize(params) # params paramsはcommandからextractされる。
         @params = params
-        @server = TCPServer.open(params[:host], params[:port]) 
         @absolutepos_id_hash = {0=>0,1=>1,
         2=>2, 3=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_events = nil
         @target_id = params[:target_id]
         @new_mjai_acitons = []
         @next_mjx_actions = []
-        @socket = @server.accept()
-        @player = Player.new(@socket, @target_id, "name")
+        if !params["test"]
+          @server = TCPServer.open(params[:host], params[:port]) 
+          @socket = @server.accept()
+          @player = Player.new(@socket, @target_id, "name")
+        end
     end
 
 
@@ -106,7 +108,7 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def extract_difference(observation,previous_events = @_mjx_events)  # public_observatoinの差分を取り出す
+    def extract_difference(observation, previous_events = @_mjx_events)  # public_observatoinの差分を取り出す
         if !previous_events
             return observation.public_observation.events
         end
@@ -118,7 +120,7 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def convert_to_mjai_actions(observation, scores)  # scoresはriichi_acceptedを送る場合などに使う
-        public_observation_difference  = extract_difference(@_mjx_events, observation) # 差分
+        public_observation_difference  = extract_difference(observation) # 差分
         mjai_actions = []
         mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
         if mjx_to_mjai.is_start_game(observation)

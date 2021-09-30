@@ -86,7 +86,7 @@ class MjaiAction < Mjai::JSONizable  # remove :player
           when :pai
             validate_class(plain, String, name)
             begin
-              return Pai.new(plain)
+              return Mjai::Pai.new(plain)
             rescue ArgumentError => ex
               raise(ValidationError, "Error in %s: %s" % [name, ex.message])
             end
