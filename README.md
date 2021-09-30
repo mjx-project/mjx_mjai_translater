@@ -50,6 +50,12 @@ $ cd mjx && make build
 $ ./mjx/build/scripts/speed_benchmark -client 256 16
 ```
 
+## How to play
+1. start mjx agent
+2. start trans_server
+3. start mjai client
+4. start mjx simulator
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/mjx-project/mjx_mjai_translater.
