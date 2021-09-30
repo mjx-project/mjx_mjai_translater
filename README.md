@@ -52,9 +52,23 @@ $ ./mjx/build/scripts/speed_benchmark -client 256 16
 
 ## How to play
 1. start mjx agent
+  ```
+ $ cd lib
+ $ cd mjx-mjai-translator
+ $ ruby random_agent.rb
+ ```
 2. start trans_server
+ ```
+ $ cd lib
+ $ cd mjx-mjai-translator
+ $ ruby trans_sever.rb
+ ```
 3. start mjai client
-4. start mjx simulator
+ ```
+ $ cd mjai
+ $ mjai client --port=11600 mjai-shanten
+ ```
+4. start mjx simulator with code like below
 
 ## Contributing
 
