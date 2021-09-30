@@ -2,8 +2,8 @@
 this_dir = __dir__
 lib_dir = File.join(this_dir, '../mjxproto')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
-require '/Users/nishimorihajimeichirou/mjai-mjx-translater/lib/mjxproto/mjx/internal/mjx_pb'
-require '/Users/nishimorihajimeichirou/mjai-mjx-translater/lib/mjxproto/mjx/internal/mjx_services_pb'
+require_relative '../mjxproto/mjx/internal/mjx_pb'
+require_relative '../mjxproto/mjx/internal/mjx_services_pb'
 require 'grpc'
 
 class RandomAgent < Mjxproto::Agent::Service

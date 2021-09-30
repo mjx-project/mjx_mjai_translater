@@ -2,98 +2,40 @@ this_dir = __dir__
 lib_dir = File.join(this_dir, '../mjxproto/')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require "grpc"
+require "socket"
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
+require 'trans_player'
 require 'mjx_to_mjai'
 require 'mjai_action_to_mjx_action'
+require 'action'
+require 'player'
 #変換サーバの本体
 
 class TransServer < Mjxproto::Agent::Service
     
     def initialize(params) # params paramsはcommandからextractされる。
-        @params = nil# params
-        @num_player_size = 4#@params[:num_player_size]
-        @target_player_id = nil #param[:target_p]
-        @players = []
-        @server = nil #TCPServer.open(params[:host], params[:port]) 
+        @params = params
         @absolutepos_id_hash = {0=>0,1=>1,
         2=>2, 3=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_events = nil
         @target_id = params[:target_id]
         @new_mjai_acitons = []
         @next_mjx_actions = []
-        #initialize_players(@server)# クラスができるときにplayerも必要な数作るようにする。
-    end
-
-
-    def run()
-        #TCPserverにおけるrunの部分
-        while true
-          Thread.new(@server.accept()) do |socket|
-            message = initial_communication(socket)
-            if message["type"] != "join" || !message["name"] || !message["room"]
-              raise(LocalError, "Expected e.g. %s" %
-                  JSON.dump({"type" => "join", "name" => "noname", "room" => @params[:room]}))
-            end
-            if message["room"] != @params[:room]
-              raise(LocalError, "No such room. Available room: %s" % @params[:room])
-            end
-            initialize_players()
-            observation = get_observation()
-            take_action(observation)
-          end
+        if !params["test"]
+          @server = TCPServer.open(params[:host], params[:port]) 
+          @socket = @server.accept()
+          @player = Player.new(@socket, @target_id, "name")
         end
     end
 
-
-    def initial_communication(socket) # clientとの最初の通信
-      socket.sync = true
-      socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
-      send(socket, {
-          "type" => "hello",
-          "protocol" => "mjsonp",
-          "protocol_version" => 3,
-      })
-      line = socket.gets()
-      if !line
-        raise(LocalError, "Connection closed")
-      end
-      puts("server <- player ?\t#{line}")
-      message = JSON.parse(line)
-      return message
-    end
-
-    def initialize_players(socket)
-        if @players.size >= @num_tcp_players
-          raise(LocalError, "The room is busy. Retry after a while.")
-        end
-        @num_player_size.times do |i|
-             @players.push(Player.new(socket, i)) # ここの作る順番がidになる。 
-        end
-    end   
-    
-    def process_one_game()
-      # for 指定された局数
-      #     - while game
-      #         - 局開始
-      #         - 局終わり
-      #     - end game
-    end
 
     def do_action(action) # mjai_clientにactionを渡してresponseを得る。
         #mjaiと同じ実装
         if action.is_a?(Hash)
-            action = Action.new(action)
+            action = MjaiAction.new(action)
           end
-          #update_state(action)これはmjxがやる
-          #@on_action.call(action) if @on_action
-          responses = (0...4).map() do |i|  
-            @players[i].respond_to_action_of_translator(action_in_view(action, i, true))  # aciton_in_view()実装する必要あり
-          end
-          #action_with_logs = action.merge({:logs => responses.map(){ |r| r && r.log }})
-          responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
-          #@on_responses.call(action_with_logs, responses) if @on_responses
-          #@previous_action = action
-          #validate_responses(responses, action)
+          responses = @player.respond_to_action_of_translator(action_in_view(action, @target_id, true))  
+          #responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
           return responses
     end
 
@@ -101,7 +43,7 @@ class TransServer < Mjxproto::Agent::Service
         #全体を見て必要な情報
         #①各プレイヤーのpossible_actitons
         #②各playerの手配
-        player = @players[player_id]
+        player = @player
         with_response_hint = true #for_response && expect_response_from?(player)
         case action.type
           when :start_game
@@ -155,6 +97,7 @@ class TransServer < Mjxproto::Agent::Service
         end
     end
 
+
     def update_next_actions(responses)
         #　ユーザーのアクションに対してmjaiのアクションからmjxのアクションに変更する
         next_mjai_actions = []
@@ -165,7 +108,7 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def extract_difference(previous_events = @_mjx_events, observation)  # public_observatoinの差分を取り出す
+    def extract_difference(observation, previous_events = @_mjx_events)  # public_observatoinの差分を取り出す
         if !previous_events
             return observation.public_observation.events
         end
@@ -177,11 +120,11 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def convert_to_mjai_actions(observation, scores)  # scoresはriichi_acceptedを送る場合などに使う
-        public_observation_difference  = extract_difference(@_mjx_events, observation) # 差分
+        public_observation_difference  = extract_difference(observation) # 差分
         mjai_actions = []
         mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
         if mjx_to_mjai.is_start_game(observation)
-          mjai_actions.push(Mjai::Action.new({:type=>:start_game}))
+          mjai_actions.push(MjaiAction.new({:type=>:start_game}))
         end
         if mjx_to_mjai.is_start_kyoku(observation)
           mjai_actions.push(mjx_to_mjai.start_kyoku(observation))
@@ -202,23 +145,38 @@ class TransServer < Mjxproto::Agent::Service
     
     def observe(observation)
         @scores = observation.state.init_score.ten  # scoreを更新 mjaiのactionに変換する際に使用
+        history_difference = extract_difference(observation)
         @new_mjai_acitons = convert_to_mjai_actions(history_difference,@scores) # mjai_actionsを更新
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
     end
 
-
-    def get_mjx_actions()  # mjxからobservagtionを取得する。
-      return observation
+    def _test()
+      a = do_action(MjaiAction.new({:type => :start_game, :names=>["shanten"]}))
     end
 
 
     def take_action(observation, _unused_call)
         obserbve(observation)
         responses = []
-        for mjai_action in self.mjai_new_actinos
+        for mjai_action in @mjai_new_actinos
             responses.push(self.do_action(mjai_action))
         end
         @next_mjx_actions = update_next_actions(responses)
-        return @next_mjx_actions #mjxへactionを返す。最後のactionだけ参照勝すれば良い
+        return @next_mjx_actions[-1] #mjxへactionを返す。最後のactionだけ参照勝すれば良い
     end
+
 end
+
+def main  # agentを1対立てる
+  s = GRPC::RpcServer.new
+  s.add_http2_port('0.0.0.0:50052', :this_port_is_insecure)
+  s.handle(TransServer.new({:target_id=>3, :host=>"127.0.0.1", :port=>11600}))
+  s.run_till_terminated_or_interrupted([1, 'int', 'SIGQUIT'])
+end
+
+if __FILE__ == $0
+  main
+end
+
+
+
