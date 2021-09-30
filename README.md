@@ -62,7 +62,7 @@ Please follow the order
  ```
  $ cd lib
  $ cd mjx-mjai-translator
- $ ruby trans_sever.rb
+ $ ruby trans_server.rb
  ```
 3. start mjai client
  ```
