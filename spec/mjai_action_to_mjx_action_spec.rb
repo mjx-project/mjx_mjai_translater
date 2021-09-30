@@ -3,7 +3,7 @@ require 'grpc'
 require 'google/protobuf'
 require './lib/mjx_mjai_translater/mjai_action_to_mjx_action'
 require './lib/mjx_mjai_translater/open_converter'
-require './lib/mjx_mjai_translater/player'
+require './lib/mjx_mjai_translater/trans_player'
 require './lib/mjx_mjai_translater/action'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
@@ -19,7 +19,7 @@ RSpec.describe "mjai_action_to_mjx_action" do
     file_3 = File.open("spec/resources/observations-003.json", "r")
     lines_3 = file_3.readlines
     absolutepos_id_hash = {0=>0,1=>1,2=>2, 3=>3}
-    players = [Player.new(nil, 0),Player.new(nil, 1), Player.new(nil, 2), Player.new(nil, 3)]
+    players = [Player.new(nil, 0, "1"),Player.new(nil, 1, "1"), Player.new(nil, 2, "1"), Player.new(nil, 3, "1")]
     it "discard" do
         observation = observation_from_json(lines,0)
         legal_actions = observation.legal_actions

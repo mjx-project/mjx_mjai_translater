@@ -160,7 +160,6 @@ class TransServer < Mjxproto::Agent::Service
             responses.push(self.do_action(mjai_action))
         end
         @next_mjx_actions = update_next_actions(responses)
-        
         return @next_mjx_actions[-1] #mjxへactionを返す。最後のactionだけ参照勝すれば良い
     end
 

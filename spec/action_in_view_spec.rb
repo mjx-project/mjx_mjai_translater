@@ -1,6 +1,6 @@
 require './lib/mjx_mjai_translater/trans_sever'
 require './lib/mjx_mjai_translater/mjx_to_mjai'
-require './lib/mjx_mjai_translater/player'
+require './lib/mjx_mjai_translater/trans_player'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
 
@@ -40,7 +40,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         observation = observation_from_json(lines,1)
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
-        player = Player.new(nil, nil) # playerのinstanceを作る
+        player = Player.new(nil, nil, nil) # playerのinstanceを作る
         player.update_possible_actions(legal_actions)  # legal_actionsを更新
         player.update_hand(hand)  # handを更新
         expect(player.forbidden_tiles_mjai()).to eq []
@@ -49,7 +49,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         observation = observation_from_json(lines,130)
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
-        player = Player.new(nil, nil) # playerのinstanceを作る
+        player = Player.new(nil, nil, nil) # playerのinstanceを作る
         player.update_possible_actions(legal_actions) 
         player.update_hand(hand) 
         expect(player.forbidden_tiles_mjai()).to eq [Mjai::Pai.new("1p"),Mjai::Pai.new("2p"),Mjai::Pai.new("3p"),Mjai::Pai.new("5p"),Mjai::Pai.new("6p"),Mjai::Pai.new("7p"),Mjai::Pai.new("8p"),Mjai::Pai.new("9p"),Mjai::Pai.new("8s")]
@@ -58,7 +58,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         observation = observation_from_json(lines,71)
         hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒したはいは除かれている
         legal_actions = observation.legal_actions
-        player = Player.new(nil, nil)
+        player = Player.new(nil, nil, nil) # playerのinstanceを作る
         player.update_possible_actions(legal_actions)  
         player.update_hand(hand) 
         expect(player.forbidden_tiles_mjai()).to eq [Mjai::Pai.new("3m")] # 7sを鳴いて7sを持っている。
