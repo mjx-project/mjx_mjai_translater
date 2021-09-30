@@ -1,7 +1,7 @@
 require 'json'
 require 'grpc'
 require 'google/protobuf'
-require './lib/mjx_mjai_translater/trans_sever'
+require './lib/mjx_mjai_translater/trans_server'
 require './lib/mjx_mjai_translater/action'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"

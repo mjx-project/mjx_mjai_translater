@@ -1,4 +1,4 @@
-require './lib/mjx_mjai_translater/trans_sever'
+require './lib/mjx_mjai_translater/trans_server'
 require './lib/mjx_mjai_translater/mjx_to_mjai'
 require './lib/mjx_mjai_translater/trans_player'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
