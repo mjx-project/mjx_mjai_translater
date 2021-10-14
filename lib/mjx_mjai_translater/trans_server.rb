@@ -137,7 +137,8 @@ class TransServer < Mjxproto::Agent::Service
           mjai_actions.push({:type=>:end_kyoku})
        end
        if mjx_to_mjai.is_game_over(observation)
-            mjai_actions.push({:type=>end_game})
+          @_mjx_events = nil # gameが終わった時にreset
+          #mjai_actions.push({:type=>end_game})
        end
         return mjai_actions
     end
