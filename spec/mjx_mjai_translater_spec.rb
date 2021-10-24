@@ -20,10 +20,12 @@ RSpec.describe TransServer do  # take_actionで実装されている階層の関
   it 'test_observe' do
     previous_events = observation_from_json(lines, 0).public_observation.events
     observation = observation_from_json(lines, 1)
-    p "aaaa"
     trans_server.set_mjx_events(previous_events)
     trans_server.observe(observation)
-    #expect(trans_server.new_mjai_acitons)
+    new_mjai_actions = trans_server.get_mjai_actions()
+    expect(new_mjai_actions).to eq [MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), MjaiAction.new({:type=>:tsumo, :actor=>1, :pai=>Mjai::Pai.new("9s")}), MjaiAction.new({:type=>:dahai, :actor=>1, :pai=>Mjai::Pai.new("W"), :tsumogiri=>false}),
+    MjaiAction.new({:type=>:tsumo, :actor=>2, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>2, :pai=>Mjai::Pai.new("S"), :tsumogiri=>true}),
+    MjaiAction.new({:type=>:tsumo, :actor=>3, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>3, :pai=>Mjai::Pai.new("S"), :tsumogiri=>false}), MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("?")})]
   end
   it 'test_update_next_action' do
   end

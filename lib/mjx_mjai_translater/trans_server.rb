@@ -9,7 +9,7 @@ require 'mjx_to_mjai'
 require 'mjai_action_to_mjx_action'
 require 'action'
 require 'player'
-$stdout = File.open('output2.txt', 'w')
+#$stdout = File.open('output2.txt', 'w')
 #変換サーバの本体
 
 class TransServer < Mjxproto::Agent::Service
