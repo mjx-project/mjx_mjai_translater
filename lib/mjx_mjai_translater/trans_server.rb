@@ -29,6 +29,14 @@ class TransServer < Mjxproto::Agent::Service
         end
     end
 
+    def set_mjx_events(mjx_events)
+      @_mjx_events = mjx_events
+    end
+
+    def get_mjai_actions()
+      return @new_mjai_acitons
+    end
+
 
     def do_action(action) # mjai_clientにactionを渡してresponseを得る。
         #mjaiと同じ実装
@@ -102,7 +110,6 @@ class TransServer < Mjxproto::Agent::Service
     def update_next_actions(responses, observation)
         #　ユーザーのアクションに対してmjaiのアクションからmjxのアクションに変更する
         next_mjx_actions = []
-        mjai_to_mjx = MjaiToMjx.new(@absolutepos_id_hash)
         legal_actions = observation.legal_actions
         responses.length.times do |i|
             next_mjx_actions.push(mjai_act_to_mjx_act(responses[i], legal_actions))
@@ -152,10 +159,10 @@ class TransServer < Mjxproto::Agent::Service
 
     
     def observe(observation)
-        @scores = observation.state.init_score.ten  # scoreを更新 mjaiのactionに変換する際に使用
-        history_difference = extract_difference(observation)
+        @scores = observation.public_observation.init_score.tens  # scoreを更新 mjaiのactionに変換する際に使用
+        #history_difference = extract_difference(observation)
         #puts history_difference
-        @new_mjai_acitons = convert_to_mjai_actions(history_difference,@scores) # mjai_actionsを更新
+        @new_mjai_acitons = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
         #STDERR.puts @new_mjai_acitons
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
     end
