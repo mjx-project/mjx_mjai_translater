@@ -111,8 +111,9 @@ class TransServer < Mjxproto::Agent::Service
         #　ユーザーのアクションに対してmjaiのアクションからmjxのアクションに変更する
         next_mjx_actions = []
         legal_actions = observation.legal_actions
+        mjai_to_mjx = MjaiToMjx.new(@absolutepos_id_hash)
         responses.length.times do |i|
-            next_mjx_actions.push(mjai_act_to_mjx_act(responses[i], legal_actions))
+            next_mjx_actions.push(mjai_to_mjx.mjai_act_to_mjx_act(responses[i], legal_actions))
         end
         if MjxToMjai.new(@absolutepos_id_hash, @target_id).is_game_over(observation)
           next_mjx_actions.push(legal_actions[0])
