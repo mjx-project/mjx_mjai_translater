@@ -36,4 +36,7 @@ RSpec.describe TransServer do  # take_actionで実装されている階層の関
     mjx_new_actions = trans_server.update_next_actions(mjai_actions, observation)
     expect(mjx_new_actions[-1]).to eq legal_actions[0]
   end
+
+  it 'test_take_action' do
+  end
 end
