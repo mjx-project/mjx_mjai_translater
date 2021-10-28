@@ -37,6 +37,29 @@ RSpec.describe TransServer do  # take_actionで実装されている階層の関
     expect(mjx_new_actions[-1]).to eq legal_actions[0]
   end
 
-  it 'test_take_action' do
+  it 'test_take_action_start' do  # 局の最初
+    observation = nil
+    trans_server.observe(observation)
+    mjai_actions = nil
+    mjx_actions = trans_server.update_next_actions(mjai_actions, observation)
+    expected_mjx_action = nil
+    expect(mjx_actions[-1]).to eq expected_mjx_action
   end
+  it 'test_take_action_middle' do  # 局の途中
+    observation = nil
+    trans_server.observe(observation)
+    mjai_actions = nil
+    mjx_actions = trans_server.update_next_actions(mjai_actions, observation)
+    expected_mjx_action = nil
+    expect(mjx_actions[-1]).to eq expected_mjx_action
+  end
+  it 'test_take_action_end' do  # 局のおわり
+    observation = nil
+    trans_server.observe(observation)
+    mjai_actions = nil
+    mjx_actions = trans_server.update_next_actions(mjai_actions, observation)
+    expected_mjx_action = nil
+    expect(mjx_actions[-1]).to eq expected_mjx_action
+  end
+
 end
