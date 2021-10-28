@@ -43,7 +43,6 @@ RSpec.describe "action_in_view" do
         player = Player.new(nil, 0, nil)
         player.update_legal_actions(legal_actions) 
         trans_server.set_player(player)
-        p legal_actions
         mjai_possible_actions = [MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2m"), :actor=>0,:tsumogiri=>false}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2p"), :actor=>0,:tsumogiri=>false}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2s"), :actor=>0,:tsumogiri=>false}),
@@ -54,16 +53,60 @@ RSpec.describe "action_in_view" do
         expect(viewed_tehai).to eq MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0, :possible_actions=>mjai_possible_actions})
     end
     it "dahai kakan not actor" do
+        observation = observation_from_json(lines,1)
+        legal_actions = observation.legal_actions
+        trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+        player = Player.new(nil, 0, nil)
+        player.update_legal_actions(legal_actions) 
+        trans_server.set_player(player)
+        mjai_possible_actions = [MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2m"), :actor=>0,:tsumogiri=>false}),
+        MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2p"), :actor=>0,:tsumogiri=>false}),
+        MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2s"), :actor=>0,:tsumogiri=>false}),
+        MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("7s"), :actor=>0,:tsumogiri=>false}),  MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9s"), :actor=>0,:tsumogiri=>false}),  MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9s"), :actor=>0,:tsumogiri=>true}),
+        MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("W"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("P"), :actor=>0,:tsumogiri=>false})]
+        mjai_action = MjaiAction.new({:type => :dahai, :pai => Mjai::Pai.new("E"), :actor => 0})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        expect(viewed_tehai).to eq MjaiAction.new({:type => :dahai, :pai => Mjai::Pai.new("E"), :actor => 0, :possible_actions=>mjai_possible_actions})
     end
     it "dahai kakan actor" do
+        mjai_action = MjaiAction.new({:type => :dahai, :pai => Mjai::Pai.new("E"), :actor => 0})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        expect(viewed_tehai).to eq MjaiAction.new({:type => :dahai, :pai => Mjai::Pai.new("E"), :actor => 0})
     end
     it "chi pon not actor" do
+        mjai_action = MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("3m"), :consumed=>[Mjai::Pai.new("2m"), Mjai::Pai.new("4m")]})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        expect(viewed_tehai).to eq MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("3m"), :consumed=>[Mjai::Pai.new("2m"), Mjai::Pai.new("4m")]})
     end
     it "chi pon actor" do
+        observation = observation_from_json(lines,71)
+        hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒したはいは除かれている
+        legal_actions = observation.legal_actions
+        player = Player.new(nil, 0, nil) # playerのinstanceを作る
+        player.update_legal_actions(legal_actions)  
+        player.update_hand(hand) 
+        trans_server.set_player(player)
+        mjai_action = MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("7s"), :consumed=>[Mjai::Pai.new("8s"), Mjai::Pai.new("8s")]})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        expect(viewed_tehai).to eq MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("7s"), :consumed=>[Mjai::Pai.new("8s"), Mjai::Pai.new("8s")], :cannot_dahai => [Mjai::Pai.new("3m")]})
     end
     it "reach not actor" do
+        mjai_action = MjaiAction.new({:type=>:reach,:actor=>0})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        expect(viewed_tehai).to eq mjai_action = MjaiAction.new({:type=>:reach,:actor=>0})
     end
     it "reach actor" do
+        observation = observation_from_json(lines,130)
+        hand = observation.private_observation.curr_hand.closed_tiles
+        legal_actions = observation.legal_actions
+        player = Player.new(nil, 0, nil) # playerのinstanceを作る
+        player.update_legal_actions(legal_actions) 
+        player.update_hand(hand) 
+        trans_server.set_player(player)
+        mjai_action = MjaiAction.new({:type=>:reach,:actor=>0})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        forbidden_tiles = [Mjai::Pai.new("1p"),Mjai::Pai.new("2p"),Mjai::Pai.new("3p"),Mjai::Pai.new("5p"),Mjai::Pai.new("6p"),Mjai::Pai.new("7p"),Mjai::Pai.new("8p"),Mjai::Pai.new("9p"),Mjai::Pai.new("8s")]
+        expect(viewed_tehai).to eq mjai_action = MjaiAction.new({:type=>:reach,:actor=>0, :cannot_dahai=>forbidden_tiles})
     end
 end
 

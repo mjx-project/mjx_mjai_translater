@@ -51,7 +51,7 @@ class Player
     def from_actions_to_discard_tiles(actions)  # possible actionの中からdiscardに関するものだけを取得する。
       tiles = []
       if actions.length.times do |i|
-        if actions[i].type == :ACTION_TYPE_DISCARD
+        if actions[i].type == :ACTION_TYPE_DISCARD or actions[i].type == :ACTION_TYPE_TSUMOGIRI
            tiles.push(actions[i].tile)
         end
       end
