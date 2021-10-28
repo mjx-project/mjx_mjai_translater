@@ -75,7 +75,7 @@ class TransServer < Mjxproto::Agent::Service
                       with_response_hint ? @player.legal_actions() : nil,
               })
             else
-              return action.merge({:pai => "none"}) # Pai::UNKNOWN
+              return action.merge({:pai => Mjai::Pai.new("?")}) # Pai::UNKNOWN
             end
           when :dahai, :kakan
             if action.actor != player_id

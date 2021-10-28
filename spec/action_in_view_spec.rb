@@ -9,28 +9,33 @@ RSpec.describe "action_in_view" do
     player = Player.new(nil, 0, nil)
     it "start_game" do
     end
-    it "start_kyoku actor" do
-        non_tehai = [Mjai::Pai.new("?")]*13
-        expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
-        mjai_action = MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
-        :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
-        viewd_tehai = trans_server.action_in_view(mjai_action, 0, nil)
-        expect(viewd_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
-        :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
-    end
     it "start_kyoku non actor" do
         non_tehai = [Mjai::Pai.new("?")]*13
         expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
         mjai_action = MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
         :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
-        viewd_tehai = trans_server.action_in_view(mjai_action, 1, nil)
-        expect(viewd_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        expect(viewed_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
         :tehais=>[non_tehai, non_tehai, non_tehai, non_tehai]})
     end
+    it "start_kyoku actor" do
+        non_tehai = [Mjai::Pai.new("?")]*13
+        expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
+        mjai_action = MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        expect(viewed_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
+    end
     it "tsumo not actor" do # idがactorと一致していない時
-        mjai_action = MjaiAction.new({:type => :tsumo, :pai => Mjai.Pai.new("E"), :actor => 0, })
+        mjai_action = MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        expect(viewed_tehai).to eq MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("?"), :actor => 0})
     end
     it "tsumo actor" do # idがactorと一致している時
+        mjai_action = MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0})
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        expect(viewed_tehai).to eq MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0})
     end
     it "dahai kakan not actor" do
     end
@@ -38,13 +43,15 @@ RSpec.describe "action_in_view" do
     end
     it "chi pon not actor" do
     end
-    it "chi actor" do
+    it "chi pon actor" do
     end
-    it "chi not actor" do
+    it "kan not actor" do
     end
-    it "reach actor" do
+    it "kan actor" do
     end
     it "reach not actor" do
+    end
+    it "reach actor" do
     end
 end
 
