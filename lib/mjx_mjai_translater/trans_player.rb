@@ -27,7 +27,7 @@ class Player
     end
 
 
-    def update_possible_actions(legal_actions)
+    def update_legal_actions(legal_actions)
       @legal_actions= legal_actions
     end
 
@@ -39,7 +39,7 @@ class Player
 
     def legal_actions()
       mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @id)  # leagal actionを参照するのはtarget playerのみ
-      return @legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x) }
+      return @legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x, public_observation=nil) }  # ここではpublic_observationは不要
     end
 
 
@@ -51,7 +51,7 @@ class Player
     def from_actions_to_discard_tiles(actions)  # possible actionの中からdiscardに関するものだけを取得する。
       tiles = []
       if actions.length.times do |i|
-        if actions[i].type == :ACTION_TYPE_DISCARD
+        if actions[i].type == :ACTION_TYPE_DISCARD or actions[i].type == :ACTION_TYPE_TSUMOGIRI
            tiles.push(actions[i].tile)
         end
       end

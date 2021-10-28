@@ -29,12 +29,16 @@ class TransServer < Mjxproto::Agent::Service
         end
     end
 
-    def set_mjx_events(mjx_events)
+    def set_mjx_events(mjx_events)  # for test
       @_mjx_events = mjx_events
     end
 
-    def get_mjai_actions()
+    def get_mjai_actions()  # for test
       return @new_mjai_acitons
+    end
+
+    def set_player(player)  # for test
+      @player = player
     end
 
 
@@ -52,7 +56,6 @@ class TransServer < Mjxproto::Agent::Service
         #全体を見て必要な情報
         #①各プレイヤーのpossible_actitons
         #②各playerの手配
-        player = @player
         with_response_hint = true #for_response && expect_response_from?(player)
         case action.type
           when :start_game
@@ -61,42 +64,42 @@ class TransServer < Mjxproto::Agent::Service
             tehais_list = action.tehais.dup()
             for i in 0...4
               if i != player_id
-                tehais_list[i] = ["none"] * tehais_list[i].size  # Pai::UNKNOWN
+                tehais_list[i] = [Mjai::Pai.new("?")] * tehais_list[i].size  # Pai::UNKNOWN
               end
             end
             return action.merge({:tehais => tehais_list})
           when :tsumo
-            if action.actor == player
+            if action.actor == player_id
               return action.merge({
-                  :legal_actions =>
-                      with_response_hint ? player.legal_actions() : nil,
+                  :possible_actions =>
+                      with_response_hint ? @player.legal_actions() : nil,
               })
             else
-              return action.merge({:pai => "none"}) # Pai::UNKNOWN
+              return action.merge({:pai => Mjai::Pai.new("?")}) # Pai::UNKNOWN
             end
           when :dahai, :kakan
-            if action.actor != player
+            if action.actor != player_id
               return action.merge({
-                  :legal_actions =>
-                      with_response_hint ? player.legal_actions() : nil,
+                  :possible_actions =>
+                      with_response_hint ? @player.legal_actions() : nil,
               })
             else
               return action
             end
           when :chi, :pon
-            if action.actor == player
+            if action.actor == player_id
               return action.merge({
                   :cannot_dahai =>
-                      with_response_hint ? player.forbidden_tiles_mjai() : nil,
+                      with_response_hint ? @player.forbidden_tiles_mjai() : nil,
               })
             else
               return action
             end
           when :reach
-            if action.actor == player
+            if action.actor == player_id
               return action.merge({
                   :cannot_dahai =>
-                      with_response_hint ? player.forbidden_tiles_mjai() : nil,
+                      with_response_hint ? @player.forbidden_tiles_mjai() : nil,
               })
             else
               return action
