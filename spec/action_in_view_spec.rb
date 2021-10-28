@@ -16,11 +16,19 @@ RSpec.describe "action_in_view" do
         :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
         viewd_tehai = trans_server.action_in_view(mjai_action, 0, nil)
         expect(viewd_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
-        :tehais=>[expected_tehai, ["none"]*13, ["none"]*13, ["none"]*13]})
+        :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
     end
     it "start_kyoku non actor" do
+        non_tehai = [Mjai::Pai.new("?")]*13
+        expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
+        mjai_action = MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
+        viewd_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        expect(viewd_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        :tehais=>[non_tehai, non_tehai, non_tehai, non_tehai]})
     end
     it "tsumo not actor" do # idがactorと一致していない時
+        mjai_action = MjaiAction.new({:type => :tsumo, :pai => Mjai.Pai.new("E"), :actor => 0, })
     end
     it "tsumo actor" do # idがactorと一致している時
     end

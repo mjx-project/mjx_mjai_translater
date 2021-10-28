@@ -64,7 +64,7 @@ class TransServer < Mjxproto::Agent::Service
             tehais_list = action.tehais.dup()
             for i in 0...4
               if i != player_id
-                tehais_list[i] = ["none"] * tehais_list[i].size  # Pai::UNKNOWN
+                tehais_list[i] = [Mjai::Pai.new("?")] * tehais_list[i].size  # Pai::UNKNOWN
               end
             end
             return action.merge({:tehais => tehais_list})
