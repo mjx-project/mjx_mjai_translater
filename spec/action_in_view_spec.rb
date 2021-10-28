@@ -6,9 +6,19 @@ require "test_utils"
 
 RSpec.describe "action_in_view" do
     trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+    player = Player.new(nil, 0, nil)
     it "start_game" do
     end
-    it "start_kyoku" do
+    it "start_kyoku actor" do
+        non_tehai = [Mjai::Pai.new("?")]*13
+        expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
+        mjai_action = MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
+        viewd_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        expect(viewd_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
+        :tehais=>[expected_tehai, ["none"]*13, ["none"]*13, ["none"]*13]})
+    end
+    it "start_kyoku non actor" do
     end
     it "tsumo not actor" do # idがactorと一致していない時
     end
@@ -41,7 +51,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil, nil) # playerのinstanceを作る
-        player.update_possible_actions(legal_actions)  # legal_actionsを更新
+        player.update_legal_actions(legal_actions)  # legal_actionsを更新
         player.update_hand(hand)  # handを更新
         expect(player.forbidden_tiles_mjai()).to eq []
     end
@@ -50,7 +60,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil, nil) # playerのinstanceを作る
-        player.update_possible_actions(legal_actions) 
+        player.update_legal_actions(legal_actions) 
         player.update_hand(hand) 
         expect(player.forbidden_tiles_mjai()).to eq [Mjai::Pai.new("1p"),Mjai::Pai.new("2p"),Mjai::Pai.new("3p"),Mjai::Pai.new("5p"),Mjai::Pai.new("6p"),Mjai::Pai.new("7p"),Mjai::Pai.new("8p"),Mjai::Pai.new("9p"),Mjai::Pai.new("8s")]
     end
@@ -59,7 +69,7 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒したはいは除かれている
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil, nil) # playerのinstanceを作る
-        player.update_possible_actions(legal_actions)  
+        player.update_legal_actions(legal_actions)  
         player.update_hand(hand) 
         expect(player.forbidden_tiles_mjai()).to eq [Mjai::Pai.new("3m")] # 7sを鳴いて7sを持っている。
     end

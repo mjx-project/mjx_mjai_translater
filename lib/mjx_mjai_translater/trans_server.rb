@@ -29,12 +29,16 @@ class TransServer < Mjxproto::Agent::Service
         end
     end
 
-    def set_mjx_events(mjx_events)
+    def set_mjx_events(mjx_events)  # for test
       @_mjx_events = mjx_events
     end
 
-    def get_mjai_actions()
+    def get_mjai_actions()  # for test
       return @new_mjai_acitons
+    end
+
+    def set_player(player)  # for test
+      @player = player
     end
 
 
@@ -67,7 +71,7 @@ class TransServer < Mjxproto::Agent::Service
           when :tsumo
             if action.actor == player_id
               return action.merge({
-                  :legal_actions =>
+                  :possible_actions =>
                       with_response_hint ? @player.legal_actions() : nil,
               })
             else
@@ -76,7 +80,7 @@ class TransServer < Mjxproto::Agent::Service
           when :dahai, :kakan
             if action.actor != player_id
               return action.merge({
-                  :legal_actions =>
+                  :possible_actions =>
                       with_response_hint ? @player.legal_actions() : nil,
               })
             else

@@ -27,7 +27,7 @@ class Player
     end
 
 
-    def update_possible_actions(legal_actions)
+    def update_legal_actions(legal_actions)
       @legal_actions= legal_actions
     end
 
