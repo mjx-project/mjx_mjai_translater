@@ -52,7 +52,6 @@ class TransServer < Mjxproto::Agent::Service
         #全体を見て必要な情報
         #①各プレイヤーのpossible_actitons
         #②各playerの手配
-        player = @player
         with_response_hint = true #for_response && expect_response_from?(player)
         case action.type
           when :start_game
@@ -66,37 +65,37 @@ class TransServer < Mjxproto::Agent::Service
             end
             return action.merge({:tehais => tehais_list})
           when :tsumo
-            if action.actor == player
+            if action.actor == player_id
               return action.merge({
                   :legal_actions =>
-                      with_response_hint ? player.legal_actions() : nil,
+                      with_response_hint ? @player.legal_actions() : nil,
               })
             else
               return action.merge({:pai => "none"}) # Pai::UNKNOWN
             end
           when :dahai, :kakan
-            if action.actor != player
+            if action.actor != player_id
               return action.merge({
                   :legal_actions =>
-                      with_response_hint ? player.legal_actions() : nil,
+                      with_response_hint ? @player.legal_actions() : nil,
               })
             else
               return action
             end
           when :chi, :pon
-            if action.actor == player
+            if action.actor == player_id
               return action.merge({
                   :cannot_dahai =>
-                      with_response_hint ? player.forbidden_tiles_mjai() : nil,
+                      with_response_hint ? @player.forbidden_tiles_mjai() : nil,
               })
             else
               return action
             end
           when :reach
-            if action.actor == player
+            if action.actor == player_id
               return action.merge({
                   :cannot_dahai =>
-                      with_response_hint ? player.forbidden_tiles_mjai() : nil,
+                      with_response_hint ? @player.forbidden_tiles_mjai() : nil,
               })
             else
               return action
