@@ -7,6 +7,10 @@ require "test_utils"
 RSpec.describe "action_in_view" do
     trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
     player = Player.new(nil, 0, nil)
+    file = File.open("spec/resources/observations-000.json", "r")
+    lines = file.readlines
+    file_3 = File.open("spec/resources/observations-003.json", "r")
+    lines_3 = file_3.readlines
     it "start_game" do
     end
     it "start_kyoku non actor" do
@@ -33,9 +37,21 @@ RSpec.describe "action_in_view" do
         expect(viewed_tehai).to eq MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("?"), :actor => 0})
     end
     it "tsumo actor" do # idがactorと一致している時
+        observation = observation_from_json(lines,1)
+        legal_actions = observation.legal_actions
+        trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+        player = Player.new(nil, 0, nil)
+        player.update_legal_actions(legal_actions) 
+        trans_server.set_player(player)
+        p legal_actions
+        mjai_possible_actions = [MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2m"), :actor=>0,:tsumogiri=>false}),
+        MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2p"), :actor=>0,:tsumogiri=>false}),
+        MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2s"), :actor=>0,:tsumogiri=>false}),
+        MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("7s"), :actor=>0,:tsumogiri=>false}),  MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9s"), :actor=>0,:tsumogiri=>false}),  MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9s"), :actor=>0,:tsumogiri=>true}),
+        MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("W"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("P"), :actor=>0,:tsumogiri=>false})]
         mjai_action = MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0})
         viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
-        expect(viewed_tehai).to eq MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0})
+        expect(viewed_tehai).to eq MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0, :possible_actions=>mjai_possible_actions})
     end
     it "dahai kakan not actor" do
     end
@@ -44,10 +60,6 @@ RSpec.describe "action_in_view" do
     it "chi pon not actor" do
     end
     it "chi pon actor" do
-    end
-    it "kan not actor" do
-    end
-    it "kan actor" do
     end
     it "reach not actor" do
     end

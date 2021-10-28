@@ -39,7 +39,7 @@ class Player
 
     def legal_actions()
       mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @id)  # leagal actionを参照するのはtarget playerのみ
-      return @legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x) }
+      return @legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x, public_observation=nil) }  # ここではpublic_observationは不要
     end
 
 
