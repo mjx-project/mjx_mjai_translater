@@ -95,7 +95,6 @@ RSpec.describe  MjxToMjai do
     legal_actions = observation.legal_actions
     public_observatoin = observation.public_observation.events
     mjx_action = legal_actions[0]
-    p public_observatoin[-1].tile
     expected_mjai_action = MjaiAction.new({:type=>:hora,:actor=>0,:target=>0,:pai=>Mjai::Pai.new("8s")})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end
@@ -104,7 +103,6 @@ RSpec.describe  MjxToMjai do
     legal_actions = observation.legal_actions
     public_observatoin = observation.public_observation.events
     mjx_action = legal_actions[0]
-    p public_observatoin[-1].tile
     expected_mjai_action = MjaiAction.new({:type=>:hora,:actor=>0,:target=>3,:pai=>Mjai::Pai.new("7m")})
     expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
   end

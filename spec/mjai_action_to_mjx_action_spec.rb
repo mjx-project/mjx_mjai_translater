@@ -87,3 +87,16 @@ RSpec.describe "mjai_action_to_mjx_action" do
         expect(MjaiToMjx.new(absolutepos_id_hash).mjai_act_to_mjx_act(mjai_action, legal_actions)).to eq legal_actions[-1]
     end
 end
+
+
+RSpec.describe "局終了時のmjx_action" do
+    file = File.open("spec/resources/observations-000.json", "r")
+    lines = file.readlines
+    trans_server = TransServer.new({:target_id=>1, "test"=>"yes"})
+    it "dummy_action" do
+        observation = observation_from_json(lines, 286)
+        legal_actions = observation.legal_actions
+        expected_mjx_action = legal_actions[0]  # dummy
+        expect(trans_server.update_next_actions([], observation)[0]).to eq expected_mjx_action
+    end
+end

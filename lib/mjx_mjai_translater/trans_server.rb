@@ -9,6 +9,7 @@ require 'mjx_to_mjai'
 require 'mjai_action_to_mjx_action'
 require 'action'
 require 'player'
+#$stdout = File.open('output2.txt', 'w')
 #変換サーバの本体
 
 class TransServer < Mjxproto::Agent::Service
@@ -26,6 +27,14 @@ class TransServer < Mjxproto::Agent::Service
           @socket = @server.accept()
           @player = Player.new(@socket, @target_id, "name")
         end
+    end
+
+    def set_mjx_events(mjx_events)
+      @_mjx_events = mjx_events
+    end
+
+    def get_mjai_actions()
+      return @new_mjai_acitons
     end
 
 
@@ -98,17 +107,23 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def update_next_actions(responses)
+    def update_next_actions(responses, observation)
         #　ユーザーのアクションに対してmjaiのアクションからmjxのアクションに変更する
-        next_mjai_actions = []
+        next_mjx_actions = []
+        legal_actions = observation.legal_actions
+        mjai_to_mjx = MjaiToMjx.new(@absolutepos_id_hash)
         responses.length.times do |i|
-            next_mjai_actions.push(mjai_act_to_mjx_act(responses[i]))
+            next_mjx_actions.push(mjai_to_mjx.mjai_act_to_mjx_act(responses[i], legal_actions))
         end
-        return next_mjai_actions
+        if MjxToMjai.new(@absolutepos_id_hash, @target_id).is_game_over(observation)
+          next_mjx_actions.push(legal_actions[0])
+        end
+        return next_mjx_actions
     end
 
 
     def extract_difference(observation, previous_events = @_mjx_events)  # public_observatoinの差分を取り出す
+        #STDERR.puts observation
         if !previous_events
             return observation.public_observation.events
         end
@@ -137,31 +152,31 @@ class TransServer < Mjxproto::Agent::Service
           mjai_actions.push({:type=>:end_kyoku})
        end
        if mjx_to_mjai.is_game_over(observation)
-            mjai_actions.push({:type=>end_game})
+          @_mjx_events = nil # gameが終わった時にreset
+          #mjai_actions.push({:type=>end_game})
        end
         return mjai_actions
     end
 
     
     def observe(observation)
-        @scores = observation.state.init_score.ten  # scoreを更新 mjaiのactionに変換する際に使用
-        history_difference = extract_difference(observation)
-        @new_mjai_acitons = convert_to_mjai_actions(history_difference,@scores) # mjai_actionsを更新
+        @scores = observation.public_observation.init_score.tens  # scoreを更新 mjaiのactionに変換する際に使用
+        #history_difference = extract_difference(observation)
+        #puts history_difference
+        @new_mjai_acitons = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
+        #STDERR.puts @new_mjai_acitons
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
-    end
-
-    def _test()
-      a = do_action(MjaiAction.new({:type => :start_game, :names=>["shanten"]}))
     end
 
 
     def take_action(observation, _unused_call)
+        #puts observation
         obserbve(observation)
         responses = []
         for mjai_action in @mjai_new_actinos
             responses.push(self.do_action(mjai_action))
         end
-        @next_mjx_actions = update_next_actions(responses)
+        @next_mjx_actions = update_next_actions(responses, observation)
         return @next_mjx_actions[-1] #mjxへactionを返す。最後のactionだけ参照勝すれば良い
     end
 

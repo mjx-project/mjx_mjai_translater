@@ -18,3 +18,7 @@ Gemfile.lock
 # generated proto files
 lib/mjxproto/mjx_pb.rb
 lib/mjxproto/mjx_services_pb.rb
+
+lib/mjx_mjai_translater/output.txt
+lib/mjx_mjai_translater/output1.txt
+mjx_mjai_translater/output2.txt
