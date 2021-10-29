@@ -13,6 +13,7 @@ RSpec.describe MjxMjaiTranslater do
   end
 end
 
+
 RSpec.describe TransServer do  # take_actionで実装されている階層の関数をtest
   file = File.open("spec/resources/observations-000.json", "r")
   lines = file.readlines
@@ -78,6 +79,7 @@ RSpec.describe "TransServer Start kyoku" do  # take_actionで実装されてい�
   end
 end
 
+
 RSpec.describe "TransServer Middle kyoku" do  # take_actionで実装されている階層の関数をtest
   file = File.open("spec/resources/observations-000.json", "r")
   lines = file.readlines
@@ -111,6 +113,7 @@ RSpec.describe "TransServer Middle kyoku" do  # take_actionで実装されてい
     expect(mjx_actions[-1]).to eq expected_mjx_action
   end
 end
+
 
 RSpec.describe "TransServer end kyoku" do  # take_actionで実装されている階層の関数をtest
   file = File.open("spec/resources/observations-000.json", "r")
