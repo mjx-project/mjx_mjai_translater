@@ -38,11 +38,15 @@ RSpec.describe TransServer do  # take_actionで実装されている階層の関
   end
 
   it 'test_take_action_start' do  # 局の最初
-    observation = nil
-    trans_server.observe(observation)
-    mjai_actions = nil
-    mjx_actions = trans_server.update_next_actions(mjai_actions, observation)
-    expected_mjx_action = nil
+    previous_events = observation_from_json(lines, 0).public_observation.events
+    observation = observation_from_json(lines, 1)
+    trans_server.set_mjx_events(previous_events)
+    trans_server.observe(observation)  # observation→mjai action
+    mjai_actions = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}),
+    MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}),
+    MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("W"), :tsumogiri=>false})]  # do_actionを通してmjaiのagentから送られてきたmjaiのactionの想定
+    mjx_actions = trans_server.update_next_actions(mjai_actions, observation)  # mjai_action→mjx_action
+    expected_mjx_action = observation.legal_actions[-2]
     expect(mjx_actions[-1]).to eq expected_mjx_action
   end
   it 'test_take_action_middle' do  # 局の途中
