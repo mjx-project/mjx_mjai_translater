@@ -114,8 +114,8 @@ RSpec.describe "mjx_eventの変換" do
         observation = observation_from_json(lines, 99)
         public_observation_difference = trans_server.extract_difference(observation, previous_events)
         mjx_event = public_observation_difference[-1]
-        expected_mjai_action = [MjaiAction.new({:type=>:hora,:actor=>3,:target=>1,:pai=>Mjai::Pai.new("8m"),:uradora_markers=>[Mjai::Pai.new("E")],:hora_tehais=>[Mjai::Pai.new("4m"), Mjai::Pai.new("4m"), Mjai::Pai.new("5m"), Mjai::Pai.new("5m"), Mjai::Pai.new("6m"), Mjai::Pai.new("6m"), Mjai::Pai.new("8m"), Mjai::Pai.new("8m"), Mjai::Pai.new("8m"), Mjai::Pai.new("3p"), Mjai::Pai.new("3p"), Mjai::Pai.new("7s"),Mjai::Pai.new("8s"), Mjai::Pai.new("9s")],
-        :yakus=>[[:reach,1],[:ipeko,1]],:fu=>40,:fan=>2,:hora_points=>2600,:deltas=>[0,-3500,0,4500],:scores=>[29100,31500,23000,16400]})]
+        expected_mjai_action = MjaiAction.new({:type=>:hora,:actor=>3,:target=>1,:pai=>Mjai::Pai.new("8m"),:uradora_markers=>[Mjai::Pai.new("E")],:hora_tehais=>[Mjai::Pai.new("4m"), Mjai::Pai.new("4m"), Mjai::Pai.new("5m"), Mjai::Pai.new("5m"), Mjai::Pai.new("6m"), Mjai::Pai.new("6m"), Mjai::Pai.new("8m"), Mjai::Pai.new("8m"), Mjai::Pai.new("8m"), Mjai::Pai.new("3p"), Mjai::Pai.new("3p"), Mjai::Pai.new("7s"),Mjai::Pai.new("8s"), Mjai::Pai.new("9s")],
+        :yakus=>[[:reach,1],[:ipeko,1]],:fu=>40,:fan=>2,:hora_points=>2600,:deltas=>[0,-3500,0,4500],:scores=>[29100,31500,23000,16400]})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, nil)).to eq expected_mjai_action
     end 
     it "RYUKYOKU" do

@@ -120,6 +120,9 @@ class MjaiToMjx
         if action_type == :ACTION_TYPE_NO # mjaiはツモとロンを区別しない　同時に発生することはないので0K　
           return i
         end
+        if action_type == :ACTION_TYPE_DUMMY
+          return i
+        end
       end
     end
   end

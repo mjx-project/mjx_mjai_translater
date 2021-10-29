@@ -182,6 +182,10 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         scores[pos_index] -= 1000
         return  MjaiAction.new({:type=>:reach_accepted,:actor=>@absolutepos_id_hash[event.who], :deltas=>ten_change, :scores=>scores})
     end
+   
+    if event.type == :EVENT_TYPE_TSUMO || event.type == :EVENT_TYPE_RON || event.type == :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL || event.type == :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL
+      nil # 実装する必要なし
+    end
     if observation.round_terminal != nil
       assert_types = [:EVENT_TYPE_RON, :EVENT_TYPE_TSUMO,:EVENT_TYPE_ABORTIVE_DRAW_FOUR_RIICHIS, :EVENT_TYPE_ABORTIVE_DRAW_THREE_RONS, :EVENT_TYPE_ABORTIVE_DRAW_FOUR_KANS,
       :EVENT_TYPE_ABORTIVE_DRAW_FOUR_WINDS, :EVENT_TYPE_EXHAUSTIVE_DRAW_NORMAL, :EVENT_TYPE_EXHAUSTIVE_DRAW_NAGASHI_MANGAN]
@@ -303,7 +307,11 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       win_terminals.push(MjaiAction.new({:type=>:hora,:actor=>@absolutepos_id_hash[who],:target=>@absolutepos_id_hash[from_who],:pai=>proto_tile_to_mjai_tile(win_tile),:uradora_markers=>proto_tiles_to_mjai_tiles(ura_dora_indicators),:hora_tehais=>proto_tiles_to_mjai_tiles(hand),
       :yakus=>_to_mjai_yakus(fans, yakus, yakumans),:fu=>fu,:fan=>fans.sum(),:hora_points=>ten,:deltas=>ten_changes,:scores=>scores}))
     end
-    return win_terminals
+    if win_terminals.length == 1
+      return win_terminals[0]
+    else
+      return win_terminals
+    end
   end
 
   def _fix_riichi_ten_change(index, who)  # ten_change に直接変更を加えると、関数外でも変更された状態になってしまうため。

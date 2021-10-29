@@ -118,7 +118,7 @@ class TransServer < Mjxproto::Agent::Service
         responses.length.times do |i|
             next_mjx_actions.push(mjai_to_mjx.mjai_act_to_mjx_act(responses[i], legal_actions))
         end
-        if MjxToMjai.new(@absolutepos_id_hash, @target_id).is_game_over(observation)
+        if MjxToMjai.new(@absolutepos_id_hash, @target_id).is_kyoku_over(observation)
           next_mjx_actions.push(legal_actions[0])
         end
         return next_mjx_actions
@@ -152,11 +152,12 @@ class TransServer < Mjxproto::Agent::Service
            mjai_actions.push(mjai_action)
         end
         if mjx_to_mjai.is_kyoku_over(observation)
-          mjai_actions.push({:type=>:end_kyoku})
+          mjai_actions.push(MjaiAction.new({:type=>:end_kyoku}))
+          @_mjx_events = nil
        end
        if mjx_to_mjai.is_game_over(observation)
+          mjai_actions.push(MjaiAction.new({:type=>:end_game}))
           @_mjx_events = nil # gameが終わった時にreset
-          #mjai_actions.push({:type=>end_game})
        end
         return mjai_actions
     end
