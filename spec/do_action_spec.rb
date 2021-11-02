@@ -2,7 +2,7 @@ require './lib/mjx_mjai_translater/trans_server'
 require './lib/mjx_mjai_translater/mjx_to_mjai'
 require './lib/mjx_mjai_translater/trans_player'
 require './lib/mjx_mjai_translater/mjai_action_to_mjx_action'
-require_relative "../mjai/lib/mjai/jsonizable"
+require_relative "../mjai/lib/mjai/mjai_command"
 require "timeout"
 
 params = {
@@ -10,7 +10,7 @@ params = {
         :port => 11600,
         :room => "default",
         :game_type => "game_type:one_kyoku".intern,
-        :player_commands => ["tsumgiri"],
+        :player_commands => ["mjai-shanten"],
         :num_games => 1,
         :log_dir => "log",
     }
@@ -20,10 +20,11 @@ RSpec.describe 'do_action' do
     it 'test_do_action' do
         server = TCPServer.open(params[:host], params[:port]) 
         trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+        p "a"
         Timeout.timeout(10) do
             Thread.new(server.accept()) do |socket|
                 p "処理を開始します"
-                player = Player(socket, 0)
+                player = Player.new(socket, 0, nil)
                 trans_server.set_player(player)
                 p "trans_server立ち上げました"
                 start_default_players_2(params)
