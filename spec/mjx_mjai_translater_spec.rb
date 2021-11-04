@@ -177,3 +177,5 @@ RSpec.describe "TransServer end game" do  # take_actionで実装されている�
   end
 end
 
+
+
