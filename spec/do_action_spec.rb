@@ -33,8 +33,30 @@ RSpec.describe 'do_action' do
                     MjaiAction.new(
                        {:type=>:hello}
                     ))
-                p response
-                s.close()
+                expect(response.type).to eq :join
+                response = trans_server.do_action(
+                    MjaiAction.new(
+                        {:type=>:start_game, :id=>0}
+                    )
+                )
+                expect(response.type).to eq :none
+                response = trans_server.do_action(
+                    MjaiAction.new(
+                        {:type=>:start_kyoku, :kyoku=>1, :bakaze=>Mjai::Pai.new("E"), :honba=>1, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("2s"), :tehais=>[[Mjai::Pai.new("9p"), Mjai::Pai.new("5s"), Mjai::Pai.new("N"), Mjai::Pai.new("F"), Mjai::Pai.new("N"), Mjai::Pai.new("2m"), Mjai::Pai.new("9s"), Mjai::Pai.new("7m"), Mjai::Pai.new("4p"), Mjai::Pai.new("N"), Mjai::Pai.new("4s"), Mjai::Pai.new("E"), Mjai::Pai.new("3m")], [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13]}
+                        )
+                )
+                expect(response.type).to eq :none
+                response = trans_server.do_action(
+                    MjaiAction.new(
+                        {:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("E")}
+                    )   
+                )
+                expect(response.type).to eq :dahai 
+                response = trans_server.do_action(
+                    response
+                )
+                expect(response.type).to eq :none
+                server.close()
             end
         end
     end
