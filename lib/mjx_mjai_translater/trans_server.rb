@@ -167,6 +167,12 @@ class TransServer < Mjxproto::Agent::Service
         #history_difference = extract_difference(observation)
         #puts history_difference
         @new_mjai_acitons = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
+        if @player
+          hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒した牌は除かれている
+          legal_actions = observation.legal_actions
+          @player.update_hand(hand)
+          @player.update_legal_actions(legal_actions)
+        end
         #STDERR.puts @new_mjai_acitons
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
     end
