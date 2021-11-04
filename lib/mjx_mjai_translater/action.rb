@@ -18,7 +18,7 @@ class MjaiAction < Mjai::JSONizable  # remove :player
         [:kyoku, :number],
         [:honba, :number],
         [:kyotaku, :number],
-        [:oya, :player],
+        [:oya, :number],
         [:dora_marker, :pai],
         [:uradora_markers, :pais],
         [:tehais, :pais_list],
@@ -38,28 +38,28 @@ class MjaiAction < Mjai::JSONizable  # remove :player
         [:logs, :strings_or_nulls],
       ])
 
-      def self.from_json(json)
+      def self._from_json(json)
         plain = JSON.parse(json)
         begin
-          return from_plain(plain, nil)
+          return _from_plain(plain, nil)
         rescue ValidationError => ex
           raise(ValidationError, "%s JSON: %s" % [ex.message, json])
         end
       end
 
-      def self.from_plain(plain, name)
+      def self._from_plain(plain, name)
         validate(plain.is_a?(Hash), "%s must be an object." % (name || "The response"))
         fields = {}
         for field_name, type in @@field_specs
           field_plain = plain[field_name.to_s()]
           next if field_plain == nil
-          fields[field_name] = plain_to_obj(
+          fields[field_name] = _plain_to_obj(
               field_plain, type, name ? "#{name}.#{field_name}" : field_name.to_s())
         end
         return new(fields)
       end
       
-      def self.plain_to_obj(plain, type, name)
+      def self._plain_to_obj(plain, type, name)
         case type
           when :number
             validate_class(plain, Integer, name)
@@ -98,31 +98,31 @@ class MjaiAction < Mjai::JSONizable  # remove :player
             validate(!plain[0].empty?, "#{name}[0] must not be empty.")
             return [plain[0].intern(), plain[1]]
           when :action
-            return from_plain(plain, name)
+            return _from_plain(plain, name)
           when :numbers
-            return plains_to_objs(plain, :number, name)
+            return _plains_to_objs(plain, :number, name)
           when :strings
-            return plains_to_objs(plain, :string, name)
+            return _plains_to_objs(plain, :string, name)
           when :strings_or_nulls
-            return plains_to_objs(plain, :string_or_null, name)
+            return _plains_to_objs(plain, :string_or_null, name)
           when :booleans
-            return plains_to_objs(plain, :boolean, name)
+            return _plains_to_objs(plain, :boolean, name)
           when :symbols
-            return plains_to_objs(plain, :symbol, name)
+            return _plains_to_objs(plain, :symbol, name)
           when :pais
-            return plains_to_objs(plain, :pai, name)
+            return _plains_to_objs(plain, :pai, name)
           when :pais_list
-            return plains_to_objs(plain, :pais, name)
+            return _plains_to_objs(plain, :pais, name)
           when :yakus
-            return plains_to_objs(plain, :yaku, name)
+            return _plains_to_objs(plain, :yaku, name)
           when :actions
-            return plains_to_objs(plain, :action, name)
+            return _plains_to_objs(plain, :action, name)
           else
             raise("unknown type")
         end
       end
       
-      def self.plains_to_objs(plains, type, name)
+      def _plains_to_objs(plains, type, name)
         validate_class(plains, Array, name)
         return plains.each_with_index().map() do |c, i|
           plain_to_obj(c, type, "#{name}[#{i}]")
