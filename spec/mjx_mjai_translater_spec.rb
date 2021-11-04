@@ -2,6 +2,8 @@ require './lib/mjx_mjai_translater/trans_server'
 require './lib/mjx_mjai_translater/action'
 $LOAD_PATH.unshift(__dir__) unless $LOAD_PATH.include?(__dir__)
 require "test_utils"
+require_relative "../mjai/lib/mjai/mjai_command"
+require "timeout"
 
 
 RSpec.describe MjxMjaiTranslater do
@@ -39,6 +41,15 @@ RSpec.describe TransServer do  # take_actionで実装されている階層の関
   end
 end
 
+params = {
+        :host => "127.0.0.1",
+        :port => 11659,
+        :room => "default",
+        :game_type => "game_type:one_kyoku".intern,
+        :player_commands => ["mjai-shanten"],
+        :num_games => 1,
+        :log_dir => "log",
+    }
 
 RSpec.describe "TransServer Start kyoku" do  # take_actionで実装されている階層の関数をtest
   file = File.open("spec/resources/observations-000.json", "r")
@@ -56,7 +67,7 @@ RSpec.describe "TransServer Start kyoku" do  # take_actionで実装されてい�
   mjai_actions_start_2 = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}),
   MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}),
   MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("P"), :tsumogiri=>false})]
-  it 'test_take_action_start' do  # 局の最初  連続で2順
+  it 'test_take_action_start with do_action mocked' do  # 局の最初  連続で2順
     previous_events = observation_from_json(lines, 0).public_observation.events
     observation_1 = observation_from_json(lines, 1)
     trans_server.set_mjx_events(previous_events)
@@ -77,6 +88,34 @@ RSpec.describe "TransServer Start kyoku" do  # take_actionで実装されてい�
     expected_mjx_action = observation_2.legal_actions[-1]
     expect(mjx_actions[-1]).to eq expected_mjx_action
   end
+
+  it 'test_take_action_start' do
+    server = TCPServer.open(params[:host], params[:port]) 
+    trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+    p "a"
+    start_default_players_2(params)
+    p "default_player立ち上げました"
+    Timeout.timeout(20) do
+        Thread.new(server.accept()) do |socket|
+            p "処理を開始します"
+            player = Player.new(socket, 0, nil)
+            trans_server.set_player(player)
+            observation_0 = observation_from_json(lines, 0)
+            mjx_action = trans_server.take_action(observation_0, nil)
+            expect(mjx_action).not_to eq nil
+
+            observation_1 = observation_from_json(lines, 1)
+            mjx_action = trans_server.take_action(observation_1, nil)
+            expect(mjx_action).not_to eq nil
+
+            observation_2 = observation_from_json(lines, 2)
+            mjx_action = trans_server.take_action(observation_2, nil)
+            expect(mjx_action).not_to eq nil
+            server.close()
+        end
+        
+    end
+  end
 end
 
 
@@ -91,7 +130,7 @@ RSpec.describe "TransServer Middle kyoku" do  # take_actionで実装されてい
     MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none})]
   expected_mjai_actions_middle_2 = [MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("6s")})]
   mjai_actions_middle_2 = [MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("8p"), :tsumogiri=>false})]
-  it 'test_take_action_middle' do  # 局の最初  連続で2順
+  it 'test_take_action_middle with do_action mocked' do  # 局の最初  連続で2順
     previous_events = observation_from_json(lines, 8).public_observation.events
     observation_1 = observation_from_json(lines, 9)
     trans_server.set_mjx_events(previous_events)
@@ -123,7 +162,7 @@ RSpec.describe "TransServer end kyoku" do  # take_actionで実装されている
   mjai_actions_end_kyoku_1 = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none})]
   expected_mjai_actions_end_kyoku_2 = [MjaiAction.new({:type=>:start_kyoku, :kyoku=>1, :bakaze=>Mjai::Pai.new("E"), :honba=>1, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("2s"), :tehais=>[[Mjai::Pai.new("9p"), Mjai::Pai.new("5s"), Mjai::Pai.new("N"), Mjai::Pai.new("F"), Mjai::Pai.new("N"), Mjai::Pai.new("2m"), Mjai::Pai.new("9s"), Mjai::Pai.new("7m"), Mjai::Pai.new("4p"), Mjai::Pai.new("N"), Mjai::Pai.new("4s"), Mjai::Pai.new("E"), Mjai::Pai.new("3m")], [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13]}) ,MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("5m")})]
   mjai_actions_end_kyoku_2 = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false})]
-  it 'test_take_action_end_kyoku' do  # 局の最初  連続で2順
+  it 'test_take_action_end_kyoku with do_action mocked' do  # 局の最初  連続で2順
     previous_events = observation_from_json(lines, 28).public_observation.events
     observation_1 = observation_from_json(lines, 29)
     trans_server.set_mjx_events(previous_events)
@@ -154,7 +193,7 @@ RSpec.describe "TransServer end game" do  # take_actionで実装されている�
   mjai_actions_end_game_1 = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none})]
   expected_mjai_actions_end_game_2 = [MjaiAction.new({:type => :start_game}), MjaiAction.new({:type=>:start_kyoku, :kyoku=>1, :bakaze=>Mjai::Pai.new("E"), :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("1s"), :tehais=>[[Mjai::Pai.new("4m"), Mjai::Pai.new("P"), Mjai::Pai.new("9p"), Mjai::Pai.new("9s"), Mjai::Pai.new("2s"), Mjai::Pai.new("2p"), Mjai::Pai.new("W"), Mjai::Pai.new("7s"), Mjai::Pai.new("1p"), Mjai::Pai.new("1m"), Mjai::Pai.new("4p"), Mjai::Pai.new("4p"), Mjai::Pai.new("E")], [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13]}), MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("2m")})]
   mjai_actions_end_game_2 = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false})]
-  it 'test_take_action_end_kyoku' do
+  it 'test_take_action_end_kyoku with do_action mocked' do
     previous_events = observation_from_json(lines, 285).public_observation.events
     observation_1 = observation_from_json(lines, 286)
     trans_server.set_mjx_events(previous_events)

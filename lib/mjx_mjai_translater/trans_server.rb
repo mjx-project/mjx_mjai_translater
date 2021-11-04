@@ -174,15 +174,23 @@ class TransServer < Mjxproto::Agent::Service
 
     def take_action(observation, _unused_call)
         #puts observation
-        obserbve(observation)
+        observe(observation)
         responses = []
-        for mjai_action in @mjai_new_actinos
-            responses.push(self.do_action(mjai_action))
+        p "新しいmjaiのactions"
+        p @new_mjai_acitons
+        for mjai_action in @new_mjai_acitons
+            responses.push(do_action(mjai_action))
+            p "clientからのresponses"
+            p responses
+            @next_mjx_actions = update_next_actions(responses, observation)
+            p "新しいmjxのaction"
+            p @next_mjx_actions
         end
         @next_mjx_actions = update_next_actions(responses, observation)
+        p "新しいmjxのaction"
+        p @next_mjx_actions
         return @next_mjx_actions[-1] #mjxへactionを返す。最後のactionだけ参照勝すれば良い
     end
-
 end
 
 def main  # agentを1対立てる

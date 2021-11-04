@@ -76,10 +76,10 @@ class Player
             line = @socket.gets()
           end
           if line
-            puts("server <- player %d\t%s" % [self.id, line])
+            #puts("server <- player %d\t%s" % [self.id, line])
             return MjaiAction._from_json(line.chomp())
           else
-            puts("server :  Player %d has disconnected." % self.id)
+            #puts("server :  Player %d has disconnected." % self.id)
             return MjaiAction.new({:type => :none})
           end
           
