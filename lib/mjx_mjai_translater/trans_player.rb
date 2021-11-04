@@ -77,7 +77,7 @@ class Player
           end
           if line
             puts("server <- player %d\t%s" % [self.id, line])
-            return MjaiAction.from_json(line.chomp())
+            return MjaiAction._from_json(line.chomp())
           else
             puts("server :  Player %d has disconnected." % self.id)
             return MjaiAction.new({:type => :none})
