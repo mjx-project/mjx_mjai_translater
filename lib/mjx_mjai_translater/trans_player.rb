@@ -18,6 +18,11 @@ class Player
         2=>2, 3=>3}
     end
 
+    def set_id(id)
+      @id = id
+    end
+
+
     def id()
       return @id
     end
