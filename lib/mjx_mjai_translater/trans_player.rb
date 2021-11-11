@@ -69,7 +69,7 @@ class Player
 
   def respond_to_action_of_translator(action)
         begin
-          puts("server -> player %d\t%s" % [self.id, action.to_json()])
+          #puts("server -> player %d\t%s" % [self.id, action.to_json()])
           @socket.puts(action.to_json())
           line = nil
           Timeout.timeout(TIMEOUT_SEC) do
@@ -79,7 +79,7 @@ class Player
             puts("server <- player %d\t%s" % [self.id, line])
             return MjaiAction._from_json(line.chomp())
           else
-            puts("server :  Player %d has disconnected." % self.id)
+            #puts("server :  Player %d has disconnected." % self.id)
             return MjaiAction.new({:type => :none})
           end
           
