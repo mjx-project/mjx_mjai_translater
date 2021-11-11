@@ -133,6 +133,7 @@ class TransServer < Mjxproto::Agent::Service
         if mjx_to_mjai.is_start_game(observation)
           @target_id = observation.public_observation.events[-1].who
           @player.id = @target_id
+          mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
           mjai_actions.push(MjaiAction.new({:type=>:start_game}))
         end
         if mjx_to_mjai.is_start_kyoku(observation)
