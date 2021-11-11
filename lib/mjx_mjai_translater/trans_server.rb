@@ -155,6 +155,7 @@ class TransServer < Mjxproto::Agent::Service
     end
 
     
+    
     def observe(observation)
         @scores = observation.public_observation.init_score.tens  # scoreを更新 mjaiのactionに変換する際に使用
         #history_difference = extract_difference(observation)
