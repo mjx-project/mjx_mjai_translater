@@ -96,24 +96,23 @@ RSpec.describe "TransServer Start kyoku" do  # take_actionで実装されてい�
     start_default_players_2(params)
     p "default_player立ち上げました"
     Timeout.timeout(20) do
-        Thread.new(server.accept()) do |socket|
-            p "処理を開始します"
-            player = Player.new(socket, 0, nil)
-            trans_server.set_player(player)
-            observation_0 = observation_from_json(lines, 0)
-            mjx_action = trans_server.take_action(observation_0, nil)
-            expect(mjx_action).not_to eq nil
+        socket = server.accept()
+        p "処理を開始します"
+        player = Player.new(socket, 0, nil)
+        p player
+        trans_server.set_player(player)
+        observation_0 = observation_from_json(lines, 0)
+        mjx_action = trans_server.take_action(observation_0, nil)
+        expect(mjx_action).not_to eq nil
 
-            observation_1 = observation_from_json(lines, 1)
-            mjx_action = trans_server.take_action(observation_1, nil)
-            expect(mjx_action).not_to eq nil
+        observation_1 = observation_from_json(lines, 1)
+        mjx_action = trans_server.take_action(observation_1, nil)
+        expect(mjx_action).not_to eq nil
 
-            observation_2 = observation_from_json(lines, 2)
-            mjx_action = trans_server.take_action(observation_2, nil)
-            expect(mjx_action).not_to eq nil
-            server.close()
-        end
-        
+        observation_2 = observation_from_json(lines, 2)
+        mjx_action = trans_server.take_action(observation_2, nil)
+        expect(mjx_action).not_to eq nil
+        server.close()
     end
   end
 end

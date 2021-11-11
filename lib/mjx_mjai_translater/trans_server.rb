@@ -185,6 +185,7 @@ class TransServer < Mjxproto::Agent::Service
         p "新しいmjaiのactions"
         p @new_mjai_acitons
         for mjai_action in @new_mjai_acitons
+            p mjai_action
             responses.push(do_action(mjai_action))
             p "clientからのresponses"
             p responses
