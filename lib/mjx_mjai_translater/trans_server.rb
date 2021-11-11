@@ -19,7 +19,7 @@ class TransServer < Mjxproto::Agent::Service
         2=>2, 3=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_events = nil
         @target_id = params[:target_id]
-        @new_mjai_acitons = []
+        @new_mjai_actions = []
         @next_mjx_actions = []
         if !params["test"]
           @server = TCPServer.open(params[:host], params[:port]) 
@@ -28,17 +28,7 @@ class TransServer < Mjxproto::Agent::Service
         end
     end
 
-    def set_mjx_events(mjx_events)  # for test
-      @_mjx_events = mjx_events
-    end
-
-    def get_mjai_actions()  # for test
-      return @new_mjai_acitons
-    end
-
-    def set_player(player)  # for test
-      @player = player
-    end
+    attr_accessor :player, :_mjx_events, :new_mjai_actions, :target_id, :next_mjx_actions
 
 
     def do_action(action) # mjai_clientにactionを渡してresponseを得る。
@@ -141,6 +131,9 @@ class TransServer < Mjxproto::Agent::Service
         mjai_actions = []
         mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
         if mjx_to_mjai.is_start_game(observation)
+          @target_id = observation.public_observation.events[-1].who
+          @player.id = @target_id
+          mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
           mjai_actions.push(MjaiAction.new({:type=>:start_game}))
         end
         if mjx_to_mjai.is_start_kyoku(observation)
@@ -166,14 +159,14 @@ class TransServer < Mjxproto::Agent::Service
         @scores = observation.public_observation.init_score.tens  # scoreを更新 mjaiのactionに変換する際に使用
         #history_difference = extract_difference(observation)
         #puts history_difference
-        @new_mjai_acitons = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
+        @new_mjai_actions = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
         if @player
           hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒した牌は除かれている
           legal_actions = observation.legal_actions
-          @player.update_hand(hand)
-          @player.update_legal_actions(legal_actions)
+          @player.hand = hand
+          @player.legal_actions = legal_actions
         end
-        #STDERR.puts @new_mjai_acitons
+        #STDERR.puts @new_mjai_actions
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
     end
 
@@ -182,20 +175,23 @@ class TransServer < Mjxproto::Agent::Service
         #puts observation
         observe(observation)
         responses = []
+        #p observation
+        p "target_id は"
+        p @target_id
         p "新しいmjaiのactions"
-        p @new_mjai_acitons
-        for mjai_action in @new_mjai_acitons
-            p mjai_action
+        p @new_mjai_actions
+        for mjai_action in @new_mjai_actions
+            #p mjai_action
             responses.push(do_action(mjai_action))
-            p "clientからのresponses"
-            p responses
+            #p "clientからのresponses"
+            #p responses
             @next_mjx_actions = update_next_actions(responses, observation)
-            p "新しいmjxのaction"
-            p @next_mjx_actions
+            #p "新しいmjxのaction"
+            #p @next_mjx_actions
         end
         @next_mjx_actions = update_next_actions(responses, observation)
-        p "新しいmjxのaction"
-        p @next_mjx_actions
+        #p "新しいmjxのaction"
+        #p @next_mjx_actions
         return @next_mjx_actions[-1] #mjxへactionを返す。最後のactionだけ参照勝すれば良い
     end
 end
