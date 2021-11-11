@@ -36,7 +36,7 @@ RSpec.describe 'do_action' do
             Thread.new(server.accept()) do |socket|
                 p "処理を開始します"
                 player = Player.new(socket, 0, nil)
-                trans_server.set_player(player)
+                trans_server.player = player
                 p "trans_server立ち上げました"
                 response = trans_server.do_action(
                     MjaiAction.new(
@@ -79,7 +79,7 @@ RSpec.describe 'do_action' do
             Thread.new(server.accept()) do |socket|
                 p "処理を開始します"
                 player = Player.new(socket, 0, nil)
-                trans_server.set_player(player)
+                trans_server.player = player
                 p "trans_server立ち上げました"
                 response = trans_server.do_action(
                     MjaiAction.new(

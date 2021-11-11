@@ -42,7 +42,7 @@ RSpec.describe "action_in_view" do
         trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
         player = Player.new(nil, 0, nil)
         player.update_legal_actions(legal_actions) 
-        trans_server.set_player(player)
+        trans_server.player = player
         mjai_possible_actions = [MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2m"), :actor=>0,:tsumogiri=>false}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2p"), :actor=>0,:tsumogiri=>false}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2s"), :actor=>0,:tsumogiri=>false}),
@@ -58,7 +58,7 @@ RSpec.describe "action_in_view" do
         trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
         player = Player.new(nil, 0, nil)
         player.update_legal_actions(legal_actions) 
-        trans_server.set_player(player)
+        trans_server.player = player
         mjai_possible_actions = [MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2m"), :actor=>0,:tsumogiri=>false}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2p"), :actor=>0,:tsumogiri=>false}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2s"), :actor=>0,:tsumogiri=>false}),
@@ -85,7 +85,7 @@ RSpec.describe "action_in_view" do
         player = Player.new(nil, 0, nil) # playerのinstanceを作る
         player.update_legal_actions(legal_actions)  
         player.update_hand(hand) 
-        trans_server.set_player(player)
+        trans_server.player = player
         mjai_action = MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("7s"), :consumed=>[Mjai::Pai.new("8s"), Mjai::Pai.new("8s")]})
         viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
         expect(viewed_tehai).to eq MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("7s"), :consumed=>[Mjai::Pai.new("8s"), Mjai::Pai.new("8s")], :cannot_dahai => [Mjai::Pai.new("3m")]})
@@ -102,7 +102,7 @@ RSpec.describe "action_in_view" do
         player = Player.new(nil, 0, nil) # playerのinstanceを作る
         player.update_legal_actions(legal_actions) 
         player.update_hand(hand) 
-        trans_server.set_player(player)
+        trans_server.player = player
         mjai_action = MjaiAction.new({:type=>:reach,:actor=>0})
         viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
         forbidden_tiles = [Mjai::Pai.new("1p"),Mjai::Pai.new("2p"),Mjai::Pai.new("3p"),Mjai::Pai.new("5p"),Mjai::Pai.new("6p"),Mjai::Pai.new("7p"),Mjai::Pai.new("8p"),Mjai::Pai.new("9p"),Mjai::Pai.new("8s")]
