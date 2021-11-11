@@ -132,7 +132,7 @@ class TransServer < Mjxproto::Agent::Service
         mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
         if mjx_to_mjai.is_start_game(observation)
           @traget_id = observation.public_observation.events[-1].who
-          @player.set_id(@target_id)
+          @player.id = @target_id
           mjai_actions.push(MjaiAction.new({:type=>:start_game}))
         end
         if mjx_to_mjai.is_start_kyoku(observation)
@@ -162,8 +162,8 @@ class TransServer < Mjxproto::Agent::Service
         if @player
           hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒した牌は除かれている
           legal_actions = observation.legal_actions
-          @player.update_hand(hand)
-          @player.update_legal_actions(legal_actions)
+          @player.hand = hand
+          @player.legal_actions = legal_actions
         end
         #STDERR.puts @new_mjai_actions
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 

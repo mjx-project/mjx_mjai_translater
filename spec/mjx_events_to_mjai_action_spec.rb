@@ -126,7 +126,7 @@ RSpec.describe "mjx_eventの変換" do
         players = []
         4.times do |i|
             players.push(Player.new(i, nil, nil))
-            players[i].update_hand(["?"]*13)
+            players[i].hand = ["?"]*13
         end
         expected_mjai_action = MjaiAction.new({:type=>:ryukyoku,:reason=>:fonpai,:tehais=>[[Mjai::Pai.new("1p"), Mjai::Pai.new("2p"), Mjai::Pai.new("3p"),Mjai::Pai.new("3p"), Mjai::Pai.new("4p"), Mjai::Pai.new("5p"), Mjai::Pai.new("C")],[Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?")],[Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?"),Mjai::Pai.new("?")],[Mjai::Pai.new("5mr"), Mjai::Pai.new("5m"), Mjai::Pai.new("7m"), Mjai::Pai.new("8m"), Mjai::Pai.new("9m"), Mjai::Pai.new("7s"), Mjai::Pai.new("7s")]],:tenpais=>[true,false,false,true],:deltas=>[1500,-1500,-1500,1500],:scores=>[37600,23900,4500,34000]})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, observation, players)).to eq expected_mjai_action

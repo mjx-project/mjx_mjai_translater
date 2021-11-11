@@ -20,40 +20,12 @@ class Player
 
     attr_accessor :id, :name, :legal_actions, :hand
 
-    def set_id(id)
-      @id = id
-    end
-
-
-    def id()
-      return @id
-    end
-
-    def name()
-      return @name
-    end
-
-
-    def update_legal_actions(legal_actions)
-      @legal_actions= legal_actions
-    end
-
-
-    def update_hand(hand)
-      @hand = hand
-    end
-
 
     def legal_actions()
       mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @id)  # leagal actionを参照するのはtarget playerのみ
       return @legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x, public_observation=nil) }  # ここではpublic_observationは不要
     end
-
-
-    def hand()
-        return @hand
-    end
-
+    
 
     def from_actions_to_discard_tiles(actions)  # possible actionの中からdiscardに関するものだけを取得する。
       tiles = []
