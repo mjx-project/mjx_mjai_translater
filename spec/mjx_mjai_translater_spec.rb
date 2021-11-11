@@ -231,28 +231,32 @@ RSpec.describe "id initialization" do
     trans_server = TransServer.new({:target_id=>1, "test"=>"yes"})
     player = Player.new(1, nil, nil)
     trans_server.player = player
-    trans_server.observe()
+    trans_server.observe(observation_0)
+    expect(trans_server.target_id).to eq 0
   end
-  it "check id position correspondance 起家" do
+  it "check id position correspondance 南家" do
     observation_1 = observation_from_json(lines_1, 0)
     trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
     player = Player.new(0, nil, nil)
     trans_server.player = player
-    trans_server.observe()
+    trans_server.observe(observation_1)
+    expect(trans_server.target_id).to eq 1
   end
-  it "check id position correspondance 起家" do
+  it "check id position correspondance 西家" do
     observation_2 = observation_from_json(lines_2, 0)
     trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
     player = Player.new(0, nil, nil)
     trans_server.player = player
-    trans_server.observe()
+    trans_server.observe(observation_2)
+    expect(trans_server.target_id).to eq 2
   end
-  it "check id position correspondance 起家" do
+  it "check id position correspondance 北家" do
     observation_3 = observation_from_json(lines_3, 0)
     trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
     player = Player.new(0, nil, nil)
     trans_server.player = player
-    trans_server.observe()
+    trans_server.observe(observation_3)
+    expect(trans_server.target_id).to eq 3
   end
 end
 
