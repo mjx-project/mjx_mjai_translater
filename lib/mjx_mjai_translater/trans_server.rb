@@ -19,7 +19,7 @@ class TransServer < Mjxproto::Agent::Service
         2=>2, 3=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
         @_mjx_events = nil
         @target_id = params[:target_id]
-        @new_mjai_acitons = []
+        @new_mjai_actions = []
         @next_mjx_actions = []
         if !params["test"]
           @server = TCPServer.open(params[:host], params[:port]) 
@@ -28,15 +28,7 @@ class TransServer < Mjxproto::Agent::Service
         end
     end
 
-    attr_accessor :player, :_mjx_events, :new_mjai_acitons, :target_id
-
-    def get_mjai_actions()  # for test
-      return @new_mjai_acitons
-    end
-
-    def set_player(player)  # for test
-      @player = player
-    end
+    attr_accessor :player, :_mjx_events, :new_mjai_actions, :target_id, :next_mjx_actions
 
 
     def do_action(action) # mjai_clientにactionを渡してresponseを得る。
@@ -166,14 +158,14 @@ class TransServer < Mjxproto::Agent::Service
         @scores = observation.public_observation.init_score.tens  # scoreを更新 mjaiのactionに変換する際に使用
         #history_difference = extract_difference(observation)
         #puts history_difference
-        @new_mjai_acitons = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
+        @new_mjai_actions = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
         if @player
           hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒した牌は除かれている
           legal_actions = observation.legal_actions
           @player.update_hand(hand)
           @player.update_legal_actions(legal_actions)
         end
-        #STDERR.puts @new_mjai_acitons
+        #STDERR.puts @new_mjai_actions
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
     end
 
@@ -183,8 +175,8 @@ class TransServer < Mjxproto::Agent::Service
         observe(observation)
         responses = []
         p "新しいmjaiのactions"
-        p @new_mjai_acitons
-        for mjai_action in @new_mjai_acitons
+        p @new_mjai_actions
+        for mjai_action in @new_mjai_actions
             p mjai_action
             responses.push(do_action(mjai_action))
             p "clientからのresponses"

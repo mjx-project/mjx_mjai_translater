@@ -18,6 +18,8 @@ class Player
         2=>2, 3=>3}
     end
 
+    attr_accessor :id, :name, :legal_actions, :hand
+
     def set_id(id)
       @id = id
     end
