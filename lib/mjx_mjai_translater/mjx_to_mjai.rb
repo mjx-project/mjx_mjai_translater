@@ -352,7 +352,8 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
   def is_start_kyoku(observation)
-    return observation.private_observation.draw_history.length <= 1
+    last_event = observation.public_observation.events[-1]
+    return observation.private_observation.draw_history.length <= 1 && last_event.type == :EVENT_TYPE_DRAW
   end
 
   def is_start_game(observation)
