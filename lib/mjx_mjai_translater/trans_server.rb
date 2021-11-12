@@ -176,8 +176,8 @@ class TransServer < Mjxproto::Agent::Service
     def take_action(observation, _unused_call)
         observe(observation)
         responses = []
-        #p "target_id は"
-        #p @target_id
+        p "target_id は"
+        p @target_id
         p "observation"
         p observation
         p "新しいmjaiのactions"
