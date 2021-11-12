@@ -18,7 +18,7 @@ RSpec.describe "action_in_view" do
         expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
         mjai_action = MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
         :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil, true)
         expect(viewed_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
         :tehais=>[non_tehai, non_tehai, non_tehai, non_tehai]})
     end
@@ -27,13 +27,13 @@ RSpec.describe "action_in_view" do
         expected_tehai = [Mjai::Pai.new("7m"),Mjai::Pai.new("F"),Mjai::Pai.new("5m"),Mjai::Pai.new("6m"),Mjai::Pai.new("1m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6m"),Mjai::Pai.new("7p"),Mjai::Pai.new("6p"),Mjai::Pai.new("W"),Mjai::Pai.new("2m"),Mjai::Pai.new("5sr"),Mjai::Pai.new("2m")]
         mjai_action = MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
         :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil, true)
         expect(viewed_tehai).to eq MjaiAction.new({:type => :start_kyoku,:bakaze=>Mjai::Pai.new("E"), :kyoku=>1, :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("3p"),
         :tehais=>[expected_tehai, non_tehai, non_tehai, non_tehai]})
     end
     it "tsumo not actor" do # idがactorと一致していない時
         mjai_action = MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil, true)
         expect(viewed_tehai).to eq MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("?"), :actor => 0})
     end
     it "tsumo actor" do # idがactorと一致している時
@@ -49,7 +49,7 @@ RSpec.describe "action_in_view" do
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("7s"), :actor=>0,:tsumogiri=>false}),  MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9s"), :actor=>0,:tsumogiri=>false}),  MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9s"), :actor=>0,:tsumogiri=>true}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("W"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("P"), :actor=>0,:tsumogiri=>false})]
         mjai_action = MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil, true)
         expect(viewed_tehai).to eq MjaiAction.new({:type => :tsumo, :pai => Mjai::Pai.new("E"), :actor => 0, :possible_actions=>mjai_possible_actions})
     end
     it "dahai kakan not actor" do
@@ -65,17 +65,17 @@ RSpec.describe "action_in_view" do
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("7s"), :actor=>0,:tsumogiri=>false}),  MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9s"), :actor=>0,:tsumogiri=>false}),  MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("9s"), :actor=>0,:tsumogiri=>true}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("W"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("P"), :actor=>0,:tsumogiri=>false})]
         mjai_action = MjaiAction.new({:type => :dahai, :pai => Mjai::Pai.new("E"), :actor => 0})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil, true)
         expect(viewed_tehai).to eq MjaiAction.new({:type => :dahai, :pai => Mjai::Pai.new("E"), :actor => 0, :possible_actions=>mjai_possible_actions})
     end
     it "dahai kakan actor" do
         mjai_action = MjaiAction.new({:type => :dahai, :pai => Mjai::Pai.new("E"), :actor => 0})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil, true)
         expect(viewed_tehai).to eq MjaiAction.new({:type => :dahai, :pai => Mjai::Pai.new("E"), :actor => 0})
     end
     it "chi pon not actor" do
         mjai_action = MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("3m"), :consumed=>[Mjai::Pai.new("2m"), Mjai::Pai.new("4m")]})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil, true)
         expect(viewed_tehai).to eq MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("3m"), :consumed=>[Mjai::Pai.new("2m"), Mjai::Pai.new("4m")]})
     end
     it "chi pon actor" do
@@ -87,12 +87,12 @@ RSpec.describe "action_in_view" do
         player.hand = hand 
         trans_server.player = player
         mjai_action = MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("7s"), :consumed=>[Mjai::Pai.new("8s"), Mjai::Pai.new("8s")]})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil, true)
         expect(viewed_tehai).to eq MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("7s"), :consumed=>[Mjai::Pai.new("8s"), Mjai::Pai.new("8s")], :cannot_dahai => [Mjai::Pai.new("3m")]})
     end
     it "reach not actor" do
         mjai_action = MjaiAction.new({:type=>:reach,:actor=>0})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 1, nil, true)
         expect(viewed_tehai).to eq mjai_action = MjaiAction.new({:type=>:reach,:actor=>0})
     end
     it "reach actor" do
@@ -104,7 +104,7 @@ RSpec.describe "action_in_view" do
         player.hand = hand 
         trans_server.player = player
         mjai_action = MjaiAction.new({:type=>:reach,:actor=>0})
-        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil)
+        viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil, true)
         forbidden_tiles = [Mjai::Pai.new("1p"),Mjai::Pai.new("2p"),Mjai::Pai.new("3p"),Mjai::Pai.new("5p"),Mjai::Pai.new("6p"),Mjai::Pai.new("7p"),Mjai::Pai.new("8p"),Mjai::Pai.new("9p"),Mjai::Pai.new("8s")]
         expect(viewed_tehai).to eq mjai_action = MjaiAction.new({:type=>:reach,:actor=>0, :cannot_dahai=>forbidden_tiles})
     end

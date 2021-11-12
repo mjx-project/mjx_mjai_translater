@@ -352,7 +352,8 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
   def is_start_kyoku(observation)
-    return observation.private_observation.draw_history.length <= 1
+    last_event = observation.public_observation.events[-1]
+    return observation.private_observation.draw_history.length <= 1 && last_event.type == :EVENT_TYPE_DRAW
   end
 
   def is_start_game(observation)
@@ -392,12 +393,4 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     return MjaiAction.new({:type=>:start_kyoku, :kyoku=>kyoku,:bakaze=>bakaze, :honba=>honba, :kyotaku=>kyotaku, :oya=>oya, :dora_marker=>dora_marker, :tehais=>tehais})
   end
 
-end
-
-def main
-  p "%t" % ["1", "2"].join()
-end
-
-if __FILE__ == $0
-  main
 end
