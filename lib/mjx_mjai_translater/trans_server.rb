@@ -31,17 +31,17 @@ class TransServer < Mjxproto::Agent::Service
     attr_accessor :player, :_mjx_events, :new_mjai_actions, :target_id, :next_mjx_actions
 
 
-    def do_action(action) # mjai_clientにactionを渡してresponseを得る。
+    def do_action(action, use_possible_actions=false) # mjai_clientにactionを渡してresponseを得る。
         #mjaiと同じ実装
         if action.is_a?(Hash)
             action = MjaiAction.new(action)
           end
-          responses = @player.respond_to_action_of_translator(action_in_view(action, @target_id, true))  
+          responses = @player.respond_to_action_of_translator(action_in_view(action, @target_id, true, use_possible_actions))  
           #responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
           return responses
     end
 
-    def action_in_view(action, player_id, for_response)  # action_in_viewをこちらで実装する。
+    def action_in_view(action, player_id, for_response, use_possible_actions=false)  # action_in_viewをこちらで実装する。
         #全体を見て必要な情報
         #①各プレイヤーのpossible_actitons
         #②各playerの手配
@@ -68,10 +68,14 @@ class TransServer < Mjxproto::Agent::Service
             end
           when :dahai, :kakan
             if action.actor != player_id
-              return action.merge({
-                  :possible_actions =>
-                      with_response_hint ? @player.legal_actions() : nil,
-              })
+              if use_possible_actions  # possible_actionがある時にだけ返すようにする。
+                return action.merge({
+                    :possible_actions =>
+                        with_response_hint ? @player.legal_actions() : nil,
+                })
+              else 
+                return action
+              end
             else
               return action
             end
@@ -182,10 +186,12 @@ class TransServer < Mjxproto::Agent::Service
         p observation
         p "新しいmjaiのactions"
         p @new_mjai_actions
-        for mjai_action in @new_mjai_actions
+        @new_mjai_actions.length.times do |i|
+            mjai_actions = @new_mjai_actions[i]
             p "送るmjaiのaction"
             p mjai_action
-            responses.push(do_action(mjai_action))
+            use_possible_actions = i==(@new_mjai_actions.length-1) # mjxから送られた最後のactionのみ可能なアクションが含まれている。
+            responses.push(do_action(mjai_action, use_possible_actions=use_possible_actions))
             #p "clientからのresponses"
             #p responses
             @next_mjx_actions = update_next_actions(responses, observation)
