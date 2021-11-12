@@ -187,7 +187,7 @@ class TransServer < Mjxproto::Agent::Service
         p "新しいmjaiのactions"
         p @new_mjai_actions
         @new_mjai_actions.length.times do |i|
-            mjai_actions = @new_mjai_actions[i]
+            mjai_action = @new_mjai_actions[i]
             p "送るmjaiのaction"
             p mjai_action
             use_possible_actions = i==(@new_mjai_actions.length-1) # mjxから送られた最後のactionのみ可能なアクションが含まれている。
