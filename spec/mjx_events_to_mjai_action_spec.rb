@@ -30,6 +30,7 @@ RSpec.describe "mjx_eventの変換" do
         previous_events = observation_from_json(lines, 0).public_observation.events
         observation = observation_from_json(lines, 1)
         public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        p public_observation_difference
         mjx_event = public_observation_difference[0]
         expected_mjai_action = MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action 

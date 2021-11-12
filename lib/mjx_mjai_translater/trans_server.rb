@@ -114,13 +114,14 @@ class TransServer < Mjxproto::Agent::Service
     end
 
 
-    def extract_difference(observation, previous_events = @_mjx_events)  # public_observatoinの差分を取り出す
+    def extract_difference(observation)  # public_observatoinの差分を取り出す
         #STDERR.puts observation
-        if !previous_events
+        if !@_mjx_events
+            @_mjx_events = observation.public_observation.events  #更新
             return observation.public_observation.events
         end
         current_events = observation.public_observation.events
-        difference_history = current_events[previous_events.length ..]
+        difference_history = current_events[@_mjx_events.length ..]
         @_mjx_events = current_events  #更新
         return difference_history
     end
@@ -155,6 +156,7 @@ class TransServer < Mjxproto::Agent::Service
     end
 
     
+    
     def observe(observation)
         @scores = observation.public_observation.init_score.tens  # scoreを更新 mjaiのactionに変換する際に使用
         #history_difference = extract_difference(observation)
@@ -172,16 +174,17 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def take_action(observation, _unused_call)
-        #puts observation
         observe(observation)
         responses = []
-        #p observation
-        p "target_id は"
-        p @target_id
+        #p "target_id は"
+        #p @target_id
+        p "observation"
+        p observation
         p "新しいmjaiのactions"
         p @new_mjai_actions
         for mjai_action in @new_mjai_actions
-            #p mjai_action
+            p "送るmjaiのaction"
+            p mjai_action
             responses.push(do_action(mjai_action))
             #p "clientからのresponses"
             #p responses
