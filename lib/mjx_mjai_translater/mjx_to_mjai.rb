@@ -393,11 +393,3 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
   end
 
 end
-
-def main
-  p "%t" % ["1", "2"].join()
-end
-
-if __FILE__ == $0
-  main
-end

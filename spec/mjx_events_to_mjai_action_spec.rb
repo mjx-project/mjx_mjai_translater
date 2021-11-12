@@ -29,8 +29,8 @@ RSpec.describe "mjx_eventの変換" do
     it "DISCARD" do
         previous_events = observation_from_json(lines, 0).public_observation.events
         observation = observation_from_json(lines, 1)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
-        p public_observation_difference
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[0]
         expected_mjai_action = MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action 
@@ -38,7 +38,8 @@ RSpec.describe "mjx_eventの変換" do
     it "tsumogiri" do
         previous_events = observation_from_json(lines, 1).public_observation.events
         observation = observation_from_json(lines, 2)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[4]
         expected_mjai_action = MjaiAction.new({:type=>:dahai, :actor=>2, :pai=>Mjai::Pai.new("W"), :tsumogiri=>true})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action 
@@ -46,7 +47,8 @@ RSpec.describe "mjx_eventの変換" do
     it "CHI" do
         previous_events = observation_from_json(lines, 7).public_observation.events
         observation = observation_from_json(lines, 8)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[5]
         expected_mjai_action = MjaiAction.new({:type=>:chi, :actor=>3, :target=>2, :pai=>Mjai::Pai.new("9p"), :consumed=>[Mjai::Pai.new("7p"), Mjai::Pai.new("8p")]})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
@@ -55,7 +57,8 @@ RSpec.describe "mjx_eventの変換" do
     it "PON" do
         previous_events = observation_from_json(lines, 5).public_observation.events
         observation = observation_from_json(lines, 6)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[0]
         expected_mjai_action = MjaiAction.new({:type=>:pon, :actor=>0, :target=>1, :pai=>Mjai::Pai.new("4p"), :consumed=>[Mjai::Pai.new("4p"), Mjai::Pai.new("4p")]})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
@@ -64,7 +67,8 @@ RSpec.describe "mjx_eventの変換" do
     it "ADDED_KAN" do
         previous_events = observation_from_json(lines, 41).public_observation.events
         observation = observation_from_json(lines, 42)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[6]
         expected_mjai_action = MjaiAction.new({:type=>:kakan,:actor=>3,:pai=>Mjai::Pai.new("9p"),:consumed=>[Mjai::Pai.new("9p"), Mjai::Pai.new("9p"), Mjai::Pai.new("9p")]})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
@@ -72,7 +76,8 @@ RSpec.describe "mjx_eventの変換" do
     it "OPEN_KAN" do
         previous_events = observation_from_json(lines_2, 3).public_observation.events
         observation = observation_from_json(lines_2, 4)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[7]
         expected_mjai_action = MjaiAction.new({:type=>:daiminkan, :actor=>0, :target=>1, :pai=>Mjai::Pai.new("7s"), :consumed=>[Mjai::Pai.new("7s"), Mjai::Pai.new("7s"), Mjai::Pai.new("7s")]})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
@@ -80,7 +85,8 @@ RSpec.describe "mjx_eventの変換" do
     it "CLOSED_KAN" do
         previous_events = observation_from_json(lines, 283).public_observation.events 
         observation = observation_from_json(lines, 284)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[4]
         expected_mjai_action = MjaiAction.new({:type=>:ankan,:actor=>2,:consumed=>[Mjai::Pai.new("9p"), Mjai::Pai.new("9p"), Mjai::Pai.new("9p"), Mjai::Pai.new("9p")]})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
@@ -89,7 +95,8 @@ RSpec.describe "mjx_eventの変換" do
     it "RIICHI" do
         previous_events = observation_from_json(lines, 92).public_observation.events
         observation = observation_from_json(lines, 93)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[6]
         expected_mjai_action = MjaiAction.new({:type=>:reach,:actor=>3})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
@@ -97,7 +104,8 @@ RSpec.describe "mjx_eventの変換" do
     it "RIICHI_SCORE_CHANGE" do
         previous_events = observation_from_json(lines, 92).public_observation.events
         observation = observation_from_json(lines, 93)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[8]
         expected_mjai_action = MjaiAction.new({:type=>:reach_accepted,:actor=>3,:deltas=>[0,0,0,-1000],:scores=>[29100, 35000, 23000, 11900]})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event,observation ,nil)).to eq expected_mjai_action
@@ -105,7 +113,8 @@ RSpec.describe "mjx_eventの変換" do
     it "NEW_DORA" do
         previous_events = observation_from_json(lines, 41).public_observation.events
         observation = observation_from_json(lines, 42)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[8]
         expected_mjai_action = MjaiAction.new({:type=>:dora,:dora_marker=>Mjai::Pai.new("4s")})
         expect(mjx_to_mjai.mjx_event_to_mjai_action(mjx_event, nil, nil)).to eq expected_mjai_action
@@ -113,7 +122,8 @@ RSpec.describe "mjx_eventの変換" do
     it "RON" do 
         previous_events = observation_from_json(lines, 98).public_observation.events
         observation = observation_from_json(lines, 99)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[-1]
         expected_mjai_action = MjaiAction.new({:type=>:hora,:actor=>3,:target=>1,:pai=>Mjai::Pai.new("8m"),:uradora_markers=>[Mjai::Pai.new("E")],:hora_tehais=>[Mjai::Pai.new("4m"), Mjai::Pai.new("4m"), Mjai::Pai.new("5m"), Mjai::Pai.new("5m"), Mjai::Pai.new("6m"), Mjai::Pai.new("6m"), Mjai::Pai.new("8m"), Mjai::Pai.new("8m"), Mjai::Pai.new("8m"), Mjai::Pai.new("3p"), Mjai::Pai.new("3p"), Mjai::Pai.new("7s"),Mjai::Pai.new("8s"), Mjai::Pai.new("9s")],
         :yakus=>[[:reach,1],[:ipeko,1]],:fu=>40,:fan=>2,:hora_points=>2600,:deltas=>[0,-3500,0,4500],:scores=>[29100,31500,23000,16400]})
@@ -122,7 +132,8 @@ RSpec.describe "mjx_eventの変換" do
     it "RYUKYOKU" do
         previous_events = observation_from_json(lines, 270).public_observation.events
         observation = observation_from_json(lines, 271)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[-1]
         players = []
         4.times do |i|
@@ -135,7 +146,8 @@ RSpec.describe "mjx_eventの変換" do
     it "DOUBLE_RON" do 
         previous_events = observation_from_json(lines, 53).public_observation.events
         observation = observation_from_json(lines, 54)
-        public_observation_difference = trans_server.extract_difference(observation, previous_events)
+        trans_server._mjx_events = previous_events
+        public_observation_difference = trans_server.extract_difference(observation)
         mjx_event = public_observation_difference[-1]
         expected_mjai_action = [MjaiAction.new({:type=>:hora, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("7m"), :uradora_markers=>[], :hora_tehais=>[Mjai::Pai.new("3m"), Mjai::Pai.new("3m"), Mjai::Pai.new("7m"), Mjai::Pai.new("7m"), Mjai::Pai.new("7m"), Mjai::Pai.new("4p"), Mjai::Pai.new("5pr"), Mjai::Pai.new("6p")],
         :yakus=>[[:houteiraoyui,1],[:dora,1],[:akadora,1]], :fu=>30, :fan=>3, :hora_points=>5800, :deltas=>[6100,0,0,-6100], :scores=>[32100,26000,22000,19900]}),
