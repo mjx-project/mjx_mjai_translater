@@ -199,8 +199,8 @@ class TransServer < Mjxproto::Agent::Service
             #p @next_mjx_actions
         end
         @next_mjx_actions = update_next_actions(responses, observation)
-        #p "新しいmjxのaction"
-        #p @next_mjx_actions
+        p "新しいmjxのaction"
+        p @next_mjx_actions
         return @next_mjx_actions[-1] #mjxへactionを返す。最後のactionだけ参照勝すれば良い
     end
 end
