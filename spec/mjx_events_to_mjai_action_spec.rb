@@ -156,6 +156,7 @@ RSpec.describe "mjx_eventの変換" do
     end                                         
 end
 
+
 RSpec.describe "局、半荘の開始終了" do
     file = File.open("spec/resources/observations-000.json", "r")
     lines = file.readlines
