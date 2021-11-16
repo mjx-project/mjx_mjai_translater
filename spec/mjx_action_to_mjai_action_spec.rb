@@ -21,7 +21,62 @@ RSpec.describe  MjxToMjai do  # tile変換のテスト
   it "protoの字牌をmjaiのtileに変換できるか" do
     expect(MjxToMjai.new({}, 0).proto_tile_to_mjai_tile(121)).to eq Mjai::Pai.new("N")
   end
-  it "変換全テスト" do 
+  it "変換全テスト 萬子" do 
+    proto_tiles = [*0 .. 35]
+    expected_mjai_tiles = [
+      Mjai::Pai.new("1m"), Mjai::Pai.new("1m"), Mjai::Pai.new("1m"), Mjai::Pai.new("1m"),
+      Mjai::Pai.new("2m"), Mjai::Pai.new("2m"), Mjai::Pai.new("2m"), Mjai::Pai.new("2m"),
+      Mjai::Pai.new("3m"), Mjai::Pai.new("3m"), Mjai::Pai.new("3m"), Mjai::Pai.new("3m"),
+      Mjai::Pai.new("4m"), Mjai::Pai.new("4m"), Mjai::Pai.new("4m"), Mjai::Pai.new("4m"),
+      Mjai::Pai.new("5mr"), Mjai::Pai.new("5m"), Mjai::Pai.new("5m"), Mjai::Pai.new("5m"),
+      Mjai::Pai.new("6m"), Mjai::Pai.new("6m"), Mjai::Pai.new("6m"), Mjai::Pai.new("6m"),
+      Mjai::Pai.new("7m"), Mjai::Pai.new("7m"), Mjai::Pai.new("7m"), Mjai::Pai.new("7m"),
+      Mjai::Pai.new("8m"), Mjai::Pai.new("8m"), Mjai::Pai.new("8m"), Mjai::Pai.new("8m"),
+      Mjai::Pai.new("9m"), Mjai::Pai.new("9m"), Mjai::Pai.new("9m"), Mjai::Pai.new("9m"),
+    ]
+    expect(MjxToMjai.new({}, 0).proto_tiles_to_mjai_tiles(proto_tiles)).to eq expected_mjai_tiles
+  end
+  it "変換全テスト 筒子" do 
+    proto_tiles = [*36 .. 71]
+    expected_mjai_tiles = [
+      Mjai::Pai.new("1p"), Mjai::Pai.new("1p"), Mjai::Pai.new("1p"), Mjai::Pai.new("1p"),
+      Mjai::Pai.new("2p"), Mjai::Pai.new("2p"), Mjai::Pai.new("2p"), Mjai::Pai.new("2p"),
+      Mjai::Pai.new("3p"), Mjai::Pai.new("3p"), Mjai::Pai.new("3p"), Mjai::Pai.new("3p"),
+      Mjai::Pai.new("4p"), Mjai::Pai.new("4p"), Mjai::Pai.new("4p"), Mjai::Pai.new("4p"),
+      Mjai::Pai.new("5pr"), Mjai::Pai.new("5p"), Mjai::Pai.new("5p"), Mjai::Pai.new("5p"),
+      Mjai::Pai.new("6p"), Mjai::Pai.new("6p"), Mjai::Pai.new("6p"), Mjai::Pai.new("6p"),
+      Mjai::Pai.new("7p"), Mjai::Pai.new("7p"), Mjai::Pai.new("7p"), Mjai::Pai.new("7p"),
+      Mjai::Pai.new("8p"), Mjai::Pai.new("8p"), Mjai::Pai.new("8p"), Mjai::Pai.new("8p"),
+      Mjai::Pai.new("9p"), Mjai::Pai.new("9p"), Mjai::Pai.new("9p"), Mjai::Pai.new("9p"),
+    ]
+    expect(MjxToMjai.new({}, 0).proto_tiles_to_mjai_tiles(proto_tiles)).to eq expected_mjai_tiles
+  end
+  it "変換全テスト 索子" do 
+    proto_tiles = [*72 .. 107]
+    expected_mjai_tiles = [
+      Mjai::Pai.new("1s"), Mjai::Pai.new("1s"), Mjai::Pai.new("1s"), Mjai::Pai.new("1s"),
+      Mjai::Pai.new("2s"), Mjai::Pai.new("2s"), Mjai::Pai.new("2s"), Mjai::Pai.new("2s"),
+      Mjai::Pai.new("3s"), Mjai::Pai.new("3s"), Mjai::Pai.new("3s"), Mjai::Pai.new("3s"),
+      Mjai::Pai.new("4s"), Mjai::Pai.new("4s"), Mjai::Pai.new("4s"), Mjai::Pai.new("4s"),
+      Mjai::Pai.new("5sr"), Mjai::Pai.new("5s"), Mjai::Pai.new("5s"), Mjai::Pai.new("5s"),
+      Mjai::Pai.new("6s"), Mjai::Pai.new("6s"), Mjai::Pai.new("6s"), Mjai::Pai.new("6s"),
+      Mjai::Pai.new("7s"), Mjai::Pai.new("7s"), Mjai::Pai.new("7s"), Mjai::Pai.new("7s"),
+      Mjai::Pai.new("8s"), Mjai::Pai.new("8s"), Mjai::Pai.new("8s"), Mjai::Pai.new("8s"),
+      Mjai::Pai.new("9s"), Mjai::Pai.new("9s"), Mjai::Pai.new("9s"), Mjai::Pai.new("9s"),
+    ]
+    expect(MjxToMjai.new({}, 0).proto_tiles_to_mjai_tiles(proto_tiles)).to eq expected_mjai_tiles
+  end
+  it "変換全テスト 字牌" do 
+    proto_tiles = [*108 .. 135]
+    expected_mjai_tiles = [
+      Mjai::Pai.new("E"), Mjai::Pai.new("E"), Mjai::Pai.new("E"), Mjai::Pai.new("E"),
+      Mjai::Pai.new("S"), Mjai::Pai.new("S"), Mjai::Pai.new("S"), Mjai::Pai.new("S"),
+      Mjai::Pai.new("W"), Mjai::Pai.new("W"), Mjai::Pai.new("W"), Mjai::Pai.new("W"),
+      Mjai::Pai.new("N"), Mjai::Pai.new("N"), Mjai::Pai.new("N"), Mjai::Pai.new("N"),
+      Mjai::Pai.new("P"), Mjai::Pai.new("P"), Mjai::Pai.new("P"), Mjai::Pai.new("P"),
+      Mjai::Pai.new("F"), Mjai::Pai.new("F"), Mjai::Pai.new("F"), Mjai::Pai.new("F"),
+      Mjai::Pai.new("C"), Mjai::Pai.new("C"), Mjai::Pai.new("C"), Mjai::Pai.new("C"),
+    ]
   end
 end
 
