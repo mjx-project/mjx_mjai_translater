@@ -48,14 +48,32 @@ class Player
 
   def respond_to_action_of_translator(action)
         begin
+          if action.type == :reach_accepted
+            p "reach_accepted_respond_to_action"
+            p action
+            p action.to_json()
+            p "wawawa"
+          end
+          if action.type == :ryukyoku
+            p "ryukyoku_respond_to_action"
+            p action
+            p action.to_json()
+            p "wawawa"
+          end
           #puts("server -> player %d\t%s" % [self.id, action.to_json()])
           @socket.puts(action.to_json())
           line = nil
+          if action.type == :reach_accepted
+            p "reach_accepted_respond_to_action_2"
+          end
+          if action.type == :ryukyoku
+            p "ryukyoku_respond_to_action_2"
+          end
           Timeout.timeout(TIMEOUT_SEC) do
             line = @socket.gets()
           end
           if line
-            puts("server <- player %d\t%s" % [self.id, line])
+            #puts("server <- player %d\t%s" % [self.id, line])
             return MjaiAction._from_json(line.chomp())
           else
             #puts("server :  Player %d has disconnected." % self.id)
