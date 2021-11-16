@@ -21,6 +21,8 @@ RSpec.describe  MjxToMjai do  # tile変換のテスト
   it "protoの字牌をmjaiのtileに変換できるか" do
     expect(MjxToMjai.new({}, 0).proto_tile_to_mjai_tile(121)).to eq Mjai::Pai.new("N")
   end
+  it "変換全テスト" do 
+  end
 end
 
 RSpec.describe  MjxToMjai do
