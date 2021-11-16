@@ -178,7 +178,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
         ten_change = [0,0,0,0]
         pos_index = @absolute_pos.find_index(event.who)
         ten_change[pos_index] = -1000
-        scores = observation.public_observation.init_score.tens
+        scores = observation.public_observation.init_score.tens.map(){|i| i}
         scores[pos_index] -= 1000
         return  MjaiAction.new({:type=>:reach_accepted,:actor=>@absolutepos_id_hash[event.who], :deltas=>ten_change, :scores=>scores})
     end
@@ -264,7 +264,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     reason = mjx_yaku_to_mjai_yaku.mjai_reason(event.type)
     terminal_hands =  _terminal_hand(terminal_info, players)
     tenpais = [0, 1, 2, 3].map {|x| terminal_info.tenpais.map{|x| x.who}.include?(x)} # 聴牌者のidに含まれているか booleanのリスト
-    delta = terminal_info.ten_changes
+    delta = terminal_info.ten_changes.map(){|i| i}
     init_scores = observation.public_observation.init_score.tens
     changed_scores = init_scores.zip(delta).map{|n,p| n+p}
     return MjaiAction.new({:type=>:ryukyoku, :reason=>reason, :tehais=>terminal_hands, :tenpais=>tenpais, :deltas=>delta, :scores=>changed_scores })
@@ -299,7 +299,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       fu = terminal_info.fu
       fans = terminal_info.fans
       ten = terminal_info.ten
-      ten_changes = terminal_info.ten_changes
+      ten_changes = terminal_info.ten_changes.map(){|i| i}
       yakus = terminal_info.yakus
       yakumans = terminal_info.yakumans
       scores = _get_scores(scores, ten_changes, yakus, who)

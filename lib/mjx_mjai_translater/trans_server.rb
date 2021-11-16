@@ -35,10 +35,12 @@ class TransServer < Mjxproto::Agent::Service
         #mjaiと同じ実装
         if action.is_a?(Hash)
             action = MjaiAction.new(action)
-          end
-          responses = @player.respond_to_action_of_translator(action_in_view(action, @target_id, true, use_possible_actions))  
-          #responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
-          return responses
+        end
+        responses = @player.respond_to_action_of_translator(action_in_view(action, @target_id, true, use_possible_actions))  
+        #responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
+        if action.type == :reach_accepted
+        end
+        return responses
     end
 
     def action_in_view(action, player_id, for_response, use_possible_actions=false)  # action_in_viewをこちらで実装する。
@@ -153,7 +155,7 @@ class TransServer < Mjxproto::Agent::Service
           @_mjx_events = nil
        end
        if mjx_to_mjai.is_game_over(observation)
-          mjai_actions.push(MjaiAction.new({:type=>:end_game}))
+          #mjai_actions.push(MjaiAction.new({:type=>:end_game}))
           @_mjx_events = nil # gameが終わった時にreset
        end
         return mjai_actions
@@ -194,9 +196,6 @@ class TransServer < Mjxproto::Agent::Service
             responses.push(do_action(mjai_action, use_possible_actions=use_possible_actions))
             #p "clientからのresponses"
             #p responses
-            @next_mjx_actions = update_next_actions(responses, observation)
-            #p "新しいmjxのaction"
-            #p @next_mjx_actions
         end
         @next_mjx_actions = update_next_actions(responses, observation)
         p "新しいmjxのaction"
