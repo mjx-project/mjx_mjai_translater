@@ -20,6 +20,16 @@ RSpec.describe "between action and json" do
         p action.to_json
         expect(action.to_json()).to eq expected_action
     end
+    it "from_json ankan" do
+        action = JSON[{"type"=>"ankan", "actor"=>0, "consumed"=>["1s", "1s", "1s", "1s"]}]
+        expected_action = MjaiAction.new({:type=>:ankan, :actor=>0, :consumed=>[Mjai::Pai.new("1s"), Mjai::Pai.new("1s"), Mjai::Pai.new("1s"), Mjai::Pai.new("1s")]})
+        expect(MjaiAction._from_json(action)).to eq expected_action
+    end
+    it "from_json chi" do
+        action = JSON[{"type"=>"ankan", "actor"=>0, "pai"=>"3s", "target"=>3, "consumed"=>["1s", "2s"]}]
+        expected_action = MjaiAction.new({:type=>:ankan, :actor=>0,:pai=>Mjai::Pai.new("3s"), :target=>3, :consumed=>[Mjai::Pai.new("1s"), Mjai::Pai.new("2s")]})
+        expect(MjaiAction._from_json(action)).to eq expected_action
+    end
     it "from_json" do
         action = JSON[{"type"=>"dahai", "actor"=>0, "pai"=>"1m", "tsumogiri"=>false}]
         expected_action = MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("1m"), :tsumogiri=>false})
