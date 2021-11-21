@@ -128,5 +128,38 @@ class MjaiAction < Mjai::JSONizable  # remove :player
           plain_to_obj(c, type, "#{name}[#{i}]")
         end
       end
+
+      def to_json()
+        return JSON.dump(to_plain())
+      end
+      
+      def to_plain()
+        hash = {}
+        for name, type in @@field_specs
+          obj = @fields[name]
+          next if obj == nil
+          case type
+            when :symbol, :pai
+              p "シンボルだね"
+              plain = obj.to_s()
+            when :player
+              plain = obj.id
+            when :symbols, :pais
+              plain = obj.map(){ |a| a.to_s() }
+            when :pais_list
+              plain = obj.map(){ |o| o.map(){ |a| a.to_s() } }
+            when :yakus
+              plain = obj.map(){ |s, n| [s.to_s(), n] }
+            when :actions
+              plain = obj.map(){ |a| a.to_plain() }
+            when :number, :numbers, :string, :strings, :string_or_null, :strings_or_nulls, :boolean, :booleans
+              plain = obj
+            else
+              raise("unknown type")
+          end
+          hash[name.to_s()] = plain
+        end
+        return hash
+      end
       
 end

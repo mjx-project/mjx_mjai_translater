@@ -39,8 +39,8 @@ class TransServer < Mjxproto::Agent::Service
         end
         responses = @player.respond_to_action_of_translator(action_in_view(action, @target_id, true, use_possible_actions))  
         #responses = responses.map(){ |r| (!r || r.type == :none) ? nil : r.merge({:log => nil}) }
-        if action.type == :reach_accepted
-        end
+        p "clientからのresponses"
+        p responses
         return responses
     end
 
@@ -169,13 +169,10 @@ class TransServer < Mjxproto::Agent::Service
           @player.id = @target_id
           @mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
         end
-        @new_mjai_actions = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
         if @player
-          hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒した牌は除かれている
-          legal_actions = observation.legal_actions
-          @player.hand = hand
-          @player.legal_actions = legal_actions
+          @player.observation = observation
         end
+        @new_mjai_actions = convert_to_mjai_actions(observation,@scores) # mjai_actionsを更新
         #STDERR.puts @new_mjai_actions
         # self._mjx_public_observatoinと照合してself.mjai_new_actionsを更新する。mjaiのactionの方が種類が多い（ゲーム開始、局開始等） 
     end
@@ -196,8 +193,6 @@ class TransServer < Mjxproto::Agent::Service
             p mjai_action
             use_possible_actions = i==(@new_mjai_actions.length-1) # mjxから送られた最後のactionのみ可能なアクションが含まれている。
             responses.push(do_action(mjai_action, use_possible_actions=use_possible_actions))
-            #p "clientからのresponses"
-            #p responses
         end
         @next_mjx_actions = update_next_actions(responses, observation)
         p "新しいmjxのaction"

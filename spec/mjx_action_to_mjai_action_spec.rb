@@ -150,18 +150,16 @@ RSpec.describe  MjxToMjai do
   it "ツモ" do
     observation = observation_from_json(lines,153)
     legal_actions = observation.legal_actions
-    public_observatoin = observation.public_observation.events
     mjx_action = legal_actions[0]
     expected_mjai_action = MjaiAction.new({:type=>:hora,:actor=>0,:target=>0,:pai=>Mjai::Pai.new("8s")})
-    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
+    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, observation)).to eq expected_mjai_action
   end
   it "ロン" do
     observation = observation_from_json(lines,53)
     legal_actions = observation.legal_actions
-    public_observatoin = observation.public_observation.events
     mjx_action = legal_actions[0]
     expected_mjai_action = MjaiAction.new({:type=>:hora,:actor=>0,:target=>3,:pai=>Mjai::Pai.new("7m")})
-    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, public_observatoin)).to eq expected_mjai_action
+    expect(mjx_to_mjai.mjx_act_to_mjai_act(mjx_action, observation)).to eq expected_mjai_action
   end
   it "no" do
     observation = observation_from_json(lines,5)
