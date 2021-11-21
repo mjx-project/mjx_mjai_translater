@@ -143,6 +143,7 @@ class TransServer < Mjxproto::Agent::Service
         end
         if @mjx_to_mjai.is_start_kyoku(observation) && !@is_started_kyoku
           mjai_actions.push(@mjx_to_mjai.start_kyoku(observation))
+          @is_started_kyoku = true
         end
         public_observation_difference.length.times do |i|
            mjai_action = @mjx_to_mjai.mjx_event_to_mjai_action(public_observation_difference[i],observation, scores)  # mjxのeventをmjai actioinに変換
@@ -171,7 +172,6 @@ class TransServer < Mjxproto::Agent::Service
           @target_id = observation.public_observation.events[-1].who
           @player.id = @target_id
           @mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
-          @is_started_kyoku = true
         end
         if @player
           @player.observation = observation
