@@ -21,6 +21,7 @@ class TransServer < Mjxproto::Agent::Service
         @target_id = params[:target_id]
         @new_mjai_actions = []
         @next_mjx_actions = []
+        @is_started_kyoku = false
         @mjx_to_mjai = nil
         if !params["test"]
           @server = TCPServer.open(params[:host], params[:port]) 
@@ -140,7 +141,7 @@ class TransServer < Mjxproto::Agent::Service
         if @mjx_to_mjai.is_start_game(observation)
           mjai_actions.push(MjaiAction.new({:type=>:start_game}))
         end
-        if @mjx_to_mjai.is_start_kyoku(observation)
+        if @mjx_to_mjai.is_start_kyoku(observation) && !@is_started_kyoku
           mjai_actions.push(@mjx_to_mjai.start_kyoku(observation))
         end
         public_observation_difference.length.times do |i|
@@ -149,9 +150,11 @@ class TransServer < Mjxproto::Agent::Service
         end
         if @mjx_to_mjai.is_kyoku_over(observation)
           mjai_actions.push(MjaiAction.new({:type=>:end_kyoku}))
+          @is_started_kyoku = false
           @_mjx_events = nil
        end
        if @mjx_to_mjai.is_game_over(observation)
+          @is_started_kyoku = false
           #mjai_actions.push(MjaiAction.new({:type=>:end_game}))
           @_mjx_events = nil # gameが終わった時にreset
        end
@@ -168,6 +171,7 @@ class TransServer < Mjxproto::Agent::Service
           @target_id = observation.public_observation.events[-1].who
           @player.id = @target_id
           @mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
+          @is_started_kyoku = true
         end
         if @player
           @player.observation = observation

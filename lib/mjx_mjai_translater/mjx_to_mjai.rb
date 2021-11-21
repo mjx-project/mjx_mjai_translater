@@ -355,7 +355,6 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     who = observation.who
     events = observation.public_observation.events
     whos = events.map(){ |x| x.who}
-    types = events,map(){|x| x.type}
     num_target_event_presence = whos.count(who)
     return (observation.private_observation.draw_history.length == 0 && num_target_event_presence == 0) || (observation.private_observation.draw_history.length == 1 && num_target_event_presence == 1)
   end
