@@ -207,6 +207,7 @@ RSpec.describe "局開始時のaction" do
     trans_server = TransServer.new({:target_id=>1, "test"=>"yes"})
     player = Player.new(0, nil, nil)
     trans_server.player = player
+    trans_server.mjx_to_mjai = MjxToMjai.new({0=>0,1=>1, 2=>2, 3=>3}, 1)
     mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash, 1) 
     non_tehai = [Mjai::Pai.new("?")]*13
     it "initial_action" do

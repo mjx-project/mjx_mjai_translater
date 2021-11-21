@@ -24,6 +24,7 @@ RSpec.describe TransServer do  # take_actionで実装されている階層の関
     previous_events = observation_from_json(lines, 0).public_observation.events
     observation = observation_from_json(lines, 1)
     trans_server._mjx_events = previous_events
+    trans_server.mjx_to_mjai = MjxToMjai.new({0=>0,1=>1, 2=>2, 3=>3}, 1)
     trans_server.observe(observation)
     new_mjai_actions = trans_server.new_mjai_actions
     expect(new_mjai_actions).to eq [MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), MjaiAction.new({:type=>:tsumo, :actor=>1, :pai=>Mjai::Pai.new("9s")}), MjaiAction.new({:type=>:dahai, :actor=>1, :pai=>Mjai::Pai.new("W"), :tsumogiri=>false}),
@@ -55,6 +56,7 @@ RSpec.describe "TransServer Start kyoku" do  # take_actionで実装されてい�
   file = File.open("spec/resources/observations-000.json", "r")
   lines = file.readlines
   trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+  trans_server.mjx_to_mjai = MjxToMjai.new({0=>0,1=>1, 2=>2, 3=>3}, 0)
   expected_mjai_action_start_1 = [MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false}), MjaiAction.new({:type=>:tsumo, :actor=>1, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>1, :pai=>Mjai::Pai.new("W"), :tsumogiri=>false}),
   MjaiAction.new({:type=>:tsumo, :actor=>2, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>2, :pai=>Mjai::Pai.new("S"), :tsumogiri=>true}),
   MjaiAction.new({:type=>:tsumo, :actor=>3, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>3, :pai=>Mjai::Pai.new("S"), :tsumogiri=>false}), MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("9s")})]
@@ -68,7 +70,6 @@ RSpec.describe "TransServer Start kyoku" do  # take_actionで実装されてい�
   MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}),
   MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("P"), :tsumogiri=>false})]
   it 'test_take_action_start with do_action mocked' do  # 局の最初  連続で2順
-    trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
     previous_events = observation_from_json(lines, 0).public_observation.events
     observation_1 = observation_from_json(lines, 1)
     trans_server._mjx_events = previous_events
@@ -123,6 +124,7 @@ RSpec.describe "TransServer Middle kyoku" do  # take_actionで実装されてい
   file = File.open("spec/resources/observations-000.json", "r")
   lines = file.readlines
   trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+  trans_server.mjx_to_mjai = MjxToMjai.new({0=>0,1=>1, 2=>2, 3=>3}, 0)
   expected_mjai_actions_middle_1 = [MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("9p"), :tsumogiri=>false}), MjaiAction.new({:type=>:tsumo, :actor=>1, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>1, :pai=>Mjai::Pai.new("9p"), :tsumogiri=>false}),
     MjaiAction.new({:type=>:tsumo, :actor=>2, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>2, :pai=>Mjai::Pai.new("9m"), :tsumogiri=>false}),
     MjaiAction.new({:type=>:tsumo, :actor=>3, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>3, :pai=>Mjai::Pai.new("3m"), :tsumogiri=>false})]
@@ -158,6 +160,7 @@ RSpec.describe "TransServer end kyoku" do  # take_actionで実装されている
   file = File.open("spec/resources/observations-000.json", "r")
   lines = file.readlines
   trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+  trans_server.mjx_to_mjai = MjxToMjai.new({0=>0,1=>1, 2=>2, 3=>3}, 0)
   expected_mjai_actions_end_kyoku_1 = [MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("1s"), :tsumogiri=>true}), MjaiAction.new({:type=>:ryukyoku, :reason=>:fonpai, :tehais=>[[Mjai::Pai.new("3m"), Mjai::Pai.new("4m"), Mjai::Pai.new("5m"), Mjai::Pai.new("2p"), Mjai::Pai.new("2p"), Mjai::Pai.new("2p"), Mjai::Pai.new("6s"), Mjai::Pai.new("7s"), Mjai::Pai.new("9s"), Mjai::Pai.new("9s")], [Mjai::Pai.new("5mr"), Mjai::Pai.new("5m"), Mjai::Pai.new("6s"), Mjai::Pai.new("8s")], [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("5p"), Mjai::Pai.new("6p"), Mjai::Pai.new("7p"), Mjai::Pai.new("7p"), Mjai::Pai.new("8p"), Mjai::Pai.new("3s"), Mjai::Pai.new("3s"), Mjai::Pai.new("5sr"), Mjai::Pai.new("5s"), Mjai::Pai.new("5s")]], :tenpais=>[true, true, false, true], :deltas=>[1000, 1000, -3000, 1000], :scores=>[26000, 26000, 22000, 26000]}) ,MjaiAction.new({:type=>:end_kyoku})]
   mjai_actions_end_kyoku_1 = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none})]
   expected_mjai_actions_end_kyoku_2 = [MjaiAction.new({:type=>:start_kyoku, :kyoku=>1, :bakaze=>Mjai::Pai.new("E"), :honba=>1, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("2s"), :tehais=>[[Mjai::Pai.new("9p"), Mjai::Pai.new("5s"), Mjai::Pai.new("N"), Mjai::Pai.new("F"), Mjai::Pai.new("N"), Mjai::Pai.new("2m"), Mjai::Pai.new("9s"), Mjai::Pai.new("7m"), Mjai::Pai.new("4p"), Mjai::Pai.new("N"), Mjai::Pai.new("4s"), Mjai::Pai.new("E"), Mjai::Pai.new("3m")], [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13]}) ,MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("5m")})]
@@ -189,6 +192,7 @@ RSpec.describe "TransServer end game" do  # take_actionで実装されている�
   file = File.open("spec/resources/observations-000.json", "r")
   lines = file.readlines
   trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
+  trans_server.mjx_to_mjai = MjxToMjai.new({0=>0,1=>1, 2=>2, 3=>3}, 0)
   player = Player.new(0, nil, nil)
   trans_server.player = player
   expected_mjai_actions_end_game_1 = [MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("7m"), :tsumogiri=>false}), MjaiAction.new({:type=>:tsumo, :actor=>1, :pai=>Mjai::Pai.new("?")}), MjaiAction.new({:type=>:dahai, :actor=>1, :pai=>Mjai::Pai.new("4s"), :tsumogiri=>false}), MjaiAction.new({:type=>:tsumo, :actor=>2, :pai=>Mjai::Pai.new("?")}) ,MjaiAction.new({:type=>:hora, :actor=>2, :target=>2, :pai=>Mjai::Pai.new("7s"), :uradora_markers=>[], :hora_tehais=>[Mjai::Pai.new("7s"), Mjai::Pai.new("7s"), Mjai::Pai.new("C"), Mjai::Pai.new("C"), Mjai::Pai.new("C")], :yakus=>[[:sangenpai, 1]], :fu=>70, :fan=>1, :hora_points=>2400, :deltas=>[-900, -900, 3300, -1500], :scores=>[36700, 23000, 7800, 32500]}), MjaiAction.new({:type => :end_kyoku})]

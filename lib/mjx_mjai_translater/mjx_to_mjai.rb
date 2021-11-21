@@ -194,7 +194,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     end
   end
 
-  def mjx_act_to_mjai_act(mjx_act, public_observatoin) 
+  def mjx_act_to_mjai_act(mjx_act, observation) 
     # この関数はtrans_serverの内部で実行されるのでprevious_historyは問題なく手に入る 
     #　またこの関数が実行される際には@_mjx_public_observatoinが最新のものに更新されているので欲しいactionが含まれていないという心配もない
     action_type = mjx_act.type
@@ -236,7 +236,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
       return MjaiAction.new({:type=>:reach, :actor=>@absolutepos_id_hash[who]})
     end
     if action_type == :ACTION_TYPE_RON || action_type == :ACTION_TYPE_TSUMO # trans_serverが持っている previous_public_observatoinの情報を使う
-      last_event = public_observatoin[-1]
+      last_event = observation.public_observation.events[-1]
       assert_types = [:EVENT_TYPE_TSUMOGIRI, :EVENT_TYPE_DISCARD, :EVENT_TYPE_DRAW, :EVENT_TYPE_ADDED_KAN]
       assert_includes assert_types, last_event.type
       target = last_event.who
@@ -356,7 +356,7 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     events = observation.public_observation.events
     whos = events.map(){ |x| x.who}
     num_target_event_presence = whos.count(who)
-    return observation.private_observation.draw_history.length <= 1 && num_target_event_presence <= 1
+    return (observation.private_observation.draw_history.length == 0 && num_target_event_presence == 0) || (observation.private_observation.draw_history.length == 1 && num_target_event_presence == 1)
   end
 
   def is_start_game(observation)

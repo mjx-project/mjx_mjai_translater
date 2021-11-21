@@ -10,20 +10,19 @@ class Player
     TIMEOUT_SEC = 60
     def initialize(socket, id, name)
         @socket = socket
-        @legal_actions = []  # mjxとのやりとりで更新していく
-        @hand = []  # mjxとのやりとりで更新していく。
+        @observation = nil
         @id = id # mjaiのid
         @name = name
         @absolutepos_id_hash = {0=>0,1=>1,
         2=>2, 3=>3}
     end
 
-    attr_accessor :id, :name, :legal_actions, :hand
-
+    attr_accessor :id, :name, :observation
 
     def legal_actions()
       mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @id)  # leagal actionを参照するのはtarget playerのみ
-      return @legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x, public_observation=nil) }  # ここではpublic_observationは不要
+      legal_actions = @observation.legal_actions
+      return legal_actions.map { |x| mjx_to_mjai.mjx_act_to_mjai_act(x, @observation) }  # ここではpublic_observationは不要
     end
     
 
@@ -40,40 +39,29 @@ class Player
 
 
   def forbidden_tiles_mjai()  # 手牌のうち,possible action に含まれていないものを返す。
-        possible_tiles = from_actions_to_discard_tiles(@legal_actions)
-        mjx_to_mjai = MjxToMjai.new(nil, @id)
-        return mjx_to_mjai.proto_tiles_to_mjai_tiles(@hand).uniq() - mjx_to_mjai.proto_tiles_to_mjai_tiles(possible_tiles)  #mjaiのformatで処理する。
+      legal_actions = @observation.legal_actions
+      hand = @observation.private_observation.curr_hand.closed_tiles
+      possible_tiles = from_actions_to_discard_tiles(legal_actions)
+      mjx_to_mjai = MjxToMjai.new(nil, @id)
+      return mjx_to_mjai.proto_tiles_to_mjai_tiles(hand).uniq() - mjx_to_mjai.proto_tiles_to_mjai_tiles(possible_tiles)  #mjaiのformatで処理する。
   end
 
 
   def respond_to_action_of_translator(action)
         begin
-          if action.type == :reach_accepted
-            p "reach_accepted_respond_to_action"
-            p action
-            p action.to_json()
-            p "wawawa"
-          end
-          if action.type == :ryukyoku
-            p "ryukyoku_respond_to_action"
-            p action
-            p action.to_json()
-            p "wawawa"
-          end
+          p "playerから送る直前のaction"
+          p action
+          p "直前にto_jsonがうまく行っているか"
+          p action.to_json
           #puts("server -> player %d\t%s" % [self.id, action.to_json()])
           @socket.puts(action.to_json())
           line = nil
-          if action.type == :reach_accepted
-            p "reach_accepted_respond_to_action_2"
-          end
-          if action.type == :ryukyoku
-            p "ryukyoku_respond_to_action_2"
-          end
           Timeout.timeout(TIMEOUT_SEC) do
             line = @socket.gets()
           end
           if line
             #puts("server <- player %d\t%s" % [self.id, line])
+            
             return MjaiAction._from_json(line.chomp())
           else
             #puts("server :  Player %d has disconnected." % self.id)

@@ -41,7 +41,7 @@ RSpec.describe "action_in_view" do
         legal_actions = observation.legal_actions
         trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
         player = Player.new(nil, 0, nil)
-        player.legal_actions = legal_actions 
+        player.observation = observation 
         trans_server.player = player
         mjai_possible_actions = [MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2m"), :actor=>0,:tsumogiri=>false}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2p"), :actor=>0,:tsumogiri=>false}),
@@ -57,7 +57,7 @@ RSpec.describe "action_in_view" do
         legal_actions = observation.legal_actions
         trans_server = TransServer.new({:target_id=>0, "test"=>"yes"})
         player = Player.new(nil, 0, nil)
-        player.legal_actions = legal_actions 
+        player.observation = observation 
         trans_server.player = player
         mjai_possible_actions = [MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2m"), :actor=>0,:tsumogiri=>false}),
         MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("4m"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("1p"), :actor=>0,:tsumogiri=>false}), MjaiAction.new({:type => :dahai, :pai =>Mjai::Pai.new("2p"), :actor=>0,:tsumogiri=>false}),
@@ -83,8 +83,8 @@ RSpec.describe "action_in_view" do
         hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒したはいは除かれている
         legal_actions = observation.legal_actions
         player = Player.new(nil, 0, nil) # playerのinstanceを作る
-        player.legal_actions = legal_actions  
-        player.hand = hand 
+        player.observation = observation  
+         
         trans_server.player = player
         mjai_action = MjaiAction.new({:type=>:chi, :actor=>0, :target=>3, :pai=>Mjai::Pai.new("7s"), :consumed=>[Mjai::Pai.new("8s"), Mjai::Pai.new("8s")]})
         viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil, true)
@@ -100,8 +100,8 @@ RSpec.describe "action_in_view" do
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, 0, nil) # playerのinstanceを作る
-        player.legal_actions = legal_actions 
-        player.hand = hand 
+        player.observation = observation 
+         
         trans_server.player = player
         mjai_action = MjaiAction.new({:type=>:reach,:actor=>0})
         viewed_tehai = trans_server.action_in_view(mjai_action, 0, nil, true)
@@ -121,8 +121,8 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil, nil) # playerのinstanceを作る
-        player.legal_actions = legal_actions  # legal_actionsを更新
-        player.hand = hand  # handを更新
+        player.observation = observation  # legal_actionsを更新
+          # handを更新
         expect(player.forbidden_tiles_mjai()).to eq []
     end
     it "riichi" do  # 聴牌にならない牌を返しているか
@@ -130,8 +130,8 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil, nil) # playerのinstanceを作る
-        player.legal_actions = legal_actions 
-        player.hand = hand 
+        player.observation = observation 
+         
         expect(player.forbidden_tiles_mjai()).to eq [Mjai::Pai.new("1p"),Mjai::Pai.new("2p"),Mjai::Pai.new("3p"),Mjai::Pai.new("5p"),Mjai::Pai.new("6p"),Mjai::Pai.new("7p"),Mjai::Pai.new("8p"),Mjai::Pai.new("9p"),Mjai::Pai.new("8s")]
     end
     it "chi" do # 喰い替えになる牌を返しているか
@@ -139,8 +139,8 @@ RSpec.describe "forbidden_tile" do  # 選択できない牌を取得する関数
         hand = observation.private_observation.curr_hand.closed_tiles  # 実際に渡されるhandは晒したはいは除かれている
         legal_actions = observation.legal_actions
         player = Player.new(nil, nil, nil) # playerのinstanceを作る
-        player.legal_actions = legal_actions  
-        player.hand = hand 
+        player.observation = observation  
+         
         expect(player.forbidden_tiles_mjai()).to eq [Mjai::Pai.new("3m")] # 7sを鳴いて7sを持っている。
     end
 end
