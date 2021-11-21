@@ -122,10 +122,10 @@ class MjaiAction < Mjai::JSONizable  # remove :player
         end
       end
       
-      def _plains_to_objs(plains, type, name)
+      def self._plains_to_objs(plains, type, name)
         validate_class(plains, Array, name)
         return plains.each_with_index().map() do |c, i|
-          plain_to_obj(c, type, "#{name}[#{i}]")
+          _plain_to_obj(c, type, "#{name}[#{i}]")
         end
       end
 
@@ -140,7 +140,6 @@ class MjaiAction < Mjai::JSONizable  # remove :player
           next if obj == nil
           case type
             when :symbol, :pai
-              p "シンボルだね"
               plain = obj.to_s()
             when :player
               plain = obj.id

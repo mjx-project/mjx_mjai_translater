@@ -51,8 +51,8 @@ class Player
         begin
           p "playerから送る直前のaction"
           p action
-          p "直前にto_jsonがうまく行っているか"
-          p action.to_json
+          #p "直前にto_jsonがうまく行っているか"
+          #p action.to_json
           #puts("server -> player %d\t%s" % [self.id, action.to_json()])
           @socket.puts(action.to_json())
           line = nil
