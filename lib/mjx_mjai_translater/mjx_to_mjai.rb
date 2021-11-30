@@ -351,18 +351,14 @@ class MjxToMjai   #  mjxからmjaiへの変換関数をまとめる。　クラ�
     return mjai_yakus
   end
 
-  def is_start_kyoku(observation)
-    who = observation.who
-    events = observation.public_observation.events
-    whos = events.map(){ |x| x.who}
-    num_target_event_presence = whos.count(who)
-    return (observation.private_observation.draw_history.length == 0 && num_target_event_presence == 0) || (observation.private_observation.draw_history.length == 1 && num_target_event_presence == 1)
+  def is_start_kyoku(observation, previous_observation)
+      return !previous_observation
   end
 
-  def is_start_game(observation)
+  def is_start_game(observation, previous_observation)
     round = observation.public_observation.init_score.round
     honba = observation.public_observation.init_score.honba
-    return is_start_kyoku(observation) && round == 0 && honba == 0
+    return is_start_kyoku(observation, previous_observation) && round == 0 && honba == 0
   end
 
   def is_kyoku_over(observation)

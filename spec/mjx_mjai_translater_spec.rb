@@ -21,9 +21,8 @@ RSpec.describe TransServer do  # take_actionで実装されている階層の関
   lines = file.readlines
   trans_server = TransServer.new({:target_id=>1, "test"=>"yes"})
   it 'test_observe' do
-    previous_events = observation_from_json(lines, 0).public_observation.events
     observation = observation_from_json(lines, 1)
-    trans_server._mjx_events = previous_events
+    trans_server.previous_observation = observation_from_json(lines, 0)
     trans_server.mjx_to_mjai = MjxToMjai.new({0=>0,1=>1, 2=>2, 3=>3}, 1)
     trans_server.observe(observation)
     new_mjai_actions = trans_server.new_mjai_actions
@@ -70,9 +69,8 @@ RSpec.describe "TransServer Start kyoku" do  # take_actionで実装されてい�
   MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}),
   MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("P"), :tsumogiri=>false})]
   it 'test_take_action_start with do_action mocked' do  # 局の最初  連続で2順
-    previous_events = observation_from_json(lines, 0).public_observation.events
     observation_1 = observation_from_json(lines, 1)
-    trans_server._mjx_events = previous_events
+    trans_server.previous_observation = observation_from_json(lines, 0)
     trans_server.observe(observation_1)  # observation→mjai action
     expected_mjai_actions = expected_mjai_action_start_1
     expect(trans_server.new_mjai_actions).to eq expected_mjai_actions
@@ -133,9 +131,8 @@ RSpec.describe "TransServer Middle kyoku" do  # take_actionで実装されてい
   expected_mjai_actions_middle_2 = [MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("6s")})]
   mjai_actions_middle_2 = [MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("8p"), :tsumogiri=>false})]
   it 'test_take_action_middle with do_action mocked' do  # 局の最初  連続で2順
-    previous_events = observation_from_json(lines, 8).public_observation.events
     observation_1 = observation_from_json(lines, 9)
-    trans_server._mjx_events = previous_events
+    trans_server.previous_observation = observation_from_json(lines, 8)
     trans_server.observe(observation_1)  # observation→mjai action
     expected_mjai_actions = expected_mjai_actions_middle_1
     expect(trans_server.new_mjai_actions).to eq expected_mjai_actions
@@ -143,7 +140,6 @@ RSpec.describe "TransServer Middle kyoku" do  # take_actionで実装されてい
     mjx_actions = trans_server.update_next_actions(mjai_actions, observation_1)  # mjai_action→mjx_action
     expected_mjx_action = observation_1.legal_actions[-1]
     expect(mjx_actions[-1]).to eq expected_mjx_action
-
     observation_2 = observation_from_json(lines, 10)
     trans_server.observe(observation_2)
     expected_mjai_actions = expected_mjai_actions_middle_2
@@ -166,9 +162,8 @@ RSpec.describe "TransServer end kyoku" do  # take_actionで実装されている
   expected_mjai_actions_end_kyoku_2 = [MjaiAction.new({:type=>:start_kyoku, :kyoku=>1, :bakaze=>Mjai::Pai.new("E"), :honba=>1, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("2s"), :tehais=>[[Mjai::Pai.new("9p"), Mjai::Pai.new("5s"), Mjai::Pai.new("N"), Mjai::Pai.new("F"), Mjai::Pai.new("N"), Mjai::Pai.new("2m"), Mjai::Pai.new("9s"), Mjai::Pai.new("7m"), Mjai::Pai.new("4p"), Mjai::Pai.new("N"), Mjai::Pai.new("4s"), Mjai::Pai.new("E"), Mjai::Pai.new("3m")], [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13]}) ,MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("5m")})]
   mjai_actions_end_kyoku_2 = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false})]
   it 'test_take_action_end_kyoku with do_action mocked' do  # 局の最初  連続で2順
-    previous_events = observation_from_json(lines, 28).public_observation.events
     observation_1 = observation_from_json(lines, 29)
-    trans_server._mjx_events = previous_events
+    trans_server.previous_observation = observation_from_json(lines, 28)
     trans_server.observe(observation_1)  # observation→mjai action
     expected_mjai_actions = expected_mjai_actions_end_kyoku_1
     expect(trans_server.new_mjai_actions).to eq expected_mjai_actions
@@ -176,7 +171,6 @@ RSpec.describe "TransServer end kyoku" do  # take_actionで実装されている
     mjx_actions = trans_server.update_next_actions(mjai_actions, observation_1)  # mjai_action→mjx_action
     expected_mjx_action = observation_1.legal_actions[-1]
     expect(mjx_actions[-1]).to eq expected_mjx_action
-
     observation_2 = observation_from_json(lines, 30)
     trans_server.observe(observation_2)
     expected_mjai_actions = expected_mjai_actions_end_kyoku_2
@@ -200,9 +194,8 @@ RSpec.describe "TransServer end game" do  # take_actionで実装されている�
   expected_mjai_actions_end_game_2 = [MjaiAction.new({:type => :start_game}), MjaiAction.new({:type=>:start_kyoku, :kyoku=>1, :bakaze=>Mjai::Pai.new("E"), :honba=>0, :kyotaku=>0, :oya=>0, :dora_marker=>Mjai::Pai.new("1s"), :tehais=>[[Mjai::Pai.new("4m"), Mjai::Pai.new("P"), Mjai::Pai.new("9p"), Mjai::Pai.new("9s"), Mjai::Pai.new("2s"), Mjai::Pai.new("2p"), Mjai::Pai.new("W"), Mjai::Pai.new("7s"), Mjai::Pai.new("1p"), Mjai::Pai.new("1m"), Mjai::Pai.new("4p"), Mjai::Pai.new("4p"), Mjai::Pai.new("E")], [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13, [Mjai::Pai.new("?")]*13]}), MjaiAction.new({:type=>:tsumo, :actor=>0, :pai=>Mjai::Pai.new("2m")})]
   mjai_actions_end_game_2 = [MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:none}), MjaiAction.new({:type=>:dahai, :actor=>0, :pai=>Mjai::Pai.new("E"), :tsumogiri=>false})]
   it 'test_take_action_end_game with do_action mocked' do
-    previous_events = observation_from_json(lines, 285).public_observation.events
     observation_1 = observation_from_json(lines, 286)
-    trans_server._mjx_events = previous_events
+    trans_server.previous_observation = observation_from_json(lines, 285)
     trans_server.observe(observation_1)  # observation→mjai action
     expected_mjai_actions = expected_mjai_actions_end_game_1
     expect(trans_server.new_mjai_actions).to eq expected_mjai_actions
@@ -210,7 +203,6 @@ RSpec.describe "TransServer end game" do  # take_actionで実装されている�
     mjx_actions = trans_server.update_next_actions(mjai_actions, observation_1)  # mjai_action→mjx_action
     expected_mjx_action = observation_1.legal_actions[-1]
     expect(mjx_actions[-1]).to eq expected_mjx_action
-
     observation_2 = observation_from_json(lines, 0)
     trans_server.observe(observation_2)
     expected_mjai_actions = expected_mjai_actions_end_game_2
