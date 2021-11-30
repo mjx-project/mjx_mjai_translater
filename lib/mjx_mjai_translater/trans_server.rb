@@ -181,12 +181,12 @@ class TransServer < Mjxproto::Agent::Service
     def take_action(observation, _unused_call)
         p "previous_event"
         p @previous_observation
+        p "observation"
+        p observation
         observe(observation)
         responses = []
         p "target_id は"
         p @target_id
-        p "observation"
-        p observation
         p "新しいmjaiのactions"
         p @new_mjai_actions
         @new_mjai_actions.length.times do |i|

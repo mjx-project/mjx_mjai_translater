@@ -125,5 +125,9 @@ RSpec.describe "mjai_consumed" do # 晒した牌のmjaiのformatへの変換
      it "chi 3s4s5s" do
          open_converter = OpenConverter.new(49495)
          expect(open_converter.mjai_consumed()).to eq  [Mjai::Pai.new("4s"), Mjai::Pai.new("5s")]
-    end
+     end
+     it "ankan 5p5p5p5pr" do
+        open_converter = OpenConverter.new(13312)
+        expect((open_converter.mjai_consumed() - [Mjai::Pai.new("5p"), Mjai::Pai.new("5p"),Mjai::Pai.new("5pr"),Mjai::Pai.new("5p")]).empty?).to eq true
+     end
 end

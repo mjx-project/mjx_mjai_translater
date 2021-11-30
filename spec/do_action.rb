@@ -155,9 +155,8 @@ RSpec.describe 'do_action' do
                 )  # start_kyoku
         
                 expect(response.type).to eq :none
-                previous_events = observation_from_json(lines, 270).public_observation.events
                 observation = observation_from_json(lines, 271)
-                trans_server._mjx_events = previous_events
+                trans_server.previous_observation = observation_from_json(lines, 270)
                 public_observation_difference = trans_server.extract_difference(observation)
                 mjx_event = public_observation_difference[-1]
                 mjai_action  = MjxToMjai.new({0=>0,1=>1,2=>2, 3=>3}, 0).mjx_event_to_mjai_action(mjx_event, observation, [])  # ryukyokuをmjxto_mjaiを用いて取得

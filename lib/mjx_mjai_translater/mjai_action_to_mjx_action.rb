@@ -51,7 +51,7 @@ class MjaiToMjx
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action.pai == stolen_tile_in_mjai && mjai_action.consumed == consumed_tile_in_mjai
+            if mjai_action.pai == stolen_tile_in_mjai && (mjai_action.consumed - consumed_tile_in_mjai).empty?
               return i
             end
         end
@@ -64,7 +64,7 @@ class MjaiToMjx
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action.pai == stolen_tile_in_mjai && mjai_action.consumed == consumed_tile_in_mjai
+            if mjai_action.pai == stolen_tile_in_mjai && (mjai_action.consumed - consumed_tile_in_mjai).empty?
               return i
             end
         end
@@ -77,7 +77,7 @@ class MjaiToMjx
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action.pai == stolen_tile_in_mjai && mjai_action.consumed == consumed_tile_in_mjai
+            if mjai_action.pai == stolen_tile_in_mjai && (mjai_action.consumed - consumed_tile_in_mjai).empty?
               return i
             end
         end
@@ -90,7 +90,7 @@ class MjaiToMjx
             open_converter = OpenConverter.new(legal_actions[i].open)
             stolen_tile_in_mjai = open_converter.mjai_stolen()
             consumed_tile_in_mjai = open_converter.mjai_consumed()
-            if mjai_action.consumed == consumed_tile_in_mjai
+            if (mjai_action.consumed - consumed_tile_in_mjai).empty?
               return i
             end
         end
