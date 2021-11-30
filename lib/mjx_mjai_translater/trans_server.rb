@@ -136,26 +136,23 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def convert_to_mjai_actions(observation, scores)  # scoresはriichi_acceptedを送る場合などに使う
-        public_observation_difference  = extract_difference(observation) # 差分
         mjai_actions = []
-        if @mjx_to_mjai.is_start_game(observation)
+        if @mjx_to_mjai.is_start_game(observation) #&& !@_mjx_events
           mjai_actions.push(MjaiAction.new({:type=>:start_game}))
         end
-        if @mjx_to_mjai.is_start_kyoku(observation) && !@is_started_kyoku
+        if @mjx_to_mjai.is_start_kyoku(observation) #&& !@_mjx_events
           mjai_actions.push(@mjx_to_mjai.start_kyoku(observation))
-          @is_started_kyoku = true
         end
+        public_observation_difference  = extract_difference(observation) # 差分
         public_observation_difference.length.times do |i|
            mjai_action = @mjx_to_mjai.mjx_event_to_mjai_action(public_observation_difference[i],observation, scores)  # mjxのeventをmjai actioinに変換
            mjai_actions.push(mjai_action)
         end
         if @mjx_to_mjai.is_kyoku_over(observation)
           mjai_actions.push(MjaiAction.new({:type=>:end_kyoku}))
-          @is_started_kyoku = false
           @_mjx_events = nil
        end
        if @mjx_to_mjai.is_game_over(observation)
-          @is_started_kyoku = false
           #mjai_actions.push(MjaiAction.new({:type=>:end_game}))
           @_mjx_events = nil # gameが終わった時にreset
        end
@@ -163,12 +160,11 @@ class TransServer < Mjxproto::Agent::Service
     end
 
     
-    
     def observe(observation)
         @scores = observation.public_observation.init_score.tens  # scoreを更新 mjaiのactionに変換する際に使用
         #history_difference = extract_difference(observation)
         #puts history_difference
-        if MjxToMjai.new(@absolutepos_id_hash, nil).is_start_game(observation)  # game start 時のsetting
+        if MjxToMjai.new(@absolutepos_id_hash, nil).is_start_game(observation) #&& !@_mjx_events # game start 時のsetting
           @target_id = observation.public_observation.events[-1].who
           @player.id = @target_id
           @mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
@@ -183,6 +179,8 @@ class TransServer < Mjxproto::Agent::Service
 
 
     def take_action(observation, _unused_call)
+        p "previous_event"
+        p @_mjx_events
         observe(observation)
         responses = []
         p "target_id は"
@@ -204,6 +202,7 @@ class TransServer < Mjxproto::Agent::Service
         return @next_mjx_actions[-1] #mjxへactionを返す。最後のactionだけ参照勝すれば良い
     end
 end
+
 
 def main  # agentを1対立てる
   s = GRPC::RpcServer.new

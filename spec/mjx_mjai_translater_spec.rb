@@ -143,7 +143,6 @@ RSpec.describe "TransServer Middle kyoku" do  # take_actionで実装されてい
     mjx_actions = trans_server.update_next_actions(mjai_actions, observation_1)  # mjai_action→mjx_action
     expected_mjx_action = observation_1.legal_actions[-1]
     expect(mjx_actions[-1]).to eq expected_mjx_action
-
     observation_2 = observation_from_json(lines, 10)
     trans_server.observe(observation_2)
     expected_mjai_actions = expected_mjai_actions_middle_2
@@ -176,7 +175,6 @@ RSpec.describe "TransServer end kyoku" do  # take_actionで実装されている
     mjx_actions = trans_server.update_next_actions(mjai_actions, observation_1)  # mjai_action→mjx_action
     expected_mjx_action = observation_1.legal_actions[-1]
     expect(mjx_actions[-1]).to eq expected_mjx_action
-
     observation_2 = observation_from_json(lines, 30)
     trans_server.observe(observation_2)
     expected_mjai_actions = expected_mjai_actions_end_kyoku_2
@@ -210,7 +208,6 @@ RSpec.describe "TransServer end game" do  # take_actionで実装されている�
     mjx_actions = trans_server.update_next_actions(mjai_actions, observation_1)  # mjai_action→mjx_action
     expected_mjx_action = observation_1.legal_actions[-1]
     expect(mjx_actions[-1]).to eq expected_mjx_action
-
     observation_2 = observation_from_json(lines, 0)
     trans_server.observe(observation_2)
     expected_mjai_actions = expected_mjai_actions_end_game_2
