@@ -149,21 +149,21 @@ RSpec.describe "局、半荘の開始終了" do
     mjx_to_mjai = MjxToMjai.new(absolutepos_id_hash, 1)
     it "start_kyoku only 2" do
         observation = observation_from_json(lines, 30)
-        is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation)
-        is_start_game = mjx_to_mjai.is_start_game(observation)
+        is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation, nil)
+        is_start_game = mjx_to_mjai.is_start_game(observation, nil)
         expect(is_start_kyoku).to eq true
         expect(is_start_game).to eq false
     end
     it "start_kyoku only 2" do
         observation = observation_from_json(lines_2, 21)
-        is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation)
-        is_start_game = mjx_to_mjai.is_start_game(observation)
+        is_start_kyoku = mjx_to_mjai.is_start_kyoku(observation, nil)
+        is_start_game = mjx_to_mjai.is_start_game(observation, nil)
         expect(is_start_kyoku).to eq true
         expect(is_start_game).to eq false
     end
     it "start_game" do
         observation = observation_from_json(lines, 0)
-        is_start_game = mjx_to_mjai.is_start_game(observation)
+        is_start_game = mjx_to_mjai.is_start_game(observation, nil)
         expect(is_start_game).to eq true
     end
     it "end_kyoku only" do

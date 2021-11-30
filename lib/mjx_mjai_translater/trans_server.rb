@@ -136,10 +136,10 @@ class TransServer < Mjxproto::Agent::Service
 
     def convert_to_mjai_actions(observation, scores)  # scoresはriichi_acceptedを送る場合などに使う
         mjai_actions = []
-        if @mjx_to_mjai.is_start_game(observation) #&& !@_mjx_events
+        if @mjx_to_mjai.is_start_game(observation, @previous_observation) #&& !@_mjx_events
           mjai_actions.push(MjaiAction.new({:type=>:start_game}))
         end
-        if @mjx_to_mjai.is_start_kyoku(observation) #&& !@_mjx_events
+        if @mjx_to_mjai.is_start_kyoku(observation, @previous_observation) #&& !@_mjx_events
           mjai_actions.push(@mjx_to_mjai.start_kyoku(observation))
         end
         public_observation_difference  = extract_difference(observation) # 差分
@@ -164,7 +164,7 @@ class TransServer < Mjxproto::Agent::Service
         @scores = observation.public_observation.init_score.tens  # scoreを更新 mjaiのactionに変換する際に使用
         #history_difference = extract_difference(observation)
         #puts history_difference
-        if MjxToMjai.new(@absolutepos_id_hash, nil).is_start_game(observation) #&& !@_mjx_events # game start 時のsetting
+        if MjxToMjai.new(@absolutepos_id_hash, nil).is_start_game(observation, @previous_observation) #&& !@_mjx_events # game start 時のsetting
           @target_id = observation.public_observation.events[-1].who
           @player.id = @target_id
           @mjx_to_mjai = MjxToMjai.new(@absolutepos_id_hash, @target_id)
