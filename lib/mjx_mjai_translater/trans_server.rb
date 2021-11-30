@@ -17,11 +17,10 @@ class TransServer < Mjxproto::Agent::Service
         @params = params
         @absolutepos_id_hash = {0=>0,1=>1,
         2=>2, 3=>3} # default absolute_posとidの対応 mjxとmjaiのidが自然に対応しないのが原因 対応させる関数を作る必要がある。
-        @_mjx_events = nil
         @target_id = params[:target_id]
         @new_mjai_actions = []
         @next_mjx_actions = []
-        @is_started_kyoku = false
+        @previous_observation = nil
         @mjx_to_mjai = nil
         if !params["test"]
           @server = TCPServer.open(params[:host], params[:port]) 
@@ -30,7 +29,7 @@ class TransServer < Mjxproto::Agent::Service
         end
     end
 
-    attr_accessor :player, :_mjx_events, :new_mjai_actions, :target_id, :next_mjx_actions, :mjx_to_mjai
+    attr_accessor :player, :previous_observation, :new_mjai_actions, :target_id, :next_mjx_actions, :mjx_to_mjai
 
 
     def do_action(action, use_possible_actions=false) # mjai_clientにactionを渡してresponseを得る。
@@ -124,14 +123,14 @@ class TransServer < Mjxproto::Agent::Service
 
     def extract_difference(observation)  # public_observatoinの差分を取り出す
         #STDERR.puts observation
-        if !@_mjx_events
-            @_mjx_events = observation.public_observation.events  #更新
+        if !@previous_observation
             return observation.public_observation.events
+        else
+            current_events = observation.public_observation.events
+            pre_events = @previous_observation.public_observation.events
+            difference_history = current_events[pre_events.length ..]
+            return difference_history
         end
-        current_events = observation.public_observation.events
-        difference_history = current_events[@_mjx_events.length ..]
-        @_mjx_events = current_events  #更新
-        return difference_history
     end
 
 
@@ -148,13 +147,14 @@ class TransServer < Mjxproto::Agent::Service
            mjai_action = @mjx_to_mjai.mjx_event_to_mjai_action(public_observation_difference[i],observation, scores)  # mjxのeventをmjai actioinに変換
            mjai_actions.push(mjai_action)
         end
+        @previous_observation = observation
         if @mjx_to_mjai.is_kyoku_over(observation)
           mjai_actions.push(MjaiAction.new({:type=>:end_kyoku}))
-          @_mjx_events = nil
+          @previous_observation = nil
        end
        if @mjx_to_mjai.is_game_over(observation)
           #mjai_actions.push(MjaiAction.new({:type=>:end_game}))
-          @_mjx_events = nil # gameが終わった時にreset
+          @previous_observation = nil # gameが終わった時にreset
        end
         return mjai_actions
     end
@@ -180,7 +180,7 @@ class TransServer < Mjxproto::Agent::Service
 
     def take_action(observation, _unused_call)
         p "previous_event"
-        p @_mjx_events
+        p @previous_observation
         observe(observation)
         responses = []
         p "target_id は"
